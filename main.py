@@ -40,38 +40,55 @@ app.config['SECRET_KEY'] = 'eterials_restaurant_2025_secure_key'
 # Configurar CORS para APIs
 CORS(app)
 
-# Importar y registrar blueprints principales
+# Importar y registrar blueprints principales uno por uno
+blueprints_cargados = 0
+
+# 🤖 Módulo Chatbot con animaciones
 try:
-    # 🤖 Módulo Chatbot con animaciones
     from modulos.chatbot.chatbot_blueprint import chatbot_bp
     app.register_blueprint(chatbot_bp, url_prefix='/chatbot')
     print("✅ Chatbot registrado: /chatbot")
-    
-    # ⚙️ Panel administrativo
+    blueprints_cargados += 1
+except ImportError as e:
+    print(f"❌ Error cargando Chatbot: {e}")
+
+# ⚙️ Panel administrativo
+try:
     from modulos.panel_admin.admin_blueprint import admin_bp
     app.register_blueprint(admin_bp, url_prefix='/admin')
     print("✅ Panel Admin registrado: /admin")
-    
-    # 🍽️ Sistema de gestión de menús (Backend)
+    blueprints_cargados += 1
+except ImportError as e:
+    print(f"❌ Error cargando Admin: {e}")
+
+# 🍽️ Sistema de gestión de menús (Backend)
+try:
     from modulos.backend.menu.menu_admin_endpoints import menu_admin_bp
     app.register_blueprint(menu_admin_bp, url_prefix='/menu-admin')
     print("✅ Gestión Menús registrado: /menu-admin")
-    
-    # 🌐 Frontend del menú para clientes
-    from modulos.frontend.menu.routes import menu_frontend_bp
-    app.register_blueprint(menu_frontend_bp, url_prefix='/menu')
+    blueprints_cargados += 1
+except ImportError as e:
+    print(f"❌ Error cargando Gestión Menús: {e}")
+
+# 🌐 Frontend del menú para clientes (CORREGIDO: se llama menu_bp, no menu_frontend_bp)
+try:
+    from modulos.frontend.menu.routes import menu_bp
+    app.register_blueprint(menu_bp, url_prefix='/menu')
     print("✅ Menú Cliente registrado: /menu")
-    
-    # 🍳 Dashboard de cocina
+    blueprints_cargados += 1
+except ImportError as e:
+    print(f"❌ Error cargando Menú Cliente: {e}")
+
+# 🍳 Dashboard de cocina
+try:
     from modulos.frontend.cocina.routes import cocina_bp
     app.register_blueprint(cocina_bp, url_prefix='/cocina')
     print("✅ Dashboard Cocina registrado: /cocina")
-    
-    print("🎉 Todos los módulos cargados exitosamente")
-    
+    blueprints_cargados += 1
 except ImportError as e:
-    print(f"⚠️ Error cargando módulo: {e}")
-    print("🔄 Continuando con módulos disponibles...")
+    print(f"❌ Error cargando Dashboard Cocina: {e}")
+
+print(f"🎉 {blueprints_cargados}/5 módulos cargados exitosamente")
 
 # Ruta principal de bienvenida
 @app.route('/')
