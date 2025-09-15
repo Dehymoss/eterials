@@ -1,0 +1,217 @@
+/* 
+ * ESTILOS PARA PÁGINA DE TRANSICIÓN DE MENÚ
+ * Archivo: menu-transicion.css
+ * Módulo: Frontend Menu
+ */
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transition-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.logo-section {
+    margin-bottom: 30px;
+}
+
+.logo-section h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.logo-section p {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+    margin-bottom: 0;
+}
+
+.transition-message {
+    background: linear-gradient(45deg, #3498db, #9b59b6);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin: 30px 0;
+}
+
+.transition-message h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.transition-message p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+    opacity: 0.95;
+}
+
+.options-section {
+    margin: 40px 0;
+}
+
+.menu-option {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.menu-option:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.menu-option h3 {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.menu-option p {
+    color: #6c757d;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.btn-menu {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+}
+
+.btn-menu:hover {
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-menu.secondary {
+    background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+}
+
+.btn-menu.secondary:hover {
+    box-shadow: 0 8px 25px rgba(149, 165, 166, 0.3);
+}
+
+.client-info {
+    background: #e8f4f8;
+    border-left: 4px solid #3498db;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.client-info h4 {
+    color: #2c3e50;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.client-info p {
+    color: #34495e;
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+.footer-info {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.countdown {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e74c3c;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.transition-container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.menu-option {
+    animation: fadeIn 0.8s ease-out;
+}
+
+.menu-option:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.menu-option:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .transition-container {
+        margin: 20px;
+        padding: 30px 20px;
+    }
+    
+    .logo-section h1 {
+        font-size: 2rem;
+    }
+    
+    .transition-message {
+        padding: 20px;
+    }
+    
+    .menu-option {
+        padding: 20px;
+    }
+    
+    .btn-menu {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+}

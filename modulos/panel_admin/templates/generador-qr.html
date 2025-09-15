@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de QR - Eterials Gastro-Café</title>
+    <link rel="stylesheet" href="/admin/static/css/generador-qr.css">
+    <script src="/admin/static/js/qrcode.min.js"></script>
+    <script src="/admin/static/js/generador-qr.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>📱 Generador de QR para Mesas y Barra</h1>
+        <p>Descarga e imprime códigos QR personalizados que dirigen al chatbot</p>
+    </div>
+    <div class="main-container">
+        <div class="qr-panel">
+            <h2>Generar QR por Mesa o Barra</h2>
+            <div style="margin-bottom:1em;">
+                <label>
+                    <input type="radio" name="tipoQR" value="mesa" checked onclick="toggleTipoQR('mesa')"> Mesa
+                </label>
+                <label style="margin-left:2em;">
+                    <input type="radio" name="tipoQR" value="barra" onclick="toggleTipoQR('barra')"> Barra
+                </label>
+            </div>
+            <div id="panel-mesas">
+                <label for="cantidad">Cantidad de mesas:</label>
+                <input type="number" id="cantidad" min="1" max="100" placeholder="Ejemplo: 10">
+                <button onclick="generarQRCodes()">Generar QR</button>
+            </div>
+            <div id="panel-barra" style="display:none;">
+                <button onclick="generarQRBarra()">Generar QR para Barra</button>
+            </div>
+        </div>
+        <div class="qr-container" id="qrContainer"></div>
+    </div>
+    <div class="footer">
+        <p>Eterials Gastro-Café © 2025 - Generador QR v1.0</p>
+    </div>
+    <script>
+    </script>
+</body>
+</html>

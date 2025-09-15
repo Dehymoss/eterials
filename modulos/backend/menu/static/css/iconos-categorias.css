@@ -1,0 +1,187 @@
+/**
+ * ESTILOS PARA SISTEMA DE ICONOS AUTOMÁTICOS EN CATEGORÍAS
+ * Versión: 2.5.0 - Sistema de Gestión de Restaurante
+ */
+
+/* Preview Container del Icono */
+#preview-icono {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 2px dashed #28a745 !important;
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease-in-out;
+    transition: all 0.3s ease;
+}
+
+#preview-icono:hover {
+    background: linear-gradient(135deg, #e8f5e8, #d4edda);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Icono en el preview */
+#preview-icono span[style*="font-size"] {
+    font-size: 2rem !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+#preview-icono:hover span[style*="font-size"] {
+    transform: scale(1.1);
+}
+
+/* Botón de aplicar icono */
+#preview-icono .btn-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+#preview-icono .btn-success:hover {
+    background: linear-gradient(45deg, #218838, #1e7e34);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
+
+/* Campo de icono */
+#categoria-icono {
+    font-size: 1.2rem;
+    text-align: center;
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+}
+
+/* Campo de código */
+#categoria-codigo {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #6c757d;
+    background-color: #f8f9fa;
+}
+
+/* Botón de sugerir icono */
+#btn-sugerir-icono {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+#btn-sugerir-icono:hover {
+    background: linear-gradient(45deg, #0056b3, #520dc2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+}
+
+/* Icono mágico animado */
+#btn-sugerir-icono .fa-wand-magic-sparkles {
+    animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    25% {
+        transform: rotate(5deg) scale(1.1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: rotate(-5deg) scale(1.2);
+        opacity: 0.6;
+    }
+    75% {
+        transform: rotate(3deg) scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+/* Feedback visual en campos */
+.form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+/* Texto de ayuda mejorado */
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.form-text .fa-magic {
+    color: #28a745;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+    #preview-icono {
+        padding: 1rem;
+    }
+    
+    #preview-icono span[style*="font-size"] {
+        font-size: 1.5rem !important;
+    }
+    
+    #btn-sugerir-icono {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+/* Estados de validación */
+.is-valid {
+    border-color: #28a745 !important;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+/* Tooltip personalizado para iconos */
+.icono-tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.icono-tooltip:hover::after {
+    content: "Icono detectado automáticamente";
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 5px;
+    z-index: 1000;
+}

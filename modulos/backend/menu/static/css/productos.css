@@ -1,0 +1,365 @@
+/* ================================
+   PRODUCTOS CSS - GESTIÓN PRODUCTOS
+   ================================ */
+
+/* Grid de productos con tarjetas */
+#productos-container {
+    min-height: 400px;
+}
+
+/* Tarjetas de productos */
+.producto-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.producto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Header de la tarjeta */
+.producto-card-header {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.producto-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.producto-card:hover .producto-card-img {
+    transform: scale(1.05);
+}
+
+.producto-sin-imagen {
+    color: white;
+    font-size: 3rem;
+    opacity: 0.7;
+}
+
+/* Badge de estado */
+.producto-estado {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+}
+
+.badge-disponible {
+    background-color: #28a745;
+}
+
+.badge-no-disponible {
+    background-color: #dc3545;
+}
+
+/* Badge de tipo */
+.producto-tipo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+.badge-simple {
+    background-color: #6c757d;
+}
+
+.badge-preparado {
+    background-color: #ffc107;
+    color: #000;
+}
+
+/* Cuerpo de la tarjeta */
+.producto-card-body {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.producto-nombre {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.producto-descripcion {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.producto-categoria {
+    font-size: 0.8rem;
+    color: #007bff;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.producto-precio {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.producto-codigo {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-family: 'Courier New', monospace;
+    background-color: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* Botones de acción */
+.producto-acciones {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.btn-producto {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.btn-editar {
+    background-color: #ffc107;
+    color: #000;
+    border: none;
+}
+
+.btn-editar:hover {
+    background-color: #e0a800;
+    transform: translateY(-1px);
+}
+
+.btn-duplicar {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+}
+
+.btn-duplicar:hover {
+    background-color: #545b62;
+    transform: translateY(-1px);
+}
+
+.btn-eliminar {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-eliminar:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+/* Filtros de productos */
+.filtros-container {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+#buscar-productos {
+    border-radius: 25px;
+    padding: 12px 20px;
+    border: 2px solid #e9ecef;
+    font-size: 1rem;
+}
+
+#buscar-productos:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive para tarjetas */
+@media (min-width: 1200px) {
+    .producto-card-container {
+        width: 20%; /* 5 tarjetas por fila */
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .producto-card-container {
+        width: 25%; /* 4 tarjetas por fila */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .producto-card-container {
+        width: 33.333%; /* 3 tarjetas por fila */
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .producto-card-container {
+        width: 50%; /* 2 tarjetas por fila */
+    }
+}
+
+@media (max-width: 575px) {
+    .producto-card-container {
+        width: 100%; /* 1 tarjeta por fila */
+    }
+    
+    .producto-card-header {
+        height: 180px;
+    }
+    
+    .producto-card-body {
+        padding: 15px;
+    }
+    
+    .producto-nombre {
+        font-size: 1.1rem;
+    }
+    
+    .producto-precio {
+        font-size: 1.2rem;
+    }
+    
+    .btn-producto {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+}
+
+/* Estados especiales */
+.producto-card.destacado {
+    border: 3px solid #ffc107;
+    transform: scale(1.02);
+}
+
+.producto-card.agotado {
+    opacity: 0.6;
+}
+
+.producto-card.agotado::after {
+    content: "AGOTADO";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    padding: 10px 30px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    z-index: 3;
+}
+
+/* Animaciones para carga */
+.producto-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Sin productos encontrados */
+.no-productos {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.no-productos i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.no-productos h4 {
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.no-productos p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* Contador de productos */
+.productos-contador {
+    background: #f8f9fa;
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 20px;
+    font-weight: 500;
+    color: #495057;
+}
+
+/* Botón de limpiar filtros */
+.limpiar-filtros {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.limpiar-filtros:hover {
+    background: linear-gradient(135deg, #495057, #343a40);
+    transform: translateY(-1px);
+}
+
+/* Efectos hover para botones */
+.btn-nuevo-producto {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+    font-weight: 600;
+    padding: 12px 25px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-nuevo-producto:hover {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}

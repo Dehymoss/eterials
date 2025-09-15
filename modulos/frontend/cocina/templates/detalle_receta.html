@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👨‍🍳 {{ receta.nombre if receta else 'Receta' }} - Cocina Eterials</title>
+    <link rel="stylesheet" href="{{ url_for('cocina.static', filename='css/cocina.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="recipe-container">
+        <!-- Header Navegación -->
+        <header class="recipe-header">
+            <div class="header-nav">
+                <a href="{{ url_for('cocina.dashboard_cocina') }}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                </a>
+                <div class="recipe-status">
+                    {% if receta and receta.disponible %}
+                        <span class="status-badge available">✅ Disponible</span>
+                    {% elif receta %}
+                        <span class="status-badge unavailable">❌ No Disponible</span>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+
+        {% if error %}
+            <!-- Error State -->
+            <main class="error-main">
+                <div class="error-container">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h2>Error al cargar receta</h2>
+                    <p>{{ error }}</p>
+                    <a href="{{ url_for('cocina.dashboard_cocina') }}" class="btn-primary">
+                        <i class="fas fa-home"></i> Volver al Dashboard
+                    </a>
+                </div>
+            </main>
+        {% elif receta %}
+            <!-- Receta Principal -->
+            <main class="recipe-main">
+                <!-- Información Principal -->
+                <section class="recipe-hero">
+                    <div class="recipe-image">
+                        {% if receta.imagen_url %}
+                            <img src="{{ receta.imagen_url }}" alt="{{ receta.nombre }}" class="main-image">
+                        {% else %}
+                            <div class="placeholder-image">
+                                <i class="fas fa-utensils"></i>
+                                <span>Sin imagen</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="recipe-info">
+                        <h1 class="recipe-title">{{ receta.nombre }}</h1>
+                        <p class="recipe-description">{{ receta.descripcion or 'Sin descripción disponible' }}</p>
+                        
+                        <div class="recipe-metadata">
+                            <div class="metadata-item">
+                                <i class="fas fa-tag"></i>
+                                <span>{{ receta.categoria }}</span>
+                            </div>
+                            {% if receta.tiempo_preparacion %}
+                            <div class="metadata-item">
+                                <i class="fas fa-clock"></i>
+                                <span>{{ receta.tiempo_preparacion }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="metadata-item">
+                                <i class="fas fa-leaf"></i>
+                                <span>{{ receta.total_ingredientes }} ingredientes</span>
+                            </div>
+                            {% if receta.precio %}
+                            <div class="metadata-item">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span>${{ "%.2f"|format(receta.precio) }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Grid de Detalles -->
+                <div class="recipe-details-grid">
+                    <!-- Ingredientes -->
+                    <section class="ingredients-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-leaf"></i> Ingredientes
+                        </h2>
+                        
+                        {% if receta.ingredientes %}
+                            <div class="ingredients-list">
+                                {% for ingrediente in receta.ingredientes %}
+                                <div class="ingredient-item">
+                                    <div class="ingredient-info">
+                                        <span class="ingredient-name">{{ ingrediente.nombre }}</span>
+                                        {% if ingrediente.notas %}
+                                            <span class="ingredient-notes">{{ ingrediente.notas }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ingredient-quantity">
+                                        <span class="quantity">{{ ingrediente.cantidad }}</span>
+                                        <span class="unit">{{ ingrediente.unidad or 'ud' }}</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fas fa-info-circle"></i>
+                                <p>No hay ingredientes registrados para esta receta</p>
+                            </div>
+                        {% endif %}
+                    </section>
+
+                    <!-- Instrucciones de Preparación -->
+                    <section class="instructions-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-list-ol"></i> Instrucciones de Preparación
+                        </h2>
+                        
+                        {% if receta.instrucciones_preparacion %}
+                            <div class="instructions-content">
+                                <div class="instructions-text">
+                                    {{ receta.instrucciones_preparacion | replace('\n', '<br>') | safe }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fas fa-info-circle"></i>
+                                <p>No hay instrucciones de preparación registradas</p>
+                            </div>
+                        {% endif %}
+                    </section>
+
+                    <!-- Notas de Cocina -->
+                    <section class="notes-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-sticky-note"></i> Notas del Chef
+                        </h2>
+                        
+                        {% if receta.notas_cocina %}
+                            <div class="notes-content">
+                                <div class="notes-text">
+                                    {{ receta.notas_cocina | replace('\n', '<br>') | safe }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="empty-state">
+                                <i class="fas fa-info-circle"></i>
+                                <p>No hay notas especiales para esta receta</p>
+                            </div>
+                        {% endif %}
+                    </section>
+
+                    <!-- Herramientas de Cocina -->
+                    <section class="tools-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-tools"></i> Herramientas
+                        </h2>
+                        
+                        <div class="tools-actions">
+                            <button class="tool-btn" onclick="window.print()">
+                                <i class="fas fa-print"></i>
+                                <span>Imprimir Receta</span>
+                            </button>
+                            <button class="tool-btn" onclick="toggleTimer()">
+                                <i class="fas fa-stopwatch"></i>
+                                <span>Cronómetro</span>
+                            </button>
+                            <button class="tool-btn" onclick="toggleFullscreen()">
+                                <i class="fas fa-expand"></i>
+                                <span>Pantalla Completa</span>
+                            </button>
+                        </div>
+
+                        <!-- Timer Integrado -->
+                        <div id="kitchen-timer" class="kitchen-timer" style="display: none;">
+                            <div class="timer-display">
+                                <span id="timer-time">00:00</span>
+                            </div>
+                            <div class="timer-controls">
+                                <input type="number" id="timer-minutes" placeholder="Min" min="0" max="60" value="5">
+                                <button id="btn-start-timer" class="btn-timer start">▶️ Iniciar</button>
+                                <button id="btn-stop-timer" class="btn-timer stop">⏹️ Parar</button>
+                                <button id="btn-reset-timer" class="btn-timer reset">🔄 Reset</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        {% endif %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('cocina.static', filename='js/cocina.js') }}"></script>
+    <script>
+        // Funciones específicas para detalle de receta
+        let timerInterval;
+        let remainingTime = 0;
+
+        function toggleTimer() {
+            const timer = document.getElementById('kitchen-timer');
+            timer.style.display = timer.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Cronómetro de cocina
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('btn-start-timer');
+            const stopBtn = document.getElementById('btn-stop-timer');
+            const resetBtn = document.getElementById('btn-reset-timer');
+            const minutesInput = document.getElementById('timer-minutes');
+            const timeDisplay = document.getElementById('timer-time');
+
+            startBtn.addEventListener('click', function() {
+                if (remainingTime === 0) {
+                    remainingTime = parseInt(minutesInput.value) * 60;
+                }
+                
+                timerInterval = setInterval(function() {
+                    remainingTime--;
+                    
+                    const minutes = Math.floor(remainingTime / 60);
+                    const seconds = remainingTime % 60;
+                    
+                    timeDisplay.textContent = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (remainingTime <= 0) {
+                        clearInterval(timerInterval);
+                        alert('⏰ ¡Tiempo terminado!');
+                        timeDisplay.textContent = '00:00';
+                        remainingTime = 0;
+                    }
+                }, 1000);
+            });
+
+            stopBtn.addEventListener('click', function() {
+                clearInterval(timerInterval);
+            });
+
+            resetBtn.addEventListener('click', function() {
+                clearInterval(timerInterval);
+                remainingTime = 0;
+                timeDisplay.textContent = '00:00';
+            });
+        });
+    </script>
+</body>
+</html>

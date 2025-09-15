@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍳 Dashboard Cocina - Eterials</title>
+    <link rel="stylesheet" href="{{ url_for('cocina.static', filename='css/cocina.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="kitchen-container">
+        <!-- Header Cocina -->
+        <header class="kitchen-header">
+            <div class="header-left">
+                <i class="fas fa-utensils"></i>
+                <h1>🍳 Dashboard Cocina</h1>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <input type="text" id="busqueda-recetas" placeholder="🔍 Buscar recetas..." class="search-input">
+                    <button id="btn-buscar" class="btn-search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="kitchen-time">
+                    <i class="fas fa-clock"></i>
+                    <span id="reloj-cocina"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Estadísticas Dashboard -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="total-recetas">-</span>
+                        <span class="stat-label">Total Recetas</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon available">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="recetas-disponibles">-</span>
+                        <span class="stat-label">Disponibles</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="total-ingredientes">-</span>
+                        <span class="stat-label">Ingredientes</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="categorias-activas">-</span>
+                        <span class="stat-label">Categorías</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros y Controles -->
+        <section class="controls-section">
+            <div class="controls-grid">
+                <div class="filter-group">
+                    <label for="filtro-categoria">📂 Categoría:</label>
+                    <select id="filtro-categoria" class="filter-select">
+                        <option value="">Todas las categorías</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filtro-disponibilidad">✅ Estado:</label>
+                    <select id="filtro-disponibilidad" class="filter-select">
+                        <option value="">Todos</option>
+                        <option value="true">Disponibles</option>
+                        <option value="false">No disponibles</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <button id="btn-actualizar" class="btn-refresh">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lista de Recetas -->
+        <main class="recipes-main">
+            <div id="loading-spinner" class="loading-container" style="display: none;">
+                <div class="spinner"></div>
+                <p>Cargando recetas...</p>
+            </div>
+
+            <div id="error-container" class="error-container" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p id="error-message"></p>
+                <button id="btn-retry" class="btn-retry">Reintentar</button>
+            </div>
+
+            <div id="recipes-grid" class="recipes-grid">
+                <!-- Las recetas se cargarán dinámicamente aquí -->
+            </div>
+
+            <div id="no-results" class="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>No se encontraron recetas</h3>
+                <p>Intenta con otros términos de búsqueda o ajusta los filtros.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Carga -->
+    <div id="modal-carga" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="loading-animation">
+                <div class="chef-icon">
+                    <i class="fas fa-chef-hat"></i>
+                </div>
+                <p>Preparando recetas...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('cocina.static', filename='js/cocina.js') }}"></script>
+</body>
+</html>

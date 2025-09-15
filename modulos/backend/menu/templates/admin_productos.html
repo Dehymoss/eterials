@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo - Gestión de Menú</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- CSS Modular -->
+    <link rel="stylesheet" href="{{ url_for('menu_admin.static', filename='css/admin-base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('menu_admin.static', filename='css/productos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('menu_admin.static', filename='css/categorias.css') }}">
+    <link rel="stylesheet" href="{{ url_for('menu_admin.static', filename='css/iconos-categorias.css') }}">
+    <link rel="stylesheet" href="{{ url_for('menu_admin.static', filename='css/recetas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('menu_admin.static', filename='css/upload-imagen.css') }}">
+    <link rel="stylesheet" href="{{ url_for('menu_admin.static', filename='css/notifications.css') }}">
+</head>
+<body>
+    <!-- Header del Panel -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="fas fa-utensils"></i> Eterials - Panel Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin"><i class="fas fa-home"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/menu-admin/admin"><i class="fas fa-clipboard-list"></i> Gestión Menú</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cocina"><i class="fas fa-fire"></i> Cocina</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Título Principal -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h3"><i class="fas fa-clipboard-list"></i> Gestión de Menú</h1>
+                <p class="text-muted">Administra productos, categorías y sistema de carga masiva</p>
+            </div>
+        </div>
+
+        <!-- Sistema de Pestañas -->
+        <ul class="nav nav-tabs nav-fill mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="productos-tab" data-bs-toggle="tab" data-bs-target="#productos-panel" 
+                        type="button" role="tab" aria-controls="productos-panel" aria-selected="true">
+                    <i class="fas fa-burger"></i> Productos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="categorias-tab" data-bs-toggle="tab" data-bs-target="#categorias-panel" 
+                        type="button" role="tab" aria-controls="categorias-panel" aria-selected="false">
+                    <i class="fas fa-tags"></i> Categorías
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="carga-masiva-tab" data-bs-toggle="tab" data-bs-target="#carga-masiva-panel" 
+                        type="button" role="tab" aria-controls="carga-masiva-panel" aria-selected="false">
+                    <i class="fas fa-file-excel"></i> Carga Masiva
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="estadisticas-tab" data-bs-toggle="tab" data-bs-target="#estadisticas-panel" 
+                        type="button" role="tab" aria-controls="estadisticas-panel" aria-selected="false">
+                    <i class="fas fa-chart-bar"></i> Estadísticas
+                </button>
+            </li>
+        </ul>
+
+        <!-- Contenido de las Pestañas -->
+        <div class="tab-content" id="mainTabsContent">
+            
+            <!-- PESTAÑA 1: PRODUCTOS -->
+            <div class="tab-pane fade show active" id="productos-panel" role="tabpanel" aria-labelledby="productos-tab">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="buscar-productos" placeholder="Buscar productos por nombre o categoría...">
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button type="button" class="btn btn-success me-2" id="btn-nuevo-producto">
+                            <i class="fas fa-plus"></i> Nuevo Producto
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btn-nueva-receta">
+                            <i class="fas fa-book"></i> Nueva Receta
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <select class="form-select" id="filtro-categoria">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filtro-disponibilidad">
+                            <option value="">Todas</option>
+                            <option value="true">Disponibles</option>
+                            <option value="false">No disponibles</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filtro-tipo">
+                            <option value="">Todos los tipos</option>
+                            <option value="simple">Simple</option>
+                            <option value="preparado">Preparado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-outline-secondary w-100" onclick="limpiarFiltros()">
+                            <i class="fas fa-times"></i> Limpiar Filtros
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid de Productos (Tarjetas) -->
+                <div class="row" id="productos-container">
+                    <!-- Las tarjetas se cargan dinámicamente aquí -->
+                    <div class="col-12 text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando productos...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PESTAÑA 2: CATEGORÍAS -->
+            <div class="tab-pane fade" id="categorias-panel" role="tabpanel" aria-labelledby="categorias-tab">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <h4>Gestión de Categorías</h4>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button type="button" class="btn btn-success" id="btn-nueva-categoria">
+                            <i class="fas fa-plus"></i> Nueva Categoría
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabla de Categorías -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Productos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categorias-tbody">
+                            <!-- Las categorías se cargan dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PESTAÑA 3: SUBCATEGORÍAS -->
+            <!-- PESTAÑA 4: CARGA MASIVA -->
+            <div class="tab-pane fade" id="carga-masiva-panel" role="tabpanel" aria-labelledby="carga-masiva-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-download"></i> Descargar Plantillas</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Descarga plantillas Excel para carga masiva de datos.</p>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-outline-primary" onclick="descargarPlantilla('productos')">
+                                        <i class="fas fa-file-excel"></i> Plantilla Productos
+                                    </button>
+                                    <button type="button" class="btn btn-outline-success" onclick="descargarPlantilla('categorias')">
+                                        <i class="fas fa-file-excel"></i> Plantilla Categorías
+                                    </button>
+                                    <button type="button" class="btn btn-outline-warning" onclick="descargarPlantilla('ingredientes')">
+                                        <i class="fas fa-file-excel"></i> Plantilla Ingredientes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-upload"></i> Subir Archivos</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Sube archivos Excel con datos para importar masivamente.</p>
+                                
+                                <div class="mb-3">
+                                    <input class="form-control" type="file" id="archivo-excel" accept=".xlsx,.xls">
+                                </div>
+                                <button type="button" class="btn btn-primary w-100" onclick="subirArchivoExcel()">
+                                    <i class="fas fa-upload"></i> Subir y Procesar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PESTAÑA 4: ESTADÍSTICAS -->
+            <div class="tab-pane fade" id="estadisticas-panel" role="tabpanel" aria-labelledby="estadisticas-tab">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card text-white bg-primary">
+                            <div class="card-header">Total Productos</div>
+                            <div class="card-body">
+                                <h4 class="card-title" id="stat-total-productos">-</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-success">
+                            <div class="card-header">Disponibles</div>
+                            <div class="card-body">
+                                <h4 class="card-title" id="stat-disponibles">-</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-warning">
+                            <div class="card-header">Categorías</div>
+                            <div class="card-body">
+                                <h4 class="card-title" id="stat-categorias">-</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-info">
+                            <div class="card-header">Con Imagen</div>
+                            <div class="card-body">
+                                <h4 class="card-title" id="stat-con-imagen">-</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PRODUCTOS -->
+    <div class="modal fade" id="modal-producto" tabindex="-1" aria-labelledby="modalProductoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProductoLabel">
+                        <i class="fas fa-plus"></i> <span id="modal-titulo">Nuevo Producto</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-producto">
+                        <input type="hidden" id="producto-id" name="id">
+                        
+                        <div class="row">
+                            <!-- Información Básica -->
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label for="producto-nombre" class="form-label">Nombre del Producto *</label>
+                                        <input type="text" class="form-control" id="producto-nombre" name="nombre" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="producto-precio" class="form-label">Precio *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="producto-precio" name="precio" step="0.01" min="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="producto-descripcion" class="form-label">Descripción</label>
+                                    <textarea class="form-control" id="producto-descripcion" name="descripcion" rows="3"></textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="producto-categoria" class="form-label">Categoría *</label>
+                                        <select class="form-select" id="producto-categoria" name="categoria_id" required>
+                                            <option value="">Seleccionar categoría...</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="producto-subcategoria" class="form-label">Subcategoría</label>
+                                        <select class="form-select" id="producto-subcategoria" name="subcategoria_id">
+                                            <option value="">Seleccionar subcategoría...</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="producto-codigo" class="form-label">Código</label>
+                                        <input type="text" class="form-control" id="producto-codigo" name="codigo" readonly>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="producto-tipo" class="form-label">Tipo</label>
+                                        <select class="form-select" id="producto-tipo" name="tipo_producto">
+                                            <option value="simple">Simple</option>
+                                            <option value="preparado">Preparado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="form-check mt-4">
+                                            <input class="form-check-input" type="checkbox" id="producto-disponible" name="disponible" checked>
+                                            <label class="form-check-label" for="producto-disponible">
+                                                Disponible
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sistema de Imagen -->
+                            <div class="col-md-4">
+                                <div class="upload-imagen-container">
+                                    <label class="form-label">Imagen del Producto</label>
+                                    
+                                    <!-- Botón de seleccionar archivo -->
+                                    <div class="mb-3">
+                                        <button type="button" class="btn btn-outline-primary w-100" onclick="document.getElementById('imagen-file').click()">
+                                            <i class="fas fa-folder-open"></i> Seleccionar Archivo
+                                        </button>
+                                        <input type="file" id="imagen-file" accept="image/*" style="display: none;" onchange="manejarSeleccionImagen(this)">
+                                    </div>
+
+                                    <!-- Campo URL (readonly) -->
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="producto-imagen-url" name="imagen_url" 
+                                               placeholder="URL se generará automáticamente..." readonly>
+                                    </div>
+
+                                    <!-- Preview de imagen -->
+                                    <div id="preview-imagen" style="display: none;" class="mt-2">
+                                        <img id="preview-img" src="" alt="Preview" class="img-thumbnail" 
+                                             style="max-width: 200px; max-height: 150px; object-fit: cover;">
+                                        <div class="text-muted small mt-1">Vista previa de la imagen</div>
+                                    </div>
+
+                                    <!-- Búsqueda de imágenes web (opcional) -->
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm w-100" id="btn-buscar-imagenes">
+                                            <i class="fas fa-search"></i> Buscar en Web
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-guardar-producto">
+                        <i class="fas fa-save"></i> Guardar Producto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CATEGORÍAS CON ICONOS AUTOMÁTICOS Y SUBCATEGORÍAS INTEGRADAS -->
+    <div class="modal fade" id="modal-categoria" tabindex="-1" aria-labelledby="modalCategoriaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCategoriaLabel">
+                        <i class="fas fa-tag"></i> <span id="modal-categoria-titulo">Nueva Categoría</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- NAV TABS PARA CATEGORÍA Y SUBCATEGORÍAS -->
+                    <ul class="nav nav-tabs mb-4" id="categoria-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="categoria-info-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#categoria-info-panel" type="button" role="tab">
+                                <i class="fas fa-tag"></i> Información de Categoría
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation" id="subcategorias-tab-container">
+                            <button class="nav-link" id="categoria-subcategorias-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#categoria-subcategorias-panel" type="button" role="tab">
+                                <i class="fas fa-tags"></i> Subcategorías <span id="contador-subcategorias" class="badge bg-secondary">0</span>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- TAB CONTENT -->
+                    <div class="tab-content" id="categoria-tab-content">
+                        <!-- PESTAÑA: INFORMACIÓN DE CATEGORÍA -->
+                        <div class="tab-pane fade show active" id="categoria-info-panel" role="tabpanel">
+                            <form id="form-categoria">
+                                <input type="hidden" id="categoria-id" name="id">
+                                
+                                <div class="mb-3">
+                                    <label for="categoria-titulo" class="form-label">Nombre de la Categoría *</label>
+                                    <input type="text" class="form-control" id="categoria-titulo" name="nombre" required 
+                                           placeholder="Ej: Bebidas Calientes, Postres, Platos Principales...">
+                                    <div class="form-text">
+                                        <i class="fas fa-magic text-primary"></i> 
+                                        El sistema detectará automáticamente el icono apropiado
+                                    </div>
+                                    <!-- El preview se insertará aquí dinámicamente -->
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <label for="categoria-icono" class="form-label">Icono</label>
+                                            <input type="text" class="form-control" id="categoria-icono" name="icono" 
+                                                   placeholder="🍽️" maxlength="4">
+                                            <div class="form-text">Emoji que representará la categoría</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="categoria-codigo" class="form-label">Código</label>
+                                            <input type="text" class="form-control" id="categoria-codigo" name="codigo" 
+                                                   placeholder="AUTO" maxlength="6" readonly>
+                                            <div class="form-text">Generado automáticamente</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="categoria-descripcion" class="form-label">Descripción</label>
+                                    <textarea class="form-control" id="categoria-descripcion" name="descripcion" rows="3"
+                                              placeholder="Describe brevemente esta categoría de productos..."></textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="categoria-orden" class="form-label">Orden</label>
+                                            <input type="number" class="form-control" id="categoria-orden" name="orden" 
+                                                   min="0" max="100" placeholder="0">
+                                            <div class="form-text">Orden de aparición en el menú</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 d-flex align-items-end">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="categoria-activa" name="activa" checked>
+                                            <label class="form-check-label" for="categoria-activa">
+                                                <i class="fas fa-eye"></i> Categoría activa
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" id="btn-sugerir-icono">
+                                        <i class="fas fa-wand-magic-sparkles"></i> Sugerir Icono
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- PESTAÑA: SUBCATEGORÍAS DE LA CATEGORÍA -->
+                        <div class="tab-pane fade" id="categoria-subcategorias-panel" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-tags text-primary"></i> Subcategorías de <span id="nombre-categoria-actual">esta categoría</span>
+                                </h6>
+                                <button type="button" class="btn btn-primary btn-sm" id="btn-nueva-subcategoria-modal">
+                                    <i class="fas fa-plus"></i> Nueva Subcategoría
+                                </button>
+                            </div>
+
+                            <!-- LISTA DE SUBCATEGORÍAS -->
+                            <div id="lista-subcategorias-categoria">
+                                <div class="text-center text-muted py-4" id="sin-subcategorias-mensaje">
+                                    <i class="fas fa-tags fa-2x mb-2"></i>
+                                    <p>Esta categoría no tiene subcategorías aún</p>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" id="btn-primera-subcategoria">
+                                        <i class="fas fa-plus"></i> Crear primera subcategoría
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- MINI FORMULARIO PARA NUEVA SUBCATEGORÍA -->
+                            <div class="card mt-3" id="form-nueva-subcategoria-container" style="display: none;">
+                                <div class="card-header bg-light">
+                                    <h6 class="card-title mb-0">
+                                        <i class="fas fa-plus-circle text-success"></i> Nueva Subcategoría
+                                        <button type="button" class="btn btn-sm btn-outline-secondary float-end" id="btn-cancelar-subcategoria">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <form id="form-subcategoria-rapida">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="subcategoria-nombre-rapida" class="form-label">Nombre *</label>
+                                                    <input type="text" class="form-control" id="subcategoria-nombre-rapida" 
+                                                           placeholder="Ej: Cervezas Artesanales, Carnes Rojas..." required>
+                                                    <div class="form-text">
+                                                        <span id="preview-icono-subcategoria-rapida">🏷️</span> 
+                                                        Icono sugerido automáticamente
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="subcategoria-descripcion-rapida" class="form-label">Descripción</label>
+                                                    <input type="text" class="form-control" id="subcategoria-descripcion-rapida" 
+                                                           placeholder="Breve descripción...">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="btn-cancelar-subcategoria-form">
+                                                Cancelar
+                                            </button>
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="fas fa-save"></i> Crear Subcategoría
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-success" id="btn-guardar-categoria">
+                        <i class="fas fa-save"></i> Guardar Categoría
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RECETAS -->
+    <div class="modal fade" id="modal-receta" tabindex="-1" aria-labelledby="modalRecetaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRecetaLabel">
+                        <i class="fas fa-book"></i> <span id="modal-receta-titulo">Nueva Receta</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-receta">
+                        <input type="hidden" id="receta-id" name="id">
+                        
+                        <!-- Información Básica -->
+                        <div class="row mb-4">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="receta-nombre" class="form-label">Nombre de la Receta *</label>
+                                    <input type="text" class="form-control" id="receta-nombre" name="nombre" required 
+                                           placeholder="Ej: Pizza Margherita Especial, Cappuccino Artesanal...">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="receta-descripcion" class="form-label">Descripción</label>
+                                    <textarea class="form-control" id="receta-descripcion" name="descripcion" rows="3"
+                                              placeholder="Describe brevemente la receta y sus características especiales..."></textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="receta-precio" class="form-label">Precio *</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" class="form-control" id="receta-precio" name="precio" 
+                                                       step="0.01" min="0" required placeholder="0.00">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="receta-categoria" class="form-label">Categoría *</label>
+                                            <select class="form-select" id="receta-categoria" name="categoria_id" required>
+                                                <option value="">Seleccionar categoría...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="receta-tiempo" class="form-label">Tiempo Preparación</label>
+                                            <input type="text" class="form-control" id="receta-tiempo" name="tiempo_preparacion" 
+                                                   placeholder="Ej: 15 minutos">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Sistema de Imagen -->
+                            <div class="col-md-4">
+                                <div class="upload-imagen-container">
+                                    <label class="form-label">Imagen de la Receta</label>
+                                    
+                                    <!-- Campo URL -->
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="receta-imagen-url" name="imagen_url" 
+                                               placeholder="URL de la imagen...">
+                                    </div>
+
+                                    <!-- Preview de imagen -->
+                                    <div id="preview-imagen-receta" style="display: none;" class="mt-2">
+                                        <img id="preview-img-receta" src="" alt="Preview" class="img-thumbnail" 
+                                             style="max-width: 200px; max-height: 150px; object-fit: cover;">
+                                        <div class="text-muted small mt-1">Vista previa de la imagen</div>
+                                    </div>
+
+                                    <!-- Búsqueda de imágenes web -->
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm w-100" id="btn-buscar-imagenes-receta">
+                                            <i class="fas fa-search"></i> Buscar en Web
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ingredientes -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0"><i class="fas fa-leaf"></i> Ingredientes</h6>
+                                <button type="button" class="btn btn-outline-success btn-sm" id="btn-agregar-ingrediente">
+                                    <i class="fas fa-plus"></i> Agregar Ingrediente
+                                </button>
+                            </div>
+                            
+                            <div id="lista-ingredientes">
+                                <!-- Los ingredientes se agregarán dinámicamente aquí -->
+                                <div class="text-center text-muted py-3" id="sin-ingredientes-mensaje">
+                                    <i class="fas fa-leaf fa-2x mb-2"></i>
+                                    <p>No hay ingredientes agregados</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instrucciones de Preparación -->
+                        <div class="mb-4">
+                            <label for="receta-instrucciones" class="form-label">
+                                <i class="fas fa-list-ol"></i> Instrucciones de Preparación
+                            </label>
+                            <textarea class="form-control" id="receta-instrucciones" name="instrucciones_preparacion" rows="6"
+                                      placeholder="Describe paso a paso el procedimiento para preparar esta receta...
+Ejemplo:
+1. Precalentar el horno a 200°C
+2. Mezclar ingredientes secos en un bowl
+3. Agregar ingredientes líquidos gradualmente..."></textarea>
+                        </div>
+
+                        <!-- Notas del Chef -->
+                        <div class="mb-3">
+                            <label for="receta-notas" class="form-label">
+                                <i class="fas fa-sticky-note"></i> Notas del Chef
+                            </label>
+                            <textarea class="form-control" id="receta-notas" name="notas_cocina" rows="3"
+                                      placeholder="Consejos especiales, trucos, temperaturas importantes, sustituciones posibles..."></textarea>
+                        </div>
+
+                        <!-- Opciones adicionales -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="receta-disponible" name="disponible" checked>
+                                    <label class="form-check-label" for="receta-disponible">
+                                        <i class="fas fa-eye"></i> Receta disponible
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="receta-especial" name="es_especial">
+                                    <label class="form-check-label" for="receta-especial">
+                                        <i class="fas fa-star"></i> Receta especial del chef
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-guardar-receta">
+                        <i class="fas fa-save"></i> Guardar Receta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript Modular - Orden de carga importante -->
+    <script src="{{ url_for('menu_admin.static', filename='js/notifications.js') }}"></script>
+    <script src="{{ url_for('menu_admin.static', filename='js/productos.js') }}"></script>
+    <script src="{{ url_for('menu_admin.static', filename='js/categorias.js') }}"></script>
+    <script src="{{ url_for('menu_admin.static', filename='js/recetas.js') }}"></script>
+    <script src="{{ url_for('menu_admin.static', filename='js/upload-imagen.js') }}"></script>
+    <script src="{{ url_for('menu_admin.static', filename='js/carga-masiva.js') }}"></script>
+</body>
+</html>

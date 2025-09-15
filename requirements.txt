@@ -1,0 +1,24 @@
+# Requerimientos para el Sistema de Gestión de Restaurante Eterials
+# Flask y extensiones
+Flask==3.0.0
+Flask-CORS==4.0.0
+
+# Base de datos
+SQLAlchemy==2.0.23
+
+# Manejo de archivos Excel
+pandas==2.1.4
+openpyxl==3.1.2
+
+# Generación de códigos QR
+qrcode==7.4.2
+Pillow==10.1.0
+
+# HTTP requests para APIs externas
+requests==2.31.0
+
+# Utilidades adicionales
+uuid
+
+# Variables de entorno (opcional)
+python-dotenv==1.0.0

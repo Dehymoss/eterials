@@ -1,0 +1,360 @@
+/* ================================
+   CATEGORÍAS CSS - GESTIÓN CATEGORÍAS
+   ================================ */
+
+/* Tabla de categorías */
+#categorias-tbody tr {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#categorias-tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.08);
+    transform: translateX(5px);
+}
+
+/* Estados de categorías */
+.categoria-activa {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.categoria-inactiva {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Badges de estado */
+.badge-activa {
+    background-color: #28a745;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.badge-inactiva {
+    background-color: #dc3545;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Contador de productos por categoría */
+.productos-count {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+    min-width: 30px;
+    text-align: center;
+}
+
+/* Botones de acción en tabla */
+.btn-tabla {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    margin: 0 2px;
+    transition: all 0.3s ease;
+}
+
+.btn-editar-categoria {
+    background-color: #ffc107;
+    color: #000;
+    border: none;
+}
+
+.btn-editar-categoria:hover {
+    background-color: #e0a800;
+    transform: translateY(-1px);
+}
+
+.btn-eliminar-categoria {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-eliminar-categoria:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.btn-toggle-categoria {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+}
+
+.btn-toggle-categoria:hover {
+    background-color: #138496;
+    transform: translateY(-1px);
+}
+
+/* Modal de categorías */
+#modal-categoria .modal-header {
+    background: linear-gradient(135deg, #6f42c1, #007bff);
+}
+
+#modal-categoria .form-control {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+#modal-categoria .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Checkbox personalizado */
+.form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.form-check-input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+}
+
+.form-check-label {
+    font-weight: 500;
+    color: #495057;
+    cursor: pointer;
+}
+
+/* Estadísticas de categorías */
+.categoria-stats {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #007bff;
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Animaciones para acciones */
+.categoria-highlight {
+    background-color: rgba(40, 167, 69, 0.1) !important;
+    border-left: 4px solid #28a745;
+    animation: highlightFade 3s ease-out;
+}
+
+@keyframes highlightFade {
+    0% { background-color: rgba(40, 167, 69, 0.3); }
+    100% { background-color: rgba(40, 167, 69, 0.1); }
+}
+
+/* Búsqueda de categorías */
+.categoria-search {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.categoria-search input {
+    border-radius: 25px;
+    padding: 12px 20px 12px 45px;
+    border: 2px solid #e9ecef;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.categoria-search i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+/* Ordenamiento de tabla */
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.sortable-header:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sortable-header::after {
+    content: '⇅';
+    position: absolute;
+    right: 10px;
+    opacity: 0.5;
+    font-size: 0.8rem;
+}
+
+.sortable-header.asc::after {
+    content: '↑';
+    opacity: 1;
+    color: #28a745;
+}
+
+.sortable-header.desc::after {
+    content: '↓';
+    opacity: 1;
+    color: #28a745;
+}
+
+/* Sin categorías */
+.no-categorias {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.no-categorias i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.no-categorias h4 {
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.no-categorias p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* Botón nueva categoría */
+.btn-nueva-categoria {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+    font-weight: 600;
+    padding: 12px 25px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-nueva-categoria:hover {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+/* Responsive para categorías */
+@media (max-width: 768px) {
+    .categoria-stats {
+        padding: 15px 10px;
+    }
+    
+    .stat-item {
+        padding: 10px 5px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .btn-tabla {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        margin: 1px;
+    }
+    
+    .table-responsive {
+        border-radius: 10px;
+    }
+    
+    .categoria-search input {
+        font-size: 0.9rem;
+        padding: 10px 15px 10px 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .productos-count {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        min-width: 25px;
+    }
+    
+    .badge-activa,
+    .badge-inactiva {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+    
+    /* Ocultar columnas menos importantes en móvil */
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+        display: none;
+    }
+}
+
+/* Loading state para tabla */
+.categorias-loading {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}
+
+.categorias-loading .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 20px;
+}
+
+/* Efectos de hover mejorados */
+.categoria-row:hover .btn-tabla {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+.btn-tabla {
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+/* Confirmación de eliminación */
+.confirmacion-eliminar {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.confirmacion-eliminar .btn {
+    margin: 0 5px;
+}

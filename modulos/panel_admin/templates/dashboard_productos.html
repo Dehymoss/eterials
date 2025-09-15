@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin Productos - Eterials</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .breadcrumb {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .breadcrumb a {
+            color: #FFE066;
+            text-decoration: none;
+        }
+        .stats-panel {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFE066;
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .action-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .action-card h3 {
+            color: #FFE066;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .action-card p {
+            margin-bottom: 20px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-primary { background: linear-gradient(45deg, #4CAF50, #45a049); }
+        .btn-secondary { background: linear-gradient(45deg, #2196F3, #1976D2); }
+        .btn-warning { background: linear-gradient(45deg, #FF9800, #F57C00); }
+        .btn-info { background: linear-gradient(45deg, #17a2b8, #138496); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+            <a href="/admin">🏠 Dashboard Principal</a> → 
+            <span>📋 Admin Productos</span>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>📋 Dashboard Admin Productos</h1>
+            <p>Centro de control para la gestión completa de productos del menú</p>
+        </div>
+
+        <!-- Statistics Panel -->
+        <div class="stats-panel">
+            <h2>📊 Estadísticas Rápidas</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalProductos">-</span>
+                    <div class="stat-label">Total Productos</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalCategorias">-</span>
+                    <div class="stat-label">Categorías</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="productosActivos">-</span>
+                    <div class="stat-label">Activos</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="ultimaActualizacion">-</span>
+                    <div class="stat-label">Última Actualización</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Grid -->
+        <div class="actions-grid">
+            <!-- Administrador Principal -->
+            <div class="action-card">
+                <h3>🍽️ Administrador de Productos</h3>
+                <p>Interfaz completa para crear, editar, eliminar y gestionar productos del menú con todas las funcionalidades avanzadas.</p>
+                <a href="/menu-admin/admin" class="btn btn-primary">Abrir Administrador</a>
+            </div>
+
+            <!-- Vista Previa -->
+            <div class="action-card">
+                <h3>👁️ Vista Previa del Menú</h3>
+                <p>Ve exactamente cómo los clientes verán el menú digital con todos los productos y categorías actualizadas.</p>
+                <a href="/menu/general" target="_blank" class="btn btn-warning">Ver Menú Cliente</a>
+            </div>
+
+            <!-- Herramientas de Datos -->
+            <div class="action-card">
+                <h3>📊 Herramientas de Datos</h3>
+                <p>Acceso a APIs, exportación de datos, reportes y herramientas para desarrolladores.</p>
+                <a href="/menu-admin/api/productos" target="_blank" class="btn btn-secondary">API Productos</a>
+                <a href="/menu-admin/api/categorias" target="_blank" class="btn btn-secondary">API Categorías</a>
+            </div>
+
+            <!-- Dashboard Cocina -->
+            <div class="action-card">
+                <h3>🍳 Dashboard Cocina</h3>
+                <p>Panel especializado para el equipo de cocina con recetas, ingredientes y instrucciones de preparación.</p>
+                <a href="/cocina" target="_blank" class="btn btn-info">Ir a Cocina</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cargar estadísticas desde la API
+        async function cargarEstadisticas() {
+            try {
+                // Intentar obtener datos de la API
+                const response = await fetch('/menu-admin/api/productos');
+                if (response.ok) {
+                    const productos = await response.json();
+                    document.getElementById('totalProductos').textContent = productos.length || '0';
+                } else {
+                    document.getElementById('totalProductos').textContent = '0';
+                }
+
+                // Obtener categorías
+                const categoriasResponse = await fetch('/menu-admin/api/categorias');
+                if (categoriasResponse.ok) {
+                    const categorias = await categoriasResponse.json();
+                    document.getElementById('totalCategorias').textContent = categorias.length || '0';
+                } else {
+                    document.getElementById('totalCategorias').textContent = '0';
+                }
+
+                // Calcular productos activos y última actualización
+                document.getElementById('productosActivos').textContent = document.getElementById('totalProductos').textContent;
+                document.getElementById('ultimaActualizacion').textContent = new Date().toLocaleTimeString('es-ES', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+                document.getElementById('totalProductos').textContent = 'Error';
+                document.getElementById('totalCategorias').textContent = 'Error';
+                document.getElementById('productosActivos').textContent = 'Error';
+                document.getElementById('ultimaActualizacion').textContent = 'Error';
+            }
+        }
+
+        // Cargar estadísticas al iniciar
+        document.addEventListener('DOMContentLoaded', cargarEstadisticas);
+        
+        // Actualizar cada 30 segundos
+        setInterval(cargarEstadisticas, 30000);
+    </script>
+</body>
+</html>

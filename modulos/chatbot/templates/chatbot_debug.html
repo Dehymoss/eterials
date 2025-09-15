@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eterials Gastro-Café - Debug</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('chatbot.static', filename='style_debug.css') }}">
+</head>
+<body>
+    <div class="contenedor-central">
+        <!-- Logo placeholder -->
+        <div class="logo-eterials"></div>
+
+        <!-- Título principal -->
+        <h1 class="titulo-principal">Eterials</h1>
+
+        <!-- Debug visible -->
+        <div style="background-color: lime; color: black; padding: 10px; margin: 20px 0; font-size: 20px;">
+            🔍 DEBUG: Template simplificado cargando - Hora: <span id="hora"></span>
+        </div>
+
+        <!-- Saludo dinámico -->
+        <div id="saludo" style="background-color: blue; color: white; padding: 10px;">
+            Saludo se cargará aquí...
+        </div>
+
+        <!-- Nombre -->
+        <div id="nombre-container" class="input-container">
+            <p>Escribe tu nombre:</p>
+            <input type="text" id="nombre" placeholder="Tu nombre" autocomplete="off">
+            <button class="boton" onclick="guardarNombre()">GUARDAR</button>
+        </div>
+
+        <!-- Botones principales -->
+        <div style="margin: 30px 0;">
+            <h3>Opciones:</h3>
+            <a class="boton" href="#" target="_blank">🍽️ MENÚ</a>
+            <a class="boton" href="#" target="_blank">🎵 CANCIONERO</a>
+            <a class="boton" href="#" target="_blank">🔔 MESERO</a>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript simplificado
+        function mostrarHora() {
+            document.getElementById('hora').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function mostrarSaludo() {
+            const hora = new Date().getHours();
+            let saludo = "Buenas noches";
+            if (hora >= 6 && hora < 12) saludo = "Buenos días";
+            if (hora >= 12 && hora < 18) saludo = "Buenas tardes";
+            
+            document.getElementById('saludo').innerHTML = `
+                <strong>${saludo}</strong><br>
+                ¡Bienvenido a Eterials!
+            `;
+        }
+        
+        function guardarNombre() {
+            const nombre = document.getElementById('nombre').value;
+            if (nombre) {
+                alert('Nombre guardado: ' + nombre);
+                sessionStorage.setItem('nombreCliente', nombre);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Debug chatbot cargado');
+            mostrarHora();
+            mostrarSaludo();
+            setInterval(mostrarHora, 1000);
+        });
+    </script>
+</body>
+</html>

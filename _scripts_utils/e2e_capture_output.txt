@@ -1,0 +1,20 @@
+GET /menu-admin/api/productos
+STATUS 200
+{"productos":[{"categoria_id":6,"categoria_nombre":"Bebidas Calientes","codigo":"","descripcion":"","disponible":true,"id":1,"imagen_url":"http://localhost:5001/menu-admin/static/uploads/productos/20250829_223254_e34137e6.jpg","ingredientes":[],"instrucciones_preparacion":null,"nombre":"Capuccino Clasico","notas_cocina":null,"precio":4500.0,"subcategoria_id":11,"subcategoria_nombre":"Capuccino","tiempo_preparacion":null,"tipo_producto":"simple"},{"categoria_id":1,"categoria_nombre":"Entradas","codigo":null,"descripcion":"Pizza para test de duplicaci\u00f3n","disponible":true,"id":3,"imagen_url":null,"ingredientes":[],"instrucciones_preparacion":null,"nombre":"PIZZA TEST ANTI-DUPLICACI\u00d3N","notas_cocina":null,"precio":15.99,"subcategoria_id":null,"subcategoria_nombre":null,"tiempo_preparacion":null,"tipo_producto":"simple"},{"categoria_id":null,"categoria_nombre":null,"codigo":null,"descripcion":"Creado por verificador E2E","disponible":true,"id":4,"imagen_url":"http://localhost:5001/menu-admin/static/uploads/productos/20250901_205632_9bb5d5d7.jpg","ingredientes":[],"instrucciones_preparacion":null,"nombre":"E2E Test Producto","notas_cocina":null,"precio":1.0,"subcategoria_id":null,"subcategoria_nombre":null,"tiempo_preparacion":null,"tipo_producto":"simple"}],"success":true}
+
+
+POST /menu-admin/subir-imagen (intentando varias claves de archivo)
+-- Intentando clave de archivo: "file"
+STATUS 200
+{"filename":"20250901_205701_ebbd5376.jpg","message":"Imagen subida correctamente","success":true,"url":"http://127.0.0.1:5001/menu-admin/static/uploads/productos/20250901_205701_ebbd5376.jpg"}
+
+UPLOAD OK with key: file
+IMAGE_URL: http://127.0.0.1:5001/menu-admin/static/uploads/productos/20250901_205701_ebbd5376.jpg
+
+POST /menu-admin/api/productos (create)
+CREATE STATUS 201
+{"mensaje":"Producto creado exitosamente","producto":{"categoria_id":null,"categoria_nombre":null,"codigo":null,"descripcion":"Creado por capture script","disponible":true,"id":5,"imagen_url":"http://127.0.0.1:5001/menu-admin/static/uploads/productos/20250901_205701_ebbd5376.jpg","ingredientes":[],"instrucciones_preparacion":null,"nombre":"Capuccino_CAPTURE","notas_cocina":null,"precio":6.0,"subcategoria_id":null,"subcategoria_nombre":null,"tiempo_preparacion":null,"tipo_producto":"simple"},"producto_id":5,"success":true}
+
+
+LIST STATUS 200
+{"productos":[{"categoria_id":6,"categoria_nombre":"Bebidas Calientes","codigo":"","descripcion":"","disponible":true,"id":1,"imagen_url":"http://localhost:5001/menu-admin/static/uploads/productos/20250829_223254_e34137e6.jpg","ingredientes":[],"instrucciones_preparacion":null,"nombre":"Capuccino Clasico","notas_cocina":null,"precio":4500.0,"subcategoria_id":11,"subcategoria_nombre":"Capuccino","tiempo_preparacion":null,"tipo_producto":"simple"},{"categoria_id":1,"categoria_nombre":"Entradas","codigo":null,"descripcion":"Pizza para test de duplicaci\u00f3n","disponible":true,"id":3,"imagen_url":null,"ingredientes":[],"instrucciones_preparacion":null,"nombre":"PIZZA TEST ANTI-DUPLICACI\u00d3N","notas_cocina":null,"precio":15.99,"subcategoria_id":null,"subcategoria_nombre":null,"tiempo_preparacion":null,"tipo_producto":"simple"},{"categoria_id":null,"categoria_nombre":null,"codigo":null,"descripcion":"Creado por verificador E2E","disponible":true,"id":4,"imagen_url":"http://localhost:5001/menu-admin/static/uploads/productos/20250901_205632_9bb5d5d7.jpg","ingredientes":[],"instrucciones_preparacion":null,"nombre":"E2E Test Producto","notas_cocina":null,"precio":1.0,"subcategoria_id":null,"subcategoria_nombre":null,"tiempo_preparacion":null,"tipo_producto":"simple"},{"categoria_id":null,"categoria_nombre":null,"codigo":null,"descripcion":"Creado por capture script","disponible":true,"id":5,"imagen_url":"http://127.0.0.1:5001/menu-admin/static/uploads/productos/20250901_205701_ebbd5376.jpg","ingredientes":[],"instrucciones_preparacion":null,"nombre":"Capuccino_CAPTURE","notas_cocina":null,"precio":6.0,"subcategoria_id":null,"subcategoria_nombre":null,"tiempo_preparacion":null,"tipo_producto":"simple"}],"success":true}

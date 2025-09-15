@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas - Eterials Gastro-Café</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .main-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #FFE066;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            display: block;
+            margin: 1rem 0;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 3rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .service-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .service-online {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4CAF50;
+        }
+
+        .service-offline {
+            background: rgba(244, 67, 54, 0.3);
+            border: 2px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/" class="back-btn">← Volver al Dashboard</a>
+        <h1>📊 Estadísticas del Sistema</h1>
+    </div>
+
+    <div class="main-container">
+        <!-- Estado de Servicios -->
+        <div class="chart-container">
+            <h2>🌐 Estado de Servicios</h2>
+            <div id="serviciosEstado">
+                <div class="coming-soon">⏳ Cargando estado de servicios...</div>
+            </div>
+        </div>
+
+        <!-- Estadísticas Principales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>🍽️ Total Productos</h3>
+                <span class="stat-number" id="totalProductos">-</span>
+                <div class="stat-label">En el menú</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>📂 Categorías</h3>
+                <span class="stat-number" id="totalCategorias">-</span>
+                <div class="stat-label">Activas</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>✅ Productos Activos</h3>
+                <span class="stat-number" id="productosActivos">-</span>
+                <div class="stat-label">Disponibles</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>⏰ Tiempo Activo</h3>
+                <span class="stat-number" id="tiempoActivo">-</span>
+                <div class="stat-label">Sistema operativo</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>🎯 Servicios</h3>
+                <span class="stat-number" id="serviciosOnline">-</span>
+                <div class="stat-label">En línea</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>📱 QR Disponibles</h3>
+                <span class="stat-number">∞</span>
+                <div class="stat-label">Generación ilimitada</div>
+            </div>
+        </div>
+
+        <!-- Próximas Funcionalidades -->
+        <div class="chart-container">
+            <h2>📈 Analíticas Avanzadas</h2>
+            <div class="coming-soon">
+                <h3>🚧 Próximamente</h3>
+                <p>Las siguientes funcionalidades estarán disponibles próximamente:</p>
+                <ul style="list-style: none; margin-top: 1rem;">
+                    <li>📊 Productos más visitados</li>
+                    <li>⏰ Horarios de mayor actividad</li>
+                    <li>💬 Interacciones del chatbot</li>
+                    <li>🍽️ Categorías más populares</li>
+                    <li>📱 Uso de códigos QR por mesa</li>
+                    <li>📈 Tendencias de visitantes</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Enlaces Útiles -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>🔄 Acciones Rápidas</h3>
+                <a href="/menu" style="display: block; margin: 0.5rem 0; color: #FFE066; text-decoration: none;">📱 Gestionar Menú</a>
+                <a href="/chatbot" style="display: block; margin: 0.5rem 0; color: #FFE066; text-decoration: none;">💬 Configurar Chatbot</a>
+                <a href="/qr" style="display: block; margin: 0.5rem 0; color: #FFE066; text-decoration: none;">📱 Generar QR</a>
+            </div>
+
+            <div class="stat-card">
+                <h3>🌐 Enlaces Externos</h3>
+                <a href="http://localhost:5001/menu/general" target="_blank" style="display: block; margin: 0.5rem 0; color: #FFE066; text-decoration: none;">👥 Vista Cliente</a>
+                <a href="http://localhost:5001/admin/menu" target="_blank" style="display: block; margin: 0.5rem 0; color: #FFE066; text-decoration: none;">🛠️ Admin Menú</a>
+                <a href="http://localhost:5001/chatbot" target="_blank" style="display: block; margin: 0.5rem 0; color: #FFE066; text-decoration: none;">💬 Probar Chatbot</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function cargarEstadisticas() {
+            try {
+                const response = await fetch('/admin/api/status');
+                const data = await response.json();
+                
+                // Actualizar estado de servicios
+                const serviciosDiv = document.getElementById('serviciosEstado');
+                let serviciosHTML = '';
+                let serviciosOnline = 0;
+                
+                if (data.servicios) {
+                    Object.entries(data.servicios).forEach(([nombre, estado]) => {
+                        const clase = estado ? 'service-online' : 'service-offline';
+                        const icono = estado ? '✅' : '❌';
+                        serviciosHTML += `<div class="service-status ${clase}">${icono} ${nombre.toUpperCase()}</div>`;
+                        if (estado) serviciosOnline++;
+                    });
+                    serviciosDiv.innerHTML = serviciosHTML;
+                    document.getElementById('serviciosOnline').textContent = `${serviciosOnline}/4`;
+                }
+                
+                // Actualizar estadísticas
+                if (data.estadisticas) {
+                    const stats = data.estadisticas;
+                    document.getElementById('totalProductos').textContent = stats.total_productos || '0';
+                    document.getElementById('totalCategorias').textContent = stats.total_categorias || '0';
+                    document.getElementById('tiempoActivo').textContent = stats.uptime || '0 min';
+                }
+                
+                // Obtener estadísticas del menú
+                const menuResponse = await fetch('/admin/api/menu/stats');
+                if (menuResponse.ok) {
+                    const menuData = await menuResponse.json();
+                    document.getElementById('totalProductos').textContent = menuData.total_productos || '0';
+                    document.getElementById('totalCategorias').textContent = menuData.total_categorias || '0';
+                    document.getElementById('productosActivos').textContent = menuData.productos_activos || '0';
+                }
+                
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+                document.getElementById('serviciosEstado').innerHTML = 
+                    '<div style="color: #f44336;">❌ Error al cargar estadísticas</div>';
+            }
+        }
+
+        // Cargar estadísticas al inicio
+        cargarEstadisticas();
+        
+        // Actualizar cada 30 segundos
+        setInterval(cargarEstadisticas, 30000);
+        
+        // Actualizar tiempo activo cada segundo
+        setInterval(() => {
+            const tiempoElement = document.getElementById('tiempoActivo');
+            if (tiempoElement.textContent !== '-') {
+                // Simulación básica - en producción esto vendría del servidor
+                const tiempo = parseInt(tiempoElement.textContent.split(' ')[0]) || 0;
+                tiempoElement.textContent = `${tiempo + 1} min`;
+            }
+        }, 60000); // Cada minuto
+    </script>
+</body>
+</html>

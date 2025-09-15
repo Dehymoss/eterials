@@ -1,0 +1,392 @@
+/* =====================================
+   UPLOAD IMAGEN CSS - SISTEMA IMÁGENES
+   ===================================== */
+
+/* Contenedor principal del upload */
+.upload-imagen-container {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.upload-imagen-container:hover {
+    border-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+/* Botón de seleccionar archivo */
+.btn-seleccionar-archivo {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.btn-seleccionar-archivo:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.btn-seleccionar-archivo i {
+    margin-right: 8px;
+    font-size: 1.1rem;
+}
+
+/* Input file oculto */
+input[type="file"] {
+    display: none !important;
+}
+
+/* Campo URL readonly */
+.url-preview {
+    background-color: #e9ecef !important;
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #495057;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.url-preview:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.url-preview.filled {
+    background-color: #d4edda !important;
+    border-color: #28a745;
+    color: #155724;
+}
+
+/* Preview de imagen */
+#preview-imagen {
+    margin-top: 15px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.img-preview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 3px solid #28a745;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.img-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* Estados de carga del upload */
+.upload-loading {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.upload-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: uploadSpin 1s linear infinite;
+}
+
+@keyframes uploadSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Indicador de progreso */
+.upload-progress {
+    width: 100%;
+    height: 6px;
+    background-color: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 10px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.upload-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #28a745);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    animation: progressShine 1.5s infinite;
+}
+
+@keyframes progressShine {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+/* Mensajes de estado */
+.upload-mensaje {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.upload-mensaje.exito {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.upload-mensaje.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.upload-mensaje.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* Drag and Drop */
+.upload-imagen-container.dragover {
+    border-color: #28a745;
+    background-color: rgba(40, 167, 69, 0.1);
+    transform: scale(1.02);
+}
+
+.drag-text {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* Botón de búsqueda web */
+.btn-buscar-web {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.btn-buscar-web:hover {
+    background: linear-gradient(135deg, #495057, #343a40);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+}
+
+/* Galería de búsqueda web */
+.imagen-galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.imagen-galeria img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.imagen-galeria img:hover {
+    transform: scale(1.1);
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.imagen-galeria img.seleccionada {
+    border-color: #28a745;
+    transform: scale(1.05);
+}
+
+/* Validación de archivos */
+.archivo-invalido {
+    border-color: #dc3545 !important;
+    background-color: rgba(220, 53, 69, 0.05) !important;
+}
+
+.archivo-valido {
+    border-color: #28a745 !important;
+    background-color: rgba(40, 167, 69, 0.05) !important;
+}
+
+/* Restricciones de tamaño */
+.info-restricciones {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.info-restricciones i {
+    color: #ffc107;
+    margin-right: 5px;
+}
+
+/* Botón limpiar imagen */
+.btn-limpiar-imagen {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-limpiar-imagen:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .upload-imagen-container {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-seleccionar-archivo {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .img-preview {
+        max-height: 150px;
+    }
+    
+    .imagen-galeria {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 8px;
+        padding: 10px;
+    }
+    
+    .imagen-galeria img {
+        height: 60px;
+    }
+}
+
+@media (max-width: 576px) {
+    .upload-imagen-container {
+        padding: 10px;
+    }
+    
+    .btn-seleccionar-archivo {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+    }
+    
+    .url-preview {
+        font-size: 0.8rem;
+        padding: 10px 12px;
+    }
+    
+    .img-preview {
+        max-height: 120px;
+    }
+    
+    .imagen-galeria {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.bounce-in {
+    animation: bounceIn 0.6s ease-out;
+}
+
+/* Estados especiales */
+.upload-completado {
+    border-color: #28a745;
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.upload-error {
+    border-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+/* Tooltip personalizado */
+.upload-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.upload-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+}
+
+.upload-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

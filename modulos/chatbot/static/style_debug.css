@@ -1,0 +1,94 @@
+/* CSS TEMPORAL PARA DEBUGGING - SIN IMÁGENES */
+body {
+    background-color: #232323;
+    /* background-image: url('assets/clean-gray-paper.png'); COMENTADO TEMPORALMENTE */
+    background-repeat: repeat;
+    background-size: cover;
+    background-position: center;
+    color: #fffbe7;
+    font-family: 'Patrick Hand', cursive;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    margin: 0;
+    font-size: 18px;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 30, 30, 0.3);
+    z-index: 0;
+    pointer-events: none;
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
+}
+
+.contenedor-central {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 140px;
+    z-index: 5;
+    position: relative;
+    display: block;
+    visibility: visible;
+    min-height: 50vh;
+    background-color: rgba(255,0,0,0.2); /* DEBUG: Fondo rojo temporal */
+    border: 2px solid #FFD700;
+}
+
+.titulo-principal {
+    font-family: 'Dancing Script', cursive;
+    font-size: 48px;
+    font-weight: 700;
+    color: #FFD700;
+    letter-spacing: 4px;
+    margin: 20px 0;
+    text-align: center;
+    text-transform: capitalize;
+    text-shadow: 0 0 15px #FFD700;
+}
+
+.logo-eterials {
+    display: block;
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    width: 80px;
+    height: 80px;
+    background-color: #FFD700; /* PLACEHOLDER en lugar de imagen */
+    border-radius: 50%;
+    z-index: 10;
+}
+
+/* Resto de elementos básicos */
+.boton {
+    background: linear-gradient(145deg, #6B8E23, #8FBC8F);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.input-container {
+    margin: 20px 0;
+}
+
+input, textarea {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrativo - Eterials Gastro-Café</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        .main-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .status-bar {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-item {
+            display: inline-block;
+            margin-right: 2rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .status-item.online {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .status-item.offline {
+            border-left: 4px solid #f44336;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .module-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .module-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #FFE066;
+            text-shadow: 0 0 5px rgba(255, 224, 102, 0.5);
+        }
+
+        .module-card p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .module-card .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .module-card .btn:hover {
+            background: linear-gradient(45deg, #45a049, #4CAF50);
+            transform: scale(1.05);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FFE066;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.7;
+        }
+
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 2px solid #f44336;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎛️ Panel Administrativo Central</h1>
+        <p>Eterials Gastro-Café - Dashboard de Gestión</p>
+    </div>
+
+    <div class="main-container">
+        <!-- Barra de Estado -->
+        <div class="status-bar" id="statusBar">
+            <div class="loading">⏳ Verificando estado de servicios...</div>
+        </div>
+
+        <!-- Módulos Principales -->
+        <div class="modules-grid">
+            <div class="module-card" onclick="window.location.href='/admin/menu'">
+                <h3>🍽️ Gestión de Menú</h3>
+                <p>Administra productos, categorías, precios y descripciones. Carga masiva de productos desde Excel.</p>
+                <a href="/admin/menu" class="btn">Abrir Panel</a>
+            </div>
+
+            <div class="module-card" onclick="window.location.href='/admin/generador-qr'">
+                <h3>📱 Generador QR</h3>
+                <p>Genera códigos QR para mesas y barra que dirigen al chatbot. Descarga e imprime códigos personalizados.</p>
+                <a href="/admin/generador-qr" class="btn" target="_blank">Generar QR</a>
+            </div>
+
+            <div class="module-card" onclick="window.location.href='/admin/estadisticas'">
+                <h3>📊 Estadísticas</h3>
+                <p>Analiza el uso del sistema, productos más visitados y estadísticas de interacción del chatbot.</p>
+                <a href="/admin/estadisticas" class="btn">Ver Datos</a>
+            </div>
+
+            <div class="module-card" onclick="window.location.href='/admin/configuracion-menu'">
+                <h3>🔧 Configuración de Menú</h3>
+                <p>Cambia entre el menú del proyecto y el menú externo de Treinta. Configuración dinámica sin código.</p>
+                <a href="/admin/configuracion-menu" class="btn">Configurar</a>
+            </div>
+        </div>
+
+        <!-- Estadísticas Rápidas -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <span class="stat-number" id="totalProductos">-</span>
+                <div class="stat-label">Productos</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalCategorias">-</span>
+                <div class="stat-label">Categorías</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="serviciosActivos">-</span>
+                <div class="stat-label">Servicios Activos</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="uptime">-</span>
+                <div class="stat-label">Tiempo Activo</div>
+            </div>
+        </div>
+
+        <!-- Enlaces de Prueba -->
+        <div class="modules-grid" style="margin-top: 3rem;">
+            <div class="module-card" onclick="window.open('/menu/general', '_blank')">
+                <h3>👥 Vista Cliente</h3>
+                <p>Ver la interfaz tal como la ven los clientes</p>
+                <a href="/menu/general" target="_blank" class="btn">Ver Menú</a>
+            </div>
+
+            <div class="module-card" onclick="window.open('/chatbot', '_blank')">
+                <h3>💬 Probar Chatbot</h3>
+                <p>Probar el chatbot desde la perspectiva del cliente</p>
+                <a href="/chatbot" target="_blank" class="btn">Probar Chat</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Eterials Gastro-Café © 2025 - Panel Administrativo v1.0</p>
+    </div>
+
+    <script>
+        // Verificar estado de servicios
+        async function verificarEstado() {
+            try {
+                const response = await fetch('/admin/api/status');
+                const data = await response.json();
+                
+                // Actualizar barra de estado
+                const statusBar = document.getElementById('statusBar');
+                let statusHTML = '';
+                
+                const servicios = data.servicios || {};
+                let serviciosActivos = 0;
+                
+                Object.entries(servicios).forEach(([nombre, estado]) => {
+                    const clase = estado ? 'online' : 'offline';
+                    const icono = estado ? '✅' : '❌';
+                    statusHTML += `<div class="status-item ${clase}">${icono} ${nombre.toUpperCase()}</div>`;
+                    if (estado) serviciosActivos++;
+                });
+                
+                statusBar.innerHTML = statusHTML;
+                
+                // Actualizar estadísticas
+                const stats = data.estadisticas || {};
+                document.getElementById('totalProductos').textContent = stats.total_productos || '0';
+                document.getElementById('totalCategorias').textContent = stats.total_categorias || '0';
+                document.getElementById('serviciosActivos').textContent = `${serviciosActivos}/4`;
+                document.getElementById('uptime').textContent = stats.uptime || '0 min';
+                
+            } catch (error) {
+                console.error('Error verificando estado:', error);
+                document.getElementById('statusBar').innerHTML = 
+                    '<div class="error">❌ Error al verificar estado de servicios</div>';
+            }
+        }
+        
+        // Verificar estado al cargar y cada 30 segundos
+        verificarEstado();
+        setInterval(verificarEstado, 30000);
+        
+        // Prevenir clicks accidentales en las cards
+        document.querySelectorAll('.module-card a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

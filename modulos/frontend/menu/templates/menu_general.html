@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú General | Eterials Gastro-Café</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Merriweather:wght@300;400;700&family=Dancing+Script:wght@400;700&family=Caveat:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('menu.static', filename='style.css') }}?v=20250901b">
+</head>
+<body>
+    <div class="contenedor-central">
+        <!-- Header con logo a la izquierda -->
+        <header class="header-menu">
+            <img src="{{ url_for('menu.static', filename='assets/logo.png') }}" alt="Logo Eterials" class="logo-eterials-izquierda">
+            <div class="header-content">
+                <h1 class="titulo-menu">Eterials Gastro-Café</h1>
+                <p class="subtitulo-elegante">Sabores que despiertan tus sentidos</p>
+                <div id="saludo"></div>
+            </div>
+        </header>
+        
+        <div class="separador"></div>
+        
+        <!-- Estado de carga -->
+        <div id="estado-carga">
+            <p>Cargando menú...</p>
+        </div>
+        
+        <!-- Contenedor de categorías -->
+        <div id="categorias-container" style="display: none;">
+            <h2 class="tiza-amarilla">🍽️ Nuestras Categorías</h2>
+            <div id="categorias-grid" class="categorias-grid">
+                <!-- Las categorías se cargarán aquí -->
+            </div>
+        </div>
+        
+        <!-- Contenedor de productos -->
+        <div id="productos-container" style="display: none;">
+            <button id="btn-volver" class="boton boton-dorado" onclick="mostrarCategorias()">← Volver a Categorías</button>
+            <div id="categoria-header"></div>
+            <div id="productos-grid" class="productos-grid">
+                <!-- Los productos se cargarán aquí -->
+            </div>
+        </div>
+        
+        <!-- Mensaje de error -->
+        <div id="mensaje-error" style="display: none;">
+            <p id="texto-error" style="color: #ffadad;"></p>
+            <button class="boton boton-dorado" onclick="cargarMenu()">🔄 Reintentar</button>
+        </div>
+    </div>
+    
+    <!-- Navegación inferior fija -->
+    <footer class="navegacion-inferior">
+        <a id="btn-chatbot" class="boton-chatbot-elegante">💬 Volver al Chatbot</a>
+    </footer>
+    
+    <!-- Taza animada -->
+    <div class="taza-esquina">
+        <img src="{{ url_for('menu.static', filename='assets/taza.png') }}" alt="Eterials taza">
+    </div>
+    
+    <!-- Humareda animada -->
+    <div class="humareda">
+        <div class="humo-nube humo-nube-0"></div>
+        <div class="nota nota-amarilla nota-0"><span>♪</span></div>
+        <div class="humo-nube humo-nube-1"></div>
+        <div class="nota nota-rosa nota-1"><span>♫</span></div>
+        <div class="humo-nube humo-nube-2"></div>
+        <div class="nota nota-verde nota-2"><span>♬</span></div>
+        <div class="humo-nube humo-nube-3"></div>
+        <div class="nota nota-morada nota-3"><span>♩</span></div>
+        <div class="humo-nube humo-nube-4"></div>
+        <div class="nota nota-azul nota-4"><span>♭</span></div>
+        <div class="humo-nube humo-nube-5"></div>
+        <div class="nota nota-amarilla nota-5"><span>♯</span></div>
+    </div>
+
+    <script>
+        // ===== VARIABLES GLOBALES =====
+        let menuCompleto = null;
+        let categoriaActual = null;
+        
+        // ===== SALUDO PERSONALIZADO =====
+        function inicializarSaludo() {
+            const params = new URLSearchParams(window.location.search);
+            const nombre = params.get('nombre') || sessionStorage.getItem('nombreCliente') || 'Invitado';
+            const mesa = params.get('mesa') || 'Sin asignar';
+            
+            if (params.get('nombre')) {
+                sessionStorage.setItem('nombreCliente', nombre);
+            }
+            
+            const hora = new Date().getHours();
+            let saludo = 'Buenas';
+            if (hora >= 6 && hora < 12) saludo = 'Buenos días';
+            else if (hora >= 12 && hora < 18) saludo = 'Buenas tardes';
+            else saludo = 'Buenas noches';
+            
+            const mensajeHTML = `
+                <span class="saludo-destacado">${saludo} 👋</span><br>
+                <span class="saludo-mensaje">
+                    ${nombre !== 'Invitado' ? `¡Bienvenido <b>${nombre}</b>!` : '¡Bienvenido!'}<br>
+                    Mesa <b>${mesa}</b> | Explora nuestras deliciosas opciones<br>
+                    🍽️ <em>Cada plato es una experiencia única</em>
+                </span>
+            `;
+            
+            document.getElementById('saludo').innerHTML = mensajeHTML;
+            
+            // Actualizar enlace del chatbot
+            const chatbotBtn = document.getElementById('btn-chatbot');
+            if (chatbotBtn) {
+                let chatbotParams = `mesa=${mesa}`;
+                if (nombre !== 'Invitado') {
+                    chatbotParams += `&nombre=${encodeURIComponent(nombre)}`;
+                }
+                chatbotBtn.href = `/chatbot?${chatbotParams}`;
+            }
+        }
+        
+        // ===== GESTIÓN DE ESTADOS =====
+        function mostrarEstado(estado) {
+            const elementos = ['estado-carga', 'categorias-container', 'productos-container', 'mensaje-error'];
+            elementos.forEach(id => {
+                document.getElementById(id).style.display = id === estado ? 'block' : 'none';
+            });
+        }
+        
+        function mostrarError(mensaje) {
+            document.getElementById('texto-error').textContent = mensaje;
+            mostrarEstado('mensaje-error');
+        }
+        
+        // ===== CARGA DEL MENÚ =====
+        async function cargarMenu() {
+            try {
+                console.log('🚀 Iniciando carga del menú...');
+                mostrarEstado('estado-carga');
+                
+                // Cargar categorías
+                console.log('📡 Cargando categorías...');
+                const categoriasRes = await fetch('/menu-admin/api/categorias/');
+                console.log('📡 Respuesta categorías:', categoriasRes.status, categoriasRes.statusText);
+                
+                if (!categoriasRes.ok) throw new Error(`Error categorías: ${categoriasRes.status}`);
+                
+                const categoriasData = await categoriasRes.json();
+                console.log('📊 Datos categorías recibidos:', categoriasData);
+                
+                // Cargar productos
+                console.log('📡 Cargando productos...');
+                const productosRes = await fetch('/menu-admin/api/productos/');
+                console.log('📡 Respuesta productos:', productosRes.status, productosRes.statusText);
+                
+                if (!productosRes.ok) throw new Error(`Error productos: ${productosRes.status}`);
+                
+                const productosData = await productosRes.json();
+                console.log('📊 Datos productos recibidos:', productosData);
+                
+                // Extraer datos de las respuestas
+                const categorias = categoriasData.categorias || [];
+                const productos = productosData.productos || [];
+                
+                console.log('✅ Procesando:', categorias.length, 'categorías y', productos.length, 'productos');
+                
+                // Validar datos
+                if (!Array.isArray(categorias) || !Array.isArray(productos)) {
+                    throw new Error('Formato de datos inválido del servidor');
+                }
+                
+                // Guardar datos
+                menuCompleto = { categorias, productos };
+                mostrarCategorias();
+                
+            } catch (error) {
+                console.error('❌ Error completo:', error);
+                mostrarError(`No pudimos cargar el menú: ${error.message}`);
+            }
+        }
+        
+        // ===== MOSTRAR CATEGORÍAS =====
+        function mostrarCategorias() {
+            if (!menuCompleto?.categorias || !Array.isArray(menuCompleto.productos)) {
+                mostrarError('Error en datos del menú');
+                return;
+            }
+            
+            const grid = document.getElementById('categorias-grid');
+            let html = '';
+            
+            menuCompleto.categorias.forEach(categoria => {
+                const productosDisponibles = menuCompleto.productos.filter(p => 
+                    p.categoria_id === categoria.id && p.disponible !== false
+                ).length;
+                
+                html += `
+                    <div class="categoria-card" onclick="seleccionarCategoria(${categoria.id}, '${categoria.titulo || categoria.nombre}')">
+                        <span class="categoria-icono">${categoria.icono || '🍽️'}</span>
+                        <h3>${categoria.titulo || categoria.nombre}</h3>
+                        <p class="categoria-descripcion">${categoria.descripcion || 'Ver productos'}</p>
+                        <span class="productos-count">${productosDisponibles} productos</span>
+                    </div>
+                `;
+            });
+            
+            if (html === '') {
+                mostrarError('No hay categorías disponibles');
+                return;
+            }
+            
+            grid.innerHTML = html;
+            mostrarEstado('categorias-container');
+        }
+        
+        // ===== MOSTRAR PRODUCTOS DE UNA CATEGORÍA =====
+        function seleccionarCategoria(categoriaId, categoriaNombre) {
+            console.log('🔍 Seleccionando categoría:', categoriaId, categoriaNombre);
+            
+            if (!menuCompleto || !Array.isArray(menuCompleto.productos)) {
+                mostrarError('Error en datos del menú');
+                return;
+            }
+            
+            console.log('📋 Total productos disponibles:', menuCompleto.productos.length);
+            console.log('📋 Productos completos:', menuCompleto.productos);
+            
+            categoriaActual = menuCompleto.categorias.find(c => c.id === categoriaId);
+            const productos = menuCompleto.productos.filter(p => 
+                p.categoria_id === categoriaId && p.disponible !== false
+            );
+            
+            console.log('✅ Productos filtrados para categoría', categoriaId, ':', productos.length);
+            console.log('📋 Lista de productos filtrados:', productos);
+            
+            if (!categoriaActual) {
+                mostrarError('Categoría no encontrada');
+                return;
+            }
+            
+            // Header de la categoría
+            const headerHTML = `
+                <div class="categoria-header">
+                    <h2 class="tiza-amarilla">${categoriaActual.icono || '🍽️'} ${categoriaNombre}</h2>
+                    <p class="categoria-descripcion">${categoriaActual.descripcion || ''}</p>
+                </div>
+            `;
+            document.getElementById('categoria-header').innerHTML = headerHTML;
+            
+            // Grid de productos - SOLO NOMBRE, PRECIO, DESCRIPCIÓN
+            const grid = document.getElementById('productos-grid');
+            let html = '';
+            
+            productos.forEach(producto => {
+                const precio = formatearPrecio(producto.precio || 0);
+                
+                html += `
+                    <div class="producto-card">
+                        ${producto.imagen_url ? `
+                            <div class="producto-imagen">
+                                <img src="${producto.imagen_url}" alt="${producto.nombre}" class="producto-img" 
+                                     onload="this.classList.add('loaded')"
+                                     onerror="this.src='{{ url_for('menu.static', filename='assets/logo.png') }}'; this.classList.add('loaded');">
+                            </div>
+                        ` : `
+                            <div class="producto-imagen placeholder">
+                                <span class="placeholder-icon">🍽️</span>
+                            </div>
+                        `}
+                        
+                        <div class="producto-info">
+                            <h3 class="producto-nombre">${producto.nombre}</h3>
+                            
+                            ${producto.descripcion ? `
+                                <p class="producto-descripcion">${producto.descripcion}</p>
+                            ` : ''}
+                            
+                            <div class="producto-precio-container">
+                                <span class="producto-precio">${precio}</span>
+                                <span class="disponible-badge">✅ Disponible</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            grid.innerHTML = html;
+            mostrarEstado('productos-container');
+        }
+        
+        // ===== NAVEGACIÓN =====
+        function volverACategorias() {
+            categoriaActual = null;
+            mostrarCategorias();
+        }
+        
+        // ===== UTILIDADES =====
+        function formatearPrecio(precio) {
+            // Formato colombiano coloquial con "luks"
+            if (!precio || precio === 0) return 'Consultar precio';
+            
+            // Convertir a miles de forma coloquial
+            if (precio >= 1000) {
+                const miles = Math.floor(precio / 1000);
+                const resto = precio % 1000;
+                if (resto === 0) {
+                    return `${miles} luks`;
+                } else if (resto < 100) {
+                    return `${miles}.${resto.toString().padStart(3, '0').slice(0, 1)} luks`;
+                } else {
+                    return `${miles}.${resto.toString().slice(0, 1)} luks`;
+                }
+            } else {
+                return `${precio} pesos`;
+            }
+        }
+        
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 DOM Content Loaded - Iniciando aplicación');
+            inicializarSaludo();
+            console.log('👋 Saludo inicializado');
+            cargarMenu();
+            console.log('📋 Función cargarMenu() llamada');
+        });
+    </script>
+</body>
+</html>

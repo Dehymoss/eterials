@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador QR Simple</title>
+    <link rel="stylesheet" href="/admin/static/css/qr_admin.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Generador QR Simple</h1>
+        <form id="qr-form">
+            <label for="mesa">Número de mesa:</label>
+            <input type="text" id="mesa" name="mesa" required>
+            <button type="submit">Generar QR</button>
+        </form>
+        <div id="qr-result"></div>
+    </div>
+    <script src="/admin/static/js/qr_admin.js"></script>
+    <script>
+        document.getElementById('qr-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const mesa = document.getElementById('mesa').value;
+            document.getElementById('qr-result').innerHTML = `<img src='/admin/api/generate-qr?mesa=${mesa}' alt='QR Mesa ${mesa}' />`;
+        });
+    </script>
+</body>
+</html>

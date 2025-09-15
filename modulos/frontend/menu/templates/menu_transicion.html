@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú - Eterials Gastro-Café</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('menu.static', filename='css/menu-transicion.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="transition-container">
+        <!-- Logo y Título -->
+        <div class="logo-section">
+            <h1>
+                <i class="fas fa-utensils me-3" style="color: #f39c12;"></i>
+                Eterials Gastro-Café
+            </h1>
+            <p>Bienvenido a nuestro menú</p>
+        </div>
+
+        <!-- Información del Cliente -->
+        {% if nombre or mesa %}
+        <div class="client-info">
+            <h4>
+                <i class="fas fa-user me-2"></i>
+                Información de Mesa
+            </h4>
+            <p>
+                {% if nombre %}<strong>Cliente:</strong> {{ nombre }}{% endif %}
+                {% if mesa %}{% if nombre %} | {% endif %}<strong>Mesa:</strong> {{ mesa }}{% endif %}
+            </p>
+        </div>
+        {% endif %}
+
+        <!-- Mensaje de Transición -->
+        <div class="transition-message">
+            <h2>
+                <i class="fas fa-exchange-alt me-2"></i>
+                Acceso al Menú
+            </h2>
+            <p>{{ config.mensaje_mantenimiento or 'Hemos actualizado nuestro sistema de menú para brindarte una mejor experiencia.' }}</p>
+        </div>
+
+        <!-- Opciones de Menú -->
+        <div class="options-section">
+            <!-- Menú Externo (Treinta) -->
+            <div class="menu-option" onclick="MenuTransicion.redirectToExternal()">
+                <h3>
+                    <i class="fas fa-external-link-alt me-2" style="color: #e74c3c;"></i>
+                    {{ config.menu_externo_nombre or 'Menú Principal' }}
+                </h3>
+                <p>Accede a nuestro menú completo con precios actualizados y nueva funcionalidad.</p>
+                <a href="{{ config.menu_externo_url }}" class="btn-menu" id="btnMenuExterno">
+                    <i class="fas fa-arrow-right me-2"></i>
+                    Ir al Menú
+                </a>
+            </div>
+
+            <!-- Menú Interno (Fallback) -->
+            <div class="menu-option" onclick="MenuTransicion.goToInternalMenu()">
+                <h3>
+                    <i class="fas fa-home me-2" style="color: #27ae60;"></i>
+                    Menú Clásico
+                </h3>
+                <p>También puedes acceder a nuestro menú tradicional si prefieres.</p>
+                <button onclick="MenuTransicion.forceInternalMenu()" class="btn-menu secondary">
+                    <i class="fas fa-list me-2"></i>
+                    Ver Menú Clásico
+                </button>
+            </div>
+        </div>
+
+        <!-- Información Footer -->
+        <div class="footer-info">
+            <p>
+                <i class="fas fa-info-circle me-2"></i>
+                Si tienes algún problema, puedes solicitar ayuda a nuestro personal.
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Variables de configuración embebidas como data attributes -->
+    <div id="menu-config" 
+         data-menu-activo="{{ config.menu_activo|e }}"
+         data-menu-externo-url="{{ config.menu_externo_url|e }}"
+         data-redirect-automatico="{{ config.redirect_automatico|lower }}"
+         data-mensaje-mantenimiento="{{ config.mensaje_mantenimiento|e }}"
+         data-cliente-nombre="{{ nombre|e }}"
+         data-cliente-mesa="{{ mesa|e }}"
+         style="display:none;">
+    </div>
+    
+    <script src="{{ url_for('menu.static', filename='js/menu-transicion.js') }}"></script>
+</body>
+</html>
