@@ -1,6 +1,6 @@
-# DEPENDENCIAS ETERIALS RESTAURANT SYSTEM
-# Actualizadas: 15/09/2025
-# Compatibles con Render.com deployment
+# DEPENDENCIAS ETERIALS RESTAURANT - DUAL DEPLOYMENT
+# Local + Railway compatibility
+# Fecha: 15/09/2025
 
 # ===== CORE FRAMEWORK =====
 Flask==2.3.2
@@ -15,14 +15,12 @@ requests==2.31.0
 # ===== EXCEL PROCESSING =====
 openpyxl==3.1.2
 
-# ===== QR CODE GENERATION (REQUERIDO PARA ADMIN PANEL) =====
+# ===== QR CODE + IMAGE PROCESSING =====
 qrcode==7.4.2
-
-# ===== IMAGE PROCESSING (REQUERIDO PARA QR CODES) =====
 Pillow==10.0.1
 
 # ===== UTILITIES =====
 python-dateutil==2.8.2
 
-# ===== DESARROLLO Y TESTING =====
-# pytest==7.4.3  # Solo para desarrollo local
+# ===== PRODUCTION SERVER =====
+gunicorn==21.2.0
