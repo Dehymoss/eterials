@@ -11,6 +11,7 @@ venv/
 # Archivos de configuración de IDE
 .vscode/
 .idea/
+.vs/
 
 # Archivos temporales
 *.log
@@ -22,3 +23,6 @@ Thumbs.db
 
 # Archivos de despliegue
 *.bak
+
+# Base de datos local (será recreada en producción)
+*.db
