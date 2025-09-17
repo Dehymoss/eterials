@@ -4,13 +4,13 @@
 
 # ===== CORE FRAMEWORK =====
 Flask==2.3.2
-Flask-CORS==4.0.0
+Flask-CORS==6.0.0
 
 # ===== DATABASE & ORM =====
 SQLAlchemy==2.0.35
 
 # ===== HTTP & APIs =====
-requests==2.31.0
+requests==2.32.4
 
 # ===== EXCEL PROCESSING =====
 openpyxl==3.1.2
