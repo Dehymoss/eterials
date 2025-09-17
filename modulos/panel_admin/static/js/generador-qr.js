@@ -13,16 +13,17 @@ async function generarQRCodes() {
         return;
     }
     
-    // Obtener IP local dinámicamente
-    let baseUrl = 'http://192.168.1.23:8080'; // Fallback
+    // Obtener URL base dinámicamente
+    let baseUrl = 'https://eterials-restaurant.onrender.com'; // URL de producción por defecto
     try {
         const response = await fetch('/admin/api/get-local-ip');
         const data = await response.json();
-        if (data.success) {
+        if (data.success && data.base_url) {
             baseUrl = data.base_url;
+            console.log('URL base obtenida:', baseUrl);
         }
     } catch (e) {
-        console.log('Usando IP fallback:', baseUrl);
+        console.log('Usando URL de producción por defecto:', baseUrl);
     }
     
     for (let i = 1; i <= cantidadMesas; i++) {
@@ -47,16 +48,17 @@ async function generarQRBarra() {
     let container = document.getElementById("qrContainer");
     container.innerHTML = "";
     
-    // Obtener IP local dinámicamente
-    let baseUrl = 'http://192.168.1.23:8080'; // Fallback
+    // Obtener URL base dinámicamente
+    let baseUrl = 'https://eterials-restaurant.onrender.com'; // URL de producción por defecto
     try {
         const response = await fetch('/admin/api/get-local-ip');
         const data = await response.json();
-        if (data.success) {
+        if (data.success && data.base_url) {
             baseUrl = data.base_url;
+            console.log('URL base obtenida:', baseUrl);
         }
     } catch (e) {
-        console.log('Usando IP fallback:', baseUrl);
+        console.log('Usando URL de producción por defecto:', baseUrl);
     }
     
     let div = document.createElement("div");

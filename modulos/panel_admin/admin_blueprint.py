@@ -27,9 +27,32 @@ def obtener_ip_local():
         return "127.0.0.1"
 
 @admin_bp.route('/api/obtener-ip')
+@admin_bp.route('/api/get-local-ip')  # Alias para compatibilidad
 def obtener_ip_actual():
-    ip = obtener_ip_local()
-    return jsonify({'ip': ip, 'timestamp': datetime.now().isoformat()})
+    """Obtiene la URL base correcta para generar QR codes"""
+    import os
+    
+    # Detectar si estamos en Render.com
+    if 'RENDER' in os.environ or 'onrender.com' in os.environ.get('RENDER_EXTERNAL_URL', ''):
+        # Estamos en producción en Render.com
+        render_url = os.environ.get('RENDER_EXTERNAL_URL', '')
+        if render_url:
+            base_url = render_url.rstrip('/')
+        else:
+            # Fallback si no está definida la variable
+            base_url = "https://eterials-restaurant.onrender.com"
+    else:
+        # Desarrollo local
+        ip = obtener_ip_local()
+        base_url = f"http://{ip}:8080"
+    
+    return jsonify({
+        'success': True,
+        'base_url': base_url,
+        'ip': obtener_ip_local(),
+        'environment': 'production' if 'RENDER' in os.environ else 'development',
+        'timestamp': datetime.now().isoformat()
+    })
 
 @admin_bp.route('/api/status')
 def api_status():
