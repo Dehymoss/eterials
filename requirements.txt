@@ -1,5 +1,5 @@
-# DEPENDENCIAS ETERIALS RESTAURANT - DUAL DEPLOYMENT
-# Local + Railway compatibility
+# DEPENDENCIAS ETERIALS RESTAURANT - RENDER.COM COMPATIBLE
+# QR migrado a JavaScript frontend para evitar dependencias C++
 # Fecha: 15/09/2025
 
 # ===== CORE FRAMEWORK =====
@@ -7,7 +7,7 @@ Flask==2.3.2
 Flask-CORS==4.0.0
 
 # ===== DATABASE & ORM =====
-SQLAlchemy==2.0.23
+SQLAlchemy==2.0.35
 
 # ===== HTTP & APIs =====
 requests==2.31.0
@@ -16,8 +16,9 @@ requests==2.31.0
 openpyxl==3.1.2
 
 # ===== QR CODE + IMAGE PROCESSING =====
-qrcode==7.4.2
-Pillow==10.0.1
+# qrcode==7.4.2     # ELIMINADO: Requiere compilación C++ incompatible con Render.com
+# Pillow==10.0.1    # ELIMINADO: Requiere compilación C++ incompatible con Render.com
+# REEMPLAZO: QRCode.js frontend (ya incluido en static/js/)
 
 # ===== UTILITIES =====
 python-dateutil==2.8.2
