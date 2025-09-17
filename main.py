@@ -94,75 +94,8 @@ print(f"🎉 {blueprints_cargados}/5 módulos cargados exitosamente")
 @app.route('/')
 def index():
     """Página principal del sistema con navegación completa"""
-    return render_template('dashboard.html') if os.path.exists('templates/dashboard.html') else f"""
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>🏠 Eterials Restaurant - Sistema Principal</title>
-        <style>
-            body {{ font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; 
-                   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }}
-            .container {{ max-width: 800px; margin: 0 auto; background: white; 
-                         border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }}
-            h1 {{ color: #333; text-align: center; margin-bottom: 30px; }}
-            .nav-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-                        gap: 20px; margin-top: 20px; }}
-            .nav-card {{ background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%); 
-                        color: white; padding: 20px; border-radius: 10px; text-decoration: none; 
-                        transition: transform 0.3s; }}
-            .nav-card:hover {{ transform: translateY(-5px); }}
-            .nav-card h3 {{ margin: 0 0 10px 0; }}
-            .nav-card p {{ margin: 0; opacity: 0.9; }}
-            .status {{ text-align: center; margin: 20px 0; color: #666; }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>🏠 Sistema Eterials Restaurant</h1>
-            <div class="status">✅ Sistema completamente operativo en puerto 8080</div>
-            
-            <div class="nav-grid">
-                <a href="/chatbot" class="nav-card" style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);">
-                    <h3>🤖 Chatbot</h3>
-                    <p>Sistema de atención con efectos musicales y animaciones</p>
-                </a>
-                
-                <a href="/admin" class="nav-card" style="background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);">
-                    <h3>⚙️ Panel Admin</h3>
-                    <p>Herramientas administrativas y configuración</p>
-                </a>
-                
-                <a href="/menu-admin/admin" class="nav-card" style="background: linear-gradient(45deg, #a8edea 0%, #fed6e3 100%);">
-                    <h3>🍽️ Gestión Menús</h3>
-                    <p>CRUD completo de productos, categorías y recetas</p>
-                </a>
-                
-                <a href="/menu/general" class="nav-card" style="background: linear-gradient(45deg, #ffecd2 0%, #fcb69f 100%);">
-                    <h3>📱 Menú Cliente</h3>
-                    <p>Menú público optimizado para móviles</p>
-                </a>
-                
-                <a href="/cocina" class="nav-card" style="background: linear-gradient(45deg, #89f7fe 0%, #66a6ff 100%);">
-                    <h3>🍳 Dashboard Cocina</h3>
-                    <p>Panel especializado para chef y auxiliares</p>
-                </a>
-                
-                <a href="/admin/configuracion-menu" class="nav-card" style="background: linear-gradient(45deg, #fdbb2d 0%, #22c1c3 100%);">
-                    <h3>🔧 Configuración</h3>
-                    <p>Configuración avanzada del sistema</p>
-                </a>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px; color: #666;">
-                <p>🌟 Sistema desarrollado para Eterials Restaurant</p>
-                <p>🔗 Versión: 3.0.1 - Production Ready</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
+    # Redirigir al panel admin que tiene el dashboard original
+    return redirect(url_for('admin.dashboard'))
 
 # Redirección de compatibilidad
 @app.route('/test')

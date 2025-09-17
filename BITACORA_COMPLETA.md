@@ -1,5 +1,71 @@
 # BITÁCORA DE CAMBIOS - Sistema de Gestión de Restaurante Eterials
 
+## 📅 **SESIÓN 16/12/2024 - RESOLUCIÓN DEPLOYMENT RENDER.COM + LIMPIEZA CÓDIGO**
+
+### 🔥 **TRABAJO REALIZADO:**
+
+#### **🚨 DIAGNÓSTICO DEPLOYMENT RENDER.COM:**
+- **❌ Problemas identificados**: Render.com free tier no soporta Pillow (requiere compilación C++)
+- **❌ Error específico**: "subprocess-exited-with-error" durante instalación de Pillow
+- **❌ Blueprint imports**: Fallos en importación de módulos en producción
+- **❌ QR funcionalidad**: Sistema QR no operativo sin Pillow dependency
+
+#### **🔍 ANÁLISIS TÉCNICO COMPLETO:**
+- **Render.com limitaciones**: Free tier sin C++ compiler para Pillow
+- **Dependencies problemáticas**: qrcode 7.4.2 + Pillow 10.0.1 requieren compilación
+- **Blueprint architecture**: Sistema modular no compatible con deployment simplificado
+- **Git repository**: "Dehymoss/eterials" con commits actualizados
+
+#### **✅ SOLUCIONES IDENTIFICADAS:**
+
+**1. Railway.app (RECOMENDADO PRIMARIO):**
+- ✅ **Soporte completo Python**: Incluyendo Pillow y dependencies compiladas
+- ✅ **Free tier robusto**: 500 horas/mes, suficiente para restaurante
+- ✅ **Git integration**: Deploy directo desde GitHub
+- ✅ **Zero configuration**: No requiere modificar código
+
+**2. Ngrok + Local (RECOMENDADO BACKUP):**
+- ✅ **100% funcional**: Sistema ya verificado localmente puerto 8080
+- ✅ **Deployment inmediato**: 1 comando para tunneling público
+- ✅ **Costo cero**: Plan gratuito con URL estable
+- ✅ **QR completo**: Todas las funcionalidades operativas
+
+#### **🧹 LIMPIEZA CÓDIGO EJECUTADA:**
+- **❌ ELIMINADO**: `main_deployment_simple.py` (non-functional simplified version)
+- **❌ ELIMINADO**: `main_simple.py` (ultra-minimal version without blueprints)  
+- **❌ ELIMINADO**: `preparar_deploy.py` (Render.com specific script)
+- **✅ CONSERVADO**: `main.py` como único entry point funcional
+- **✅ RESULTADO**: 236 líneas de código obsoleto eliminadas, repository optimizado
+
+#### **📋 ESTADO POST-LIMPIEZA:**
+- **✅ Entry point único**: `main.py` con architecture completa
+- **✅ Requirements completo**: Dependencies restauradas para funcionalidad completa
+- **✅ Git repository clean**: Solo archivos funcionales, sin duplicados
+- **✅ Sistema local 100%**: Verificado operativo en puerto 8080
+
+#### **📁 ARCHIVOS MODIFICADOS:**
+- **Git commit 00caad8**: "Cleanup: Eliminados archivos de deployment obsoletos"
+- **Archivos eliminados**: 3 archivos de 236 líneas total
+- **Status final**: Repository limpio y optimizado
+
+### ⏳ **PENDIENTES CRÍTICOS PRÓXIMA SESIÓN:**
+
+#### **🚀 PRIORIDAD MÁXIMA - DEPLOYMENT DUAL (15 minutos):**
+1. **Ngrok setup** (5 min): Instalación y configuración tunneling local
+2. **Railway deployment** (10 min): Setup cuenta + deploy desde GitHub
+3. **QR generation** (5 min): Código QR con URLs públicas para mesas
+
+#### **🎯 FUNCIONALIDAD QR CRÍTICA:**
+- **Requirement usuario**: "sin un qr funcional el sistema no funciona para los clientes es decir el sistema es inservible"
+- **Solución dual**: Ngrok (primario) + Railway (backup) para máxima redundancia
+- **URLs móviles**: QR codes funcionando en dispositivos móviles para mesas restaurante
+
+#### **📚 DOCUMENTACIÓN UPDATES:**
+- DOCUMENTACION_TECNICA.md: Estrategia deployment dual
+- copilot-instructions.md: Proceso deployment para futuras sesiones
+
+---
+
 ## 📅 **SESIÓN 14/09/2025 - RESTAURACIÓN PUERTO 8080 + PREPARACIÓN DEPLOYMENT**
 
 ### 🔄 **TRABAJO REALIZADO:**
