@@ -52,6 +52,24 @@ try:
 except ImportError as e:
     print(f"❌ Error cargando Chatbot: {e}")
 
+# 🤖 Backend del Chatbot (API y Dashboard Administrativo)
+try:
+    from modulos.backend.chatbot.admin_dashboard import chatbot_admin_bp
+    app.register_blueprint(chatbot_admin_bp)
+    print("✅ Chatbot Backend registrado: /admin/chatbot")
+    blueprints_cargados += 1
+except ImportError as e:
+    print(f"❌ Error cargando Chatbot Backend: {e}")
+
+# 🚀 APIs del Chatbot
+try:
+    from modulos.backend.chatbot.api_endpoints import chatbot_api_bp
+    app.register_blueprint(chatbot_api_bp)
+    print("✅ Chatbot APIs registradas: /api/chatbot")
+    blueprints_cargados += 1
+except ImportError as e:
+    print(f"❌ Error cargando Chatbot APIs: {e}")
+
 # ⚙️ Panel administrativo
 try:
     from modulos.panel_admin.admin_blueprint import admin_bp

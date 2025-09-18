@@ -1,4 +1,4 @@
-# Instrucciones para Copilot - Sistema de Gestión de Restaurante
+# GitHub Copilot Instructions - Sistema Eterials Restaurant
 
 ## 🚨 PROTOCOLO OBLIGATORIO DE SESIÓN
 
@@ -15,11 +15,227 @@
    - Identificar pendientes de sesión anterior
    - Entender cambios recientes aplicados
 
-3. **📊 PRESENTAR RESUMEN AL USUARIO**:
+3. **🔄 SINCRONIZACIÓN ENTRE TERMINALES**:
+   - **Terminal Casa**: Verificar últimos cambios subidos a repositorio
+   - **Terminal Café**: Hacer `git pull origin main` para sincronizar
+   - Revisar si hay conflictos o cambios pendientes de merge
+
+4. **📊 PRESENTAR RESUMEN AL USUARIO**:
    - Estado actual del sistema
    - Pendientes identificados para continuar
    - Problemas conocidos que requieren atención
    - **ESPERAR CONFIRMACIÓN DEL USUARIO** antes de proceder
+
+### **🛑 CIERRE DE CADA SESIÓN - OBLIGATORIO**
+**Cuando el usuario indique "terminemos la sesión", "no vamos a continuar", "terminamos por hoy" o similar:**
+
+1. **📝 ACTUALIZAR DOCUMENTACIÓN TÉCNICA**:
+   - Agregar nuevas funcionalidades implementadas
+   - Actualizar flujos de trabajo modificados
+   - Documentar nuevos problemas identificados
+
+2. **📋 ACTUALIZAR BITÁCORA**:
+   - Registrar todos los cambios de la sesión
+   - Documentar archivos modificados
+   - Listar problemas resueltos y nuevos
+
+3. **💾 CERRAR TODOS LOS ARCHIVOS**:
+   - Guardar y cerrar todos los archivos abiertos
+   - Verificar que no queden cambios sin guardar
+
+4. **🚀 DEPLOYMENT A RENDER.COM**:
+   - Verificar que todos los cambios estén commiteados: `git status`
+   - Agregar archivos: `git add .`
+   - Commit con mensaje descriptivo: `git commit -m "feat: descripción cambios"`
+   - Push al repositorio: `git push origin main`
+   - Confirmar que Render.com detecte los cambios automáticamente
+   - Verificar deployment exitoso en: `https://eterials-restaurant.onrender.com`
+   - Validar que las nuevas funcionalidades funcionen en producción
+
+5. **⏳ DEJAR PENDIENTES CLAROS**:
+   - Enumerar tareas específicas para próxima sesión
+   - Identificar prioridades y dependencias
+   - Establecer orden de ejecución recomendado
+
+---
+
+## 🏗️ ARQUITECTURA DEL PROYECTO
+
+### **📁 Estructura Principal**
+```
+main.py                          # ✅ ÚNICO punto de entrada
+verificar_sistema_completo.py    # ✅ ÚNICO archivo de testing
+modulos/
+├── backend/
+│   ├── menu/                   # CRUD productos/categorías/recetas
+│   └── chatbot/                # Sistema conversacional + APIs
+├── frontend/
+│   ├── menu/                   # Menú público para clientes  
+│   └── cocina/                 # Dashboard especializado chef
+├── panel_admin/                # Herramientas administrativas
+└── chatbot/                    # Frontend chatbot con animaciones
+```
+
+### **🌐 URLs del Sistema (Puerto 8080)**
+- **Admin**: `http://127.0.0.1:8080/admin` - Dashboard principal
+- **Gestión Menú**: `http://127.0.0.1:8080/menu-admin/admin` - CRUD productos
+- **Cliente**: `http://127.0.0.1:8080/menu/general` - Menú público
+- **Cocina**: `http://127.0.0.1:8080/cocina` - Dashboard chef
+- **Chatbot**: `http://127.0.0.1:8080/chatbot` - Sistema conversacional
+
+---
+
+## 🚫 POLÍTICAS OBLIGATORIAS
+
+### **❌ PROHIBICIONES ESTRICTAS**
+
+1. **NO CREAR ARCHIVOS INNECESARIOS**:
+   - ❌ Archivos de test individuales (usar solo `verificar_sistema_completo.py`)
+   - ❌ Scripts temporales de verificación
+   - ❌ Archivos de backup automáticos
+   - ❌ Templates experimentales
+
+2. **❌ PROHIBIDO CREAR ARCHIVOS DE TEST**:
+   - ❌ NO crear archivos test_*.py
+   - ❌ NO crear archivos de pruebas individuales
+   - ❌ NO crear scripts de verificación temporales
+   - ✅ **ÚNICO ARCHIVO AUTORIZADO**: `verificar_sistema_completo.py`
+   - ✅ Todas las pruebas deben agregarse a este archivo único
+
+3. **NO SOBRESCRIBIR ARCHIVOS COMPLETOS**:
+   - ❌ Reemplazar archivos HTML/JS/CSS completos
+   - ❌ Ediciones masivas sin contexto específico
+   - ✅ Solo ediciones targeted con `replace_string_in_file`
+
+4. **NO MODIFICAR SIN DISCUSIÓN**:
+   - ❌ Cambios en arquitectura sin aprobación
+   - ❌ Modificaciones a archivos críticos sin consenso
+   - ✅ Proponer cambios y esperar confirmación del usuario
+
+### **✅ OBLIGACIONES ESTRICTAS**
+
+1. **TESTING DESDE INTERFAZ**:
+   - ✅ Todas las funcionalidades deben probarse en navegador
+   - ✅ Usar URLs reales del sistema (`http://127.0.0.1:8080/...`)
+   - ✅ Verificar flujo completo usuario → UI → backend → DB
+
+2. **DOCUMENTACIÓN SEPARADA**:
+   - ✅ Información técnica → `DOCUMENTACION_TECNICA.md`
+   - ✅ Cambios cronológicos → `BITACORA_COMPLETA.md`
+   - ✅ Mantener separación estricta entre documentación y historial
+
+---
+
+## 🔧 REGLAS DE DESARROLLO
+
+### **Edición de Archivos**
+1. **✅ OBLIGATORIO**: Usar `replace_string_in_file` con contexto específico
+2. **✅ OBLIGATORIO**: Incluir 3-5 líneas antes y después del cambio
+3. **❌ PROHIBIDO**: Sobrescribir archivos completos
+
+### **Testing y Validación**
+1. **✅ ÚNICO ARCHIVO**: `verificar_sistema_completo.py` para todo testing
+2. **✅ OBLIGATORIO**: Probar en interfaz web real
+3. **❌ PROHIBIDO**: Crear archivos de test individuales
+
+### **Base de Datos**
+1. **✅ OBLIGATORIO**: Importar `Base` desde `modulos.backend.menu.base`
+2. **❌ PROHIBIDO**: Crear nuevas instancias de `declarative_base()`
+3. **✅ OBLIGATORIO**: Verificar relaciones bidireccionales
+
+### **Blueprints y Rutas**
+1. **✅ MANTENER**: Estructura modular por funcionalidad
+2. **✅ SEPARAR**: Backend y frontend claramente
+3. **✅ USAR**: `url_prefix` para evitar conflictos
+
+---
+
+## 📋 COMANDOS ESENCIALES
+
+### **Desarrollo**
+```bash
+# Iniciar servidor principal
+python main.py
+
+# Testing completo del sistema
+python verificar_sistema_completo.py
+
+# Migrar base de datos
+python migrar_db.py
+
+# Limpiar base de datos
+python limpiar_bd.py
+```
+
+### **Deployment a Render.com**
+```bash
+# Verificar estado del repositorio
+git status
+
+# Agregar cambios
+git add .
+
+# Commit con mensaje descriptivo
+git commit -m "feat: descripción de los cambios implementados"
+
+# Push a producción (trigger automático en Render)
+git push origin main
+
+# Verificar deployment
+# URL: https://eterials-restaurant.onrender.com
+```
+
+### **Patrones de Blueprint**
+```python
+# Patrón estándar para nuevos blueprints
+from flask import Blueprint
+
+blueprint_name = Blueprint('name', __name__, 
+                          template_folder='templates',
+                          static_folder='static',
+                          url_prefix='/prefix')
+
+# Registro en main.py
+app.register_blueprint(blueprint_name, url_prefix='/prefix')
+```
+
+### **Modelos SQLAlchemy**
+```python
+# CORRECTO: Importar Base centralizada
+from modulos.backend.menu.base import Base
+
+# INCORRECTO: ❌ NO CREAR NUEVA INSTANCIA
+# Base = declarative_base()
+```
+
+---
+
+## 🎯 FUNCIONALIDADES CLAVE
+
+### **Sistema Modular**
+- **Backend Menu**: CRUD productos, categorías, recetas, imágenes
+- **Frontend Menu**: Menú público optimizado mobile con QR
+- **Chatbot**: Sistema conversacional con personalización completa
+- **Panel Admin**: Dashboard con estadísticas y herramientas
+- **Cocina**: Dashboard especializado para chef con recetas
+
+### **APIs Principales**
+- `GET /menu-admin/api/productos` - Listado productos
+- `POST /menu-admin/api/productos` - Crear producto
+- `POST /menu-admin/subir-imagen` - Upload imágenes
+- `GET /menu-admin/api/categorias` - Listado categorías
+- `GET /api/chatbot/*` - APIs del chatbot
+
+### **Características Técnicas**
+- **Puerto**: 8080 (desarrollo) / Variable PORT (producción)
+- **Base de Datos**: SQLite con SQLAlchemy ORM
+- **Deployment**: Render.com con auto-deploy desde GitHub
+- **Frontend**: HTML5 + CSS3 + JavaScript vanilla modular
+- **Testing**: Script unificado `verificar_sistema_completo.py`
+
+---
+
+**Al trabajar en este proyecto, siempre consulta `DOCUMENTACION_TECNICA.md` y `BITACORA_COMPLETA.md` para contexto completo de las funcionalidades implementadas.**
 
 ### **🛑 CIERRE DE CADA SESIÓN - OBLIGATORIO**
 **Cuando el usuario indique "terminemos la sesión", "no vamos a continuar", "terminamos por hoy" o similar:**
@@ -81,25 +297,7 @@
 
 ---
 
-## 📊 ESTADO ACTUAL DEL SISTEMA (16/12/2024 - DEPLOYMENT CRITICAL ISSUES + CÓDIGO LIMPIO)
-
-### **🚨 PROBLEMAS CRÍTICOS IDENTIFICADOS**
-
-#### **❌ DEPLOYMENT RENDER.COM FALLIDO**
-**Estado**: 🔴 **BLOQUEANTE CRÍTICO - QR FUNCTIONALITY INOPERATIVA**
-
-- **Problema core**: Render.com free tier NO soporta Pillow (requiere C++ compilation)
-- **Error específico**: "subprocess-exited-with-error" durante build process
-- **Impacto**: Sistema QR completamente inoperativo → "sin un qr funcional el sistema no funciona para los clientes es decir el sistema es inservible"
-- **Dependencies afectadas**: qrcode 7.4.2 + Pillow 10.0.1 no compilables en Render.com
-
-#### **🔧 ARQUITECTURA POST-LIMPIEZA**
-**Estado**: ✅ **OPTIMIZADA - CÓDIGO LIMPIO**
-
-- **Entry Point ÚNICO**: `main.py` como única forma de iniciar sistema
-- **Archivos eliminados**: main_deployment_simple.py, main_simple.py, preparar_deploy.py (236 líneas obsoletas)
-- **Git repository**: Clean + optimizado, commit 00caad8 successful
-- **Local functionality**: ✅ **100% OPERATIVO puerto 8080**
+## 📊 ESTADO ACTUAL DEL SISTEMA (17/12/2024 - PERSONALIZACIÓN MANUAL COMPLETAMENTE FUNCIONAL)
 
 ### **✅ FUNCIONALIDADES COMPLETAMENTE OPERATIVAS (LOCAL)**
 1. **🍽️ Sistema de Gestión de Productos**: CRUD completo con modal funcional
@@ -125,13 +323,10 @@
 21. **🎵 Sistema Notas Musicales Pasteles**: ✨ **COMPLETAMENTE FUNCIONAL (13/09/2025)**
 22. **☕ Animaciones Vapor Dinámicas**: ✨ **COMPLETAMENTE FUNCIONAL (13/09/2025)**
 23. **🎨 Botones CSS Optimizados**: ✨ **COMPLETAMENTE FUNCIONAL (13/09/2025)**
-16. **🔍 Sistema Búsqueda Libre de Imágenes**: ✨ **COMPLETAMENTE FUNCIONAL (06/09/2025)**
-17. **🏷️ Sistema Categorías + Subcategorías**: ✨ **COMPLETAMENTE FUNCIONAL (07/09/2025)**
-18. **📱 Sistema QR Mobile Optimizado**: ✨ **COMPLETAMENTE FUNCIONAL (10/09/2025)**
-19. **🎨 Integración Frontend-Backend Iconos**: ✨ **COMPLETAMENTE FUNCIONAL (10/09/2025)**
-20. **🚀 Optimización Mobile y CSS**: ✨ **COMPLETAMENTE FUNCIONAL (10/09/2025)**
-16. **🔍 Sistema Búsqueda Libre de Imágenes**: ✨ **COMPLETAMENTE FUNCIONAL (06/09/2025)**
-17. **🏷️ Sistema Categorías + Subcategorías**: ✨ **COMPLETAMENTE FUNCIONAL (07/09/2025)**
+24. **🤖 Backend Chatbot Completo**: ✨ **COMPLETAMENTE FUNCIONAL (16/09/2025)**
+25. **� Dashboard Administrativo**: ✨ **COMPLETAMENTE FUNCIONAL (16/09/2025)**
+26. **🔗 Integración Frontend-Backend Chatbot**: ✨ **COMPLETAMENTE FUNCIONAL (16/09/2025)**
+27. **🎨 Personalización Manual CSS/JS**: ✨ **COMPLETAMENTE FUNCIONAL (17/09/2025)**
 
 ### **⚠️ FUNCIONALIDADES COMPLETADAS (07/09/2025)**
 1. **🏷️ Sistema Integrado Categorías-Subcategorías**: 
@@ -422,11 +617,37 @@ debug_endpoints.py      # 6 funciones testing y diagnóstico
    - **Cambios**: Grid mínimo 220px (antes 300px), altura imagen 120px (antes 150px)
    - **Media Queries**: Breakpoints específicos para desktop, tablet y móvil
 
-### **🔥 PRÓXIMAS PRIORIDADES (CRÍTICAS)**
-1. **🚀 INMEDIATO**: Iniciar servidor en puerto 8080 y verificar funcionamiento
-2. **🧪 Testing urgente**: Probar todas las URLs en nuevo puerto
-3. **🔍 Validación responsiva**: Confirmar optimizaciones CSS en diferentes dispositivos
-4. **🏗️ Población BD**: Agregar productos reales del restaurante
+### **🔥 PRÓXIMAS PRIORIDADES (SESIÓN 18/09/2025)**
+
+#### **1. � TESTING MOBILE COMPLETO PERSONALIZACIÓN** - PRIORIDAD ALTA (15 min)
+- Verificar que personalización manual funciona en dispositivos móviles
+- Probar pestañas de configuración en pantallas pequeñas
+- Validar que notificaciones se muestran correctamente
+- **Resultado esperado**: Sistema personalización 100% mobile-optimizado
+
+#### **2. 🎨 TESTING INTEGRACIÓN FRONTEND-BACKEND** - PRIORIDAD ALTA (20 min)
+- Verificar que cambios de personalización se reflejan en frontend público
+- Probar sincronización entre admin y chatbot visible
+- Validar que preferencias se guardan y persisten
+- **Resultado esperado**: Integración personalización completamente verificada
+
+#### **3. 🚀 OPTIMIZACIÓN PERFORMANCE** - PRIORIDAD MEDIA (10 min)
+- Medir velocidad de carga con nuevos CSS/JS
+- Verificar que cache-busting funciona correctamente
+- Optimizar archivos si necesario para mejor rendimiento
+- **Resultado esperado**: Performance mantenido después de nuevas funcionalidades
+
+#### **4. 📚 DOCUMENTACIÓN TÉCNICA FINAL** - PRIORIDAD MEDIA (10 min)
+- Actualizar guías de uso del sistema de personalización
+- Documentar nuevas funcionalidades para futuros desarrolladores
+- Crear manual de usuario para funciones de personalización
+- **Resultado esperado**: Documentación completa y actualizada
+
+#### **5. 🧪 TESTING INTEGRAL SISTEMA COMPLETO** - PRIORIDAD BAJA (15 min)
+- Ejecutar suite de tests completa después de cambios
+- Verificar que todas las funcionalidades previas siguen operativas
+- Validar que no se introdujeron regresiones
+- **Resultado esperado**: Sistema completo 100% funcional sin regresiones
 
 ### **⏳ PENDIENTES COMPLETADOS (30/08/2025)**
 - ✅ **Frontend Modal**: Problema de IDs y FormData resuelto

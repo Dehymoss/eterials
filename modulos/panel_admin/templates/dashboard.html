@@ -197,6 +197,12 @@
                 <a href="/admin/generador-qr" class="btn" target="_blank">Generar QR</a>
             </div>
 
+            <div class="module-card" onclick="window.location.href='/admin/chatbot'">
+                <h3>🤖 Dashboard Chatbot</h3>
+                <p>Gestión completa del chatbot: temas personalizados, configuraciones, sesiones, calificaciones y estadísticas avanzadas.</p>
+                <a href="/admin/chatbot" class="btn">Gestionar Chatbot</a>
+            </div>
+
             <div class="module-card" onclick="window.location.href='/cocina'">
                 <h3>📊 Dashboard Cocina</h3>
                 <p>Panel especializado para chef y auxiliares con recetas y preparación.</p>
@@ -221,6 +227,10 @@
                 <div class="stat-label">Categorías</div>
             </div>
             <div class="stat-card">
+                <span class="stat-number" id="sesionesActivas">-</span>
+                <div class="stat-label">Sesiones Chatbot</div>
+            </div>
+            <div class="stat-card">
                 <span class="stat-number" id="serviciosActivos">-</span>
                 <div class="stat-label">Servicios Activos</div>
             </div>
@@ -230,18 +240,24 @@
             </div>
         </div>
 
-        <!-- Enlaces de Prueba -->
+        <!-- Enlaces de Acceso Rápido -->
         <div class="modules-grid" style="margin-top: 3rem;">
+            <div class="module-card" onclick="window.open('/chatbot?mesa=1', '_blank')">
+                <h3>💬 Probar Chatbot</h3>
+                <p>Probar el chatbot desde la perspectiva del cliente mesa 1</p>
+                <a href="/chatbot?mesa=1" target="_blank" class="btn">Probar Chat</a>
+            </div>
+
             <div class="module-card" onclick="window.open('/menu/general', '_blank')">
                 <h3>👥 Vista Cliente</h3>
-                <p>Ver la interfaz tal como la ven los clientes</p>
+                <p>Ver la interfaz del menú tal como la ven los clientes</p>
                 <a href="/menu/general" target="_blank" class="btn">Ver Menú</a>
             </div>
 
-            <div class="module-card" onclick="window.open('/chatbot', '_blank')">
-                <h3>💬 Probar Chatbot</h3>
-                <p>Probar el chatbot desde la perspectiva del cliente</p>
-                <a href="/chatbot" target="_blank" class="btn">Probar Chat</a>
+            <div class="module-card" onclick="window.location.href='/admin/chatbot'">
+                <h3>⚙️ Configurar Temas</h3>
+                <p>Acceso directo a la gestión de temas personalizados del chatbot</p>
+                <a href="/admin/chatbot" class="btn">Personalizar</a>
             </div>
         </div>
     </div>
@@ -277,13 +293,32 @@
                 const stats = data.estadisticas || {};
                 document.getElementById('totalProductos').textContent = stats.total_productos || '0';
                 document.getElementById('totalCategorias').textContent = stats.total_categorias || '0';
-                document.getElementById('serviciosActivos').textContent = `${serviciosActivos}/4`;
+                document.getElementById('serviciosActivos').textContent = `${serviciosActivos}/5`;
                 document.getElementById('uptime').textContent = stats.uptime || '0 min';
+                
+                // Obtener estadísticas del chatbot
+                await obtenerEstadisticasChatbot();
                 
             } catch (error) {
                 console.error('Error verificando estado:', error);
                 document.getElementById('statusBar').innerHTML = 
                     '<div class="error">❌ Error al verificar estado de servicios</div>';
+            }
+        }
+
+        // Obtener estadísticas específicas del chatbot
+        async function obtenerEstadisticasChatbot() {
+            try {
+                const response = await fetch('/api/chatbot/estadisticas');
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('sesionesActivas').textContent = stats.sesiones_activas || '0';
+                } else {
+                    document.getElementById('sesionesActivas').textContent = '-';
+                }
+            } catch (error) {
+                console.warn('⚠️ No se pudieron obtener estadísticas del chatbot:', error);
+                document.getElementById('sesionesActivas').textContent = '-';
             }
         }
         
