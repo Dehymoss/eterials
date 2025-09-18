@@ -58,22 +58,25 @@ def menu_general():
     # Verificar si se fuerza el menú interno
     force_internal = request.args.get('force_internal', 'false').lower() == 'true'
     
+    # Verificar configuración de menú (siempre)
+    config = verificar_configuracion_menu()
+    
     # Si no se fuerza interno, verificar configuración de menú
     if not force_internal:
-        config = verificar_configuracion_menu()
-        
         # Si está configurado para menú externo y redirección automática
         if config['menu_activo'] == 'externo' and config['redirect_automatico']:
             if config['menu_externo_url']:
                 return redirect(config['menu_externo_url'])
         
-    # Si está configurado para menú externo pero sin redirección automática
-    if config['menu_activo'] == 'externo' and not config['redirect_automatico']:
-        # Mostrar página de transición con botón manual
-        return render_template('menu_transicion.html', 
-                             config=config,
-                             nombre=request.args.get('nombre', ''),
-                             mesa=request.args.get('mesa', ''))    # Menú propio (comportamiento normal o forzado)
+        # Si está configurado para menú externo pero sin redirección automática
+        if config['menu_activo'] == 'externo' and not config['redirect_automatico']:
+            # Mostrar página de transición con botón manual
+            return render_template('menu_transicion.html', 
+                                 config=config,
+                                 nombre=request.args.get('nombre', ''),
+                                 mesa=request.args.get('mesa', ''))
+    
+    # Menú propio (comportamiento normal o forzado)
     nombre = request.args.get('nombre', '')
     mesa = request.args.get('mesa', '')
     return render_template('menu_general.html', nombre=nombre, mesa=mesa)

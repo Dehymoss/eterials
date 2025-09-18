@@ -1,0 +1,8 @@
+{
+  "nombre": "Croissant Dorado",
+  "precio": 6500,
+  "descripcion": "Croissant artesanal con mantequilla francesa",
+  "categoria_id": 1,
+  "disponible": true,
+  "tipo_producto": "simple"
+}

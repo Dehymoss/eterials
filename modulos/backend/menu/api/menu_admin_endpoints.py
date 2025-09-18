@@ -1004,9 +1004,9 @@ def subir_imagen():
         # Guardar el archivo
         archivo.save(ruta_archivo)
         
-        # Generar URL absoluta para acceder a la imagen
-        # Usar request.host_url para generar URL completa
-        url_imagen = f"{request.host_url}menu-admin/static/uploads/productos/{nombre_unico}"
+        # Generar URL relativa para compatibilidad con producción
+        # URLs relativas funcionan tanto en desarrollo como en producción
+        url_imagen = f"/menu-admin/static/uploads/productos/{nombre_unico}"
         
         return jsonify({
             'success': True,
