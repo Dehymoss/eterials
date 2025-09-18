@@ -1286,3 +1286,124 @@ body {
         font-size: 24px;
     }
 }
+
+/* ===== MEJORAS DE CONTRASTE Y VISIBILIDAD ===== */
+
+/* Mejorar contraste de texto general */
+body {
+    color: #ffffff !important; /* Texto blanco sobre fondo oscuro */
+}
+
+/* Elementos con texto oscuro que necesitan ser blancos */
+.card-content,
+.dashboard-section h2,
+.dashboard-section h3,
+.tab-content h3,
+.config-panel h3,
+.loading-message,
+.error-message {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Mejorar contraste en inputs y selects */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="color"],
+select,
+textarea {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: #333 !important;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="color"]:focus,
+select:focus,
+textarea:focus {
+    background-color: #ffffff !important;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Mejorar contraste en labels */
+label {
+    color: #ffffff !important;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Mejorar contraste en tablas */
+table th {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+table td {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+}
+
+/* Mejorar contraste en elementos de navegación */
+.breadcrumb a,
+.nav-link {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.breadcrumb a:hover,
+.nav-link:hover {
+    color: #ffd700 !important;
+}
+
+/* Mejorar contraste en botones */
+.btn-primary {
+    background: linear-gradient(135deg, #ffd700 0%, #ff9500 100%);
+    color: #333 !important;
+    font-weight: 600;
+    text-shadow: none;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Mejorar contraste en estadísticas */
+.stat-number {
+    color: #ffd700 !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.stat-label {
+    color: #ffffff !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Mejorar contraste en mensajes de error */
+.error-message,
+.loading-message {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    color: #ff6b6b !important;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 107, 107, 0.3);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Mejorar contraste en notificaciones success */
+.success-message {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    color: #51cf66 !important;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid rgba(81, 207, 102, 0.3);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}

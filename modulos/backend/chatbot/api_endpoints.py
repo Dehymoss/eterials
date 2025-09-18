@@ -334,6 +334,53 @@ def validar_sesion(sesion_id):
     finally:
         session.close()
 
+@chatbot_api_bp.route('/sesiones/activas', methods=['GET'])
+def obtener_sesiones_activas():
+    """
+    Obtiene todas las sesiones activas para el dashboard administrativo
+    
+    GET /api/chatbot/sesiones/activas
+    """
+    try:
+        db = SessionLocal()
+        
+        # Obtener sesiones activas con información de cliente
+        sesiones_activas = db.query(Sesion).filter_by(activa=True).order_by(
+            Sesion.fecha_inicio.desc()
+        ).all()
+        
+        # Formatear datos para el dashboard
+        sesiones_data = []
+        for sesion in sesiones_activas:
+            tiempo_activo = datetime.utcnow() - sesion.fecha_inicio
+            ultimo_acceso = sesion.fecha_ultimo_acceso or sesion.fecha_inicio
+            tiempo_inactivo = datetime.utcnow() - ultimo_acceso
+            
+            sesiones_data.append({
+                'id': sesion.id,
+                'mesa': sesion.mesa,
+                'cliente': sesion.nombre_cliente or 'Anónimo',
+                'inicio': sesion.fecha_inicio.strftime('%H:%M:%S'),
+                'ultimo_acceso': ultimo_acceso.strftime('%H:%M:%S'),
+                'tiempo_activo': f"{int(tiempo_activo.total_seconds() // 60)}min",
+                'estado': 'Activa',
+                'dispositivo': sesion.dispositivo or 'Desktop'
+            })
+        
+        return jsonify({
+            'success': True,
+            'sesiones': sesiones_data,
+            'total': len(sesiones_data)
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error al obtener sesiones activas: {str(e)}'
+        }), 500
+    finally:
+        db.close()
+
 @chatbot_api_bp.route('/configuracion/timeout', methods=['GET'])
 def obtener_timeout_configurado():
     """
@@ -464,6 +511,57 @@ def guardar_calificacion():
             'success': False,
             'error': str(e)
         }), 500
+
+@chatbot_api_bp.route('/calificaciones', methods=['GET'])
+def obtener_calificaciones():
+    """
+    Obtiene todas las calificaciones para el dashboard administrativo
+    
+    GET /api/chatbot/calificaciones
+    """
+    try:
+        db = SessionLocal()
+        
+        # Obtener calificaciones recientes con información de sesión
+        calificaciones = db.query(Calificacion).join(Sesion).order_by(
+            Calificacion.fecha_calificacion.desc()
+        ).limit(50).all()
+        
+        # Formatear datos para el dashboard
+        calificaciones_data = []
+        for cal in calificaciones:
+            calificaciones_data.append({
+                'id': cal.id,
+                'mesa': cal.sesion.mesa,
+                'cliente': cal.sesion.nombre_cliente or 'Anónimo',
+                'estrellas': cal.estrellas,
+                'categoria': cal.categoria,
+                'fecha': cal.fecha_calificacion.strftime('%d/%m/%Y %H:%M'),
+                'sesion_id': cal.sesion_id
+            })
+        
+        # Calcular estadísticas
+        total_calificaciones = len(calificaciones_data)
+        promedio = sum(c['estrellas'] for c in calificaciones_data) / total_calificaciones if total_calificaciones > 0 else 0
+        
+        return jsonify({
+            'success': True,
+            'calificaciones': calificaciones_data,
+            'estadisticas': {
+                'total': total_calificaciones,
+                'promedio': round(promedio, 1),
+                'excelentes': len([c for c in calificaciones_data if c['estrellas'] >= 4]),
+                'necesitan_atencion': len([c for c in calificaciones_data if c['estrellas'] <= 2])
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Error al obtener calificaciones: {str(e)}'
+        }), 500
+    finally:
+        db.close()
 
 # ==================== ENDPOINTS DE COMENTARIOS ====================
 
@@ -659,6 +757,15 @@ def obtener_notificaciones_pendientes():
             'success': False,
             'error': str(e)
         }), 500
+
+@chatbot_api_bp.route('/notificaciones', methods=['GET'])
+def obtener_notificaciones():
+    """
+    Alias para obtener notificaciones pendientes (compatibilidad dashboard)
+    
+    GET /api/chatbot/notificaciones
+    """
+    return obtener_notificaciones_pendientes()
 
 # ==================== ENDPOINTS DE ANALYTICS ====================
 
