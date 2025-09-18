@@ -34,7 +34,7 @@ class GestorCategorias {
      */
     async cargarCategorias() {
         try {
-            const response = await fetch(`${this.baseURL}/categorias`);
+            const response = await fetch(`${this.baseURL}/categorias/`);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -115,8 +115,8 @@ class GestorCategorias {
         
         try {
             const url = categoriaId ? 
-                `${this.baseURL}/categorias/${categoriaId}` : 
-                `${this.baseURL}/categorias`;
+                `${this.baseURL}/categorias/${categoriaId}/` : 
+                `${this.baseURL}/categorias/`;
                 
             const method = categoriaId ? 'PUT' : 'POST';
             
@@ -404,7 +404,7 @@ class GestorCategorias {
      */
     async cargarSubcategorias(categoriaId) {
         try {
-            const response = await fetch(`${this.baseURL}/subcategorias/categoria/${categoriaId}`);
+            const response = await fetch(`${this.baseURL}/subcategorias/categoria/${categoriaId}/`);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }

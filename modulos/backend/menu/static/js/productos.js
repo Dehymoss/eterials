@@ -42,7 +42,7 @@ class GestorProductos {
      */
     async cargarProductos() {
         try {
-            const response = await fetch(`${this.baseURL}/productos`);
+            const response = await fetch(`${this.baseURL}/productos/`);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -79,7 +79,7 @@ class GestorProductos {
      */
     async cargarCategorias() {
         try {
-            const response = await fetch(`${this.baseURL}/categorias`);
+            const response = await fetch(`${this.baseURL}/categorias/`);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -106,7 +106,7 @@ class GestorProductos {
         }
 
         try {
-            const response = await fetch(`${this.baseURL}/subcategorias/categoria/${categoriaId}`);
+            const response = await fetch(`${this.baseURL}/subcategorias/categoria/${categoriaId}/`);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
@@ -200,8 +200,8 @@ class GestorProductos {
         
         try {
             const url = productoId ? 
-                `${this.baseURL}/productos/${productoId}` : 
-                `${this.baseURL}/productos`;
+                `${this.baseURL}/productos/${productoId}/` : 
+                `${this.baseURL}/productos/`;
                 
             const method = productoId ? 'PUT' : 'POST';
             
