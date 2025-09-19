@@ -269,7 +269,7 @@ class GestorRecetas {
         }
         
         try {
-            const response = await fetch(`/menu-admin/api/imagenes/buscar?nombre=${encodeURIComponent(nombreReceta)}&limite=6`);
+            const response = await fetch(`/menu-admin/api/imagenes/buscar/?nombre=${encodeURIComponent(nombreReceta)}&limite=6`);
             
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);

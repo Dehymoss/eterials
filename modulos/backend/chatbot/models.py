@@ -153,6 +153,7 @@ class FondoPersonalizado(Base):
     nombre = Column(String(100), nullable=False, unique=True)
     descripcion = Column(Text)
     archivo_url = Column(String(500), nullable=False)  # Ruta al archivo subido
+    archivo_base64 = Column(Text)  # Contenido de la imagen en base64 (NUEVO)
     archivo_original = Column(String(200))  # Nombre original del archivo
     tipo_archivo = Column(String(10))  # jpg, png, webp, gif
     tamaño_archivo = Column(Integer)  # Tamaño en bytes

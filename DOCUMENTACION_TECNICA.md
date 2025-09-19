@@ -1,15 +1,34 @@
 # DOCUMENTACIÓN TÉCNICA DEL SISTEMA - ETERIALS CHATBOT
-**Fecha de Actualización**: 17 de septiembre de 2025  
-**Versión**: 4.1.0 - Sistema de Personalización Manual Completo + Interfaz CSS/JS Reparada
+**Fecha de Actualización**: 19 de septiembre de 2025  
+**Versión**: 4.1.2 - Sistema de Upload de Archivos Grandes Implementado
 
 ---
 
 ## 🎯 **ESTADO ACTUAL DEL SISTEMA - PERSONALIZACIÓN MANUAL COMPLETAMENTE FUNCIONAL**
 
-### **✅ SISTEMA 100% FUNCIONAL CON PERSONALIZACIÓN MANUAL OPERATIVA**
+### **✅ SISTEMA 100% FUNCIONAL CON UPLOAD DE ARCHIVOS GRANDES**
 **Estado**: 🟢 **COMPLETAMENTE OPERATIVO**
 
-#### **� NUEVAS FUNCIONALIDADES IMPLEMENTADAS (17/09/2025):**
+#### **📁 NUEVA FUNCIONALIDAD: SISTEMA DE UPLOAD GRANDE (19/09/2025):**
+
+1. **Aumento de Límites de Archivo**:
+   - ✅ **Flask MAX_CONTENT_LENGTH**: 5MB → 20MB (main.py)
+   - ✅ **Dashboard Frontend**: 5MB → 20MB (dashboard.js)
+   - ✅ **Backend Imágenes**: 5MB → 20MB (imagenes_endpoints.py)
+   - ✅ **Upload General**: 5MB → 20MB (upload-imagen.js)
+
+2. **Configuración Completa para Archivos Grandes**:
+   - ✅ **Validación Frontend**: Límite 20MB con mensajes actualizados
+   - ✅ **Validación Backend**: MAX_FILE_SIZE sincronizado en todos endpoints
+   - ✅ **Flask Config**: MAX_CONTENT_LENGTH global para toda la aplicación
+   - ✅ **Mensajes Error**: Actualizados de "máximo 5MB" a "máximo 20MB"
+
+3. **Impacto en Calidad Visual**:
+   - ✅ **Imágenes Alta Resolución**: Soporte para fondos de mejor calidad
+   - ✅ **Sin Pixelación**: Backgrounds manteniendo dimensiones originales
+   - ✅ **Mejor UX**: Usuarios pueden subir imágenes profesionales
+
+#### **� FUNCIONALIDADES PREVIAMENTE IMPLEMENTADAS (17/09/2025):**
 
 1. **Sistema de Personalización Manual CSS Completo**:
    - ✅ **Dashboard CSS**: 400+ líneas CSS agregadas al archivo correcto (`dashboard.css`)

@@ -30,9 +30,6 @@ def get_db_session():
     Session = sessionmaker(bind=engine)
     return Session()
 
-# Crear SessionLocal para compatibilidad con nuevos endpoints
-SessionLocal = get_db_session
-
 # ==================== ENDPOINTS DE SESIONES ====================
 
 @chatbot_api_bp.route('/sesion/iniciar', methods=['POST'])
@@ -342,7 +339,7 @@ def obtener_sesiones_activas():
     GET /api/chatbot/sesiones/activas
     """
     try:
-        db = SessionLocal()
+        db = get_db_session()
         
         # Obtener sesiones activas con información de cliente
         sesiones_activas = db.query(Sesion).filter_by(activa=True).order_by(
@@ -520,7 +517,7 @@ def obtener_calificaciones():
     GET /api/chatbot/calificaciones
     """
     try:
-        db = SessionLocal()
+        db = get_db_session()
         
         # Obtener calificaciones recientes con información de sesión
         calificaciones = db.query(Calificacion).join(Sesion).order_by(
@@ -837,6 +834,71 @@ def obtener_resumen_analytics():
             'error': str(e)
         }), 500
 
+@chatbot_api_bp.route('/estadisticas', methods=['GET'])
+def obtener_estadisticas():
+    """
+    Obtiene estadísticas generales del chatbot para el dashboard
+    
+    GET /api/chatbot/estadisticas
+    """
+    try:
+        db = get_db_session()
+        
+        # Estadísticas básicas (manejo seguro de errores)
+        try:
+            total_sesiones = db.query(Sesion).count()
+        except:
+            total_sesiones = 0
+            
+        try:
+            sesiones_activas = db.query(Sesion).filter(
+                Sesion.activa == True
+            ).count()
+        except:
+            sesiones_activas = 0
+        
+        # Calificaciones promedio
+        try:
+            calificaciones = db.query(Calificacion).all()
+            promedio_calificacion = 0
+            if calificaciones:
+                promedio_calificacion = sum(c.calificacion for c in calificaciones) / len(calificaciones)
+        except:
+            promedio_calificacion = 0
+        
+        # Actividad reciente simplificada
+        try:
+            actividad_reciente = db.query(Analytics).count()
+        except:
+            actividad_reciente = 0
+        
+        db.close()
+        
+        return jsonify({
+            'success': True,
+            'estadisticas': {
+                'total_sesiones': total_sesiones,
+                'sesiones_activas': sesiones_activas,
+                'promedio_calificacion': round(promedio_calificacion, 2),
+                'actividad_24h': actividad_reciente,
+                'timestamp': datetime.utcnow().isoformat()
+            }
+        })
+        
+    except Exception as e:
+        print(f"❌ Error obteniendo estadísticas: {e}")
+        # Retornar estadísticas por defecto en caso de error
+        return jsonify({
+            'success': True,
+            'estadisticas': {
+                'total_sesiones': 0,
+                'sesiones_activas': 0,
+                'promedio_calificacion': 0,
+                'actividad_24h': 0,
+                'timestamp': datetime.utcnow().isoformat()
+            }
+        })
+
 # ==================== ENDPOINTS DE CONFIGURACIÓN ====================
 
 @chatbot_api_bp.route('/configuracion', methods=['GET'])
@@ -939,7 +1001,7 @@ def obtener_temas():
         JSON: Lista de temas con sus propiedades y estado
     """
     try:
-        db = SessionLocal()
+        db = get_db_session()
         
         # Obtener todos los temas con sus propiedades
         temas = db.query(TemaPersonalizacion).all()
@@ -992,7 +1054,7 @@ def activar_tema(tema_id):
     Activa un tema específico (desactiva todos los demás)
     """
     try:
-        db = SessionLocal()
+        db = get_db_session()
         
         # Verificar que el tema existe
         tema_nuevo = db.query(TemaPersonalizacion).filter_by(id=tema_id).first()
@@ -1054,7 +1116,7 @@ def obtener_tema_activo():
         JSON: Tema activo con propiedades
     """
     try:
-        db = SessionLocal()
+        db = get_db_session()
         
         # Buscar el tema activo
         tema_activo = db.query(TemaPersonalizacion).filter_by(activo=True).first()
@@ -1100,7 +1162,7 @@ def obtener_css_tema_activo():
         CSS: Código CSS listo para aplicar
     """
     try:
-        db = SessionLocal()
+        db = get_db_session()
         
         # Buscar el tema activo
         tema_activo = db.query(TemaPersonalizacion).filter_by(activo=True).first()
@@ -1201,7 +1263,7 @@ def crear_tema_personalizado():
                 'error': 'Nombre del tema es requerido'
             }), 400
         
-        db = SessionLocal()
+        db = get_db_session()
         
         # Verificar que el nombre no exista
         tema_existente = db.query(TemaPersonalizacion).filter_by(
@@ -1267,20 +1329,19 @@ def crear_tema_personalizado():
 @chatbot_api_bp.route('/fondos', methods=['GET'])
 def obtener_fondos():
     """Obtener todos los fondos personalizados"""
-    db = SessionLocal()
+    db = get_db_session()
     try:
         from .models import FondoPersonalizado
         fondos = db.query(FondoPersonalizado).all()
         return jsonify([{
             'id': fondo.id,
             'nombre': fondo.nombre,
-            'archivo_url': fondo.archivo_url,
-            'miniatura_url': fondo.miniatura_url,
+            'archivo_url': fondo.archivo_url,  # Esta ya es una data URL base64
+            'archivo_original': fondo.archivo_original,
             'dimensiones': fondo.dimensiones,
             'tamaño_archivo': fondo.tamaño_archivo,
             'tipo_archivo': fondo.tipo_archivo,
-            'fecha_subida': fondo.fecha_subida.isoformat(),
-            'contador_uso': fondo.contador_uso,
+            'fecha_subida': fondo.fecha_subida.isoformat() if fondo.fecha_subida else None,
             'activo': fondo.activo
         } for fondo in fondos])
     
@@ -1293,11 +1354,10 @@ def obtener_fondos():
 @chatbot_api_bp.route('/fondos/upload', methods=['POST'])
 def subir_fondo():
     """Subir un nuevo fondo personalizado"""
-    db = SessionLocal()
+    db = get_db_session()
     try:
         import os
         from werkzeug.utils import secure_filename
-        from PIL import Image
         import uuid
         from .models import FondoPersonalizado
         
@@ -1331,25 +1391,37 @@ def subir_fondo():
         ruta_archivo = os.path.join(upload_dir, nombre_archivo)
         archivo.save(ruta_archivo)
         
-        # Crear miniatura
-        with Image.open(ruta_archivo) as img:
-            # Obtener dimensiones originales
-            ancho, alto = img.size
-            dimensiones = f"{ancho}x{alto}"
-            
-            # Crear miniatura (200x150 max)
-            img.thumbnail((200, 150), Image.Resampling.LANCZOS)
-            ruta_miniatura = os.path.join(thumb_dir, nombre_miniatura)
-            img.save(ruta_miniatura)
+        # Solución base64 - 100% compatible con Render.com
+        import base64
+        
+        # Leer el archivo y convertir a base64
+        archivo.seek(0)  # Asegurar que estamos al inicio del archivo
+        contenido_archivo = archivo.read()
+        contenido_base64 = base64.b64encode(contenido_archivo).decode('utf-8')
         
         # Obtener tamaño del archivo
-        tamaño_archivo = os.path.getsize(ruta_archivo)
+        tamaño_archivo = len(contenido_archivo)
         
-        # Crear registro en base de datos
+        # Crear URL de datos para ser usada directamente en HTML/CSS
+        tipo_mime = {
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg', 
+            '.png': 'image/png',
+            '.gif': 'image/gif',
+            '.webp': 'image/webp'
+        }.get(extension, 'image/jpeg')
+        
+        data_url = f"data:{tipo_mime};base64,{contenido_base64}"
+        
+        # No necesitamos crear archivos físicos
+        dimensiones = "auto"
+        
+        # Crear registro en base de datos con base64
         fondo = FondoPersonalizado(
             nombre=nombre or f"Fondo {len(db.query(FondoPersonalizado).all()) + 1}",
-            archivo_url=f"/chatbot/static/fondos/{nombre_archivo}",
-            miniatura_url=f"/chatbot/static/fondos/thumbnails/{nombre_miniatura}",
+            archivo_url=data_url,  # URL de datos base64
+            archivo_base64=contenido_base64,  # Contenido base64 puro
+            archivo_original=archivo.filename,
             dimensiones=dimensiones,
             tamaño_archivo=tamaño_archivo,
             tipo_archivo=extension[1:].upper(),
@@ -1364,8 +1436,8 @@ def subir_fondo():
             'fondo': {
                 'id': fondo.id,
                 'nombre': fondo.nombre,
-                'archivo_url': fondo.archivo_url,
-                'miniatura_url': fondo.miniatura_url,
+                'archivo_url': fondo.archivo_url,  # Esta es la data URL base64
+                'archivo_original': fondo.archivo_original,
                 'dimensiones': fondo.dimensiones,
                 'tamaño_archivo': fondo.tamaño_archivo,
                 'tipo_archivo': fondo.tipo_archivo
@@ -1382,7 +1454,7 @@ def subir_fondo():
 @chatbot_api_bp.route('/fondos/<int:fondo_id>', methods=['DELETE'])
 def eliminar_fondo(fondo_id):
     """Eliminar un fondo personalizado"""
-    db = SessionLocal()
+    db = get_db_session()
     try:
         import os
         from .models import FondoPersonalizado
@@ -1418,10 +1490,124 @@ def eliminar_fondo(fondo_id):
         db.close()
 
 
+@chatbot_api_bp.route('/fondos/<int:fondo_id>/aplicar', methods=['POST'])
+def aplicar_fondo_chatbot(fondo_id):
+    """Aplicar un fondo al chatbot y generar tema automático"""
+    db = get_db_session()
+    try:
+        from .models import FondoPersonalizado, TemaPersonalizacion, PropiedadTema
+        import json
+        from datetime import datetime
+        
+        # Verificar que el fondo existe
+        fondo = db.query(FondoPersonalizado).get(fondo_id)
+        if not fondo:
+            return jsonify({'error': 'Fondo no encontrado'}), 404
+        
+        data = request.get_json() or {}
+        colores_automaticos = data.get('colores_automaticos', {})
+        
+        # Buscar o crear tema "Automático" 
+        tema_auto = db.query(TemaPersonalizacion).filter_by(nombre="Fondo Automático").first()
+        if not tema_auto:
+            tema_auto = TemaPersonalizacion(
+                nombre="Fondo Automático",
+                descripcion="Tema generado automáticamente basado en fondo personalizado",
+                activo=False,
+                predefinido=False
+            )
+            db.add(tema_auto)
+            db.flush()  # Para obtener el ID
+        
+        # Limpiar propiedades existentes del tema automático
+        db.query(PropiedadTema).filter_by(tema_id=tema_auto.id).delete()
+        
+        # Aplicar fondo como propiedad
+        prop_fondo = PropiedadTema(
+            tema_id=tema_auto.id,
+            categoria='fondo',
+            propiedad='background_image',
+            valor=fondo.archivo_url
+        )
+        db.add(prop_fondo)
+        
+        # Aplicar colores automáticos si se proporcionaron
+        if colores_automaticos:
+            for categoria, color in colores_automaticos.items():
+                if categoria == 'primario':
+                    prop = PropiedadTema(
+                        tema_id=tema_auto.id,
+                        categoria='colores',
+                        propiedad='accent_color',
+                        valor=color
+                    )
+                elif categoria == 'secundario':
+                    prop = PropiedadTema(
+                        tema_id=tema_auto.id,
+                        categoria='colores', 
+                        propiedad='background_color',
+                        valor=color
+                    )
+                elif categoria == 'acento':
+                    prop = PropiedadTema(
+                        tema_id=tema_auto.id,
+                        categoria='colores',
+                        propiedad='text_color',
+                        valor=color
+                    )
+                elif categoria == 'texto_claro':
+                    prop = PropiedadTema(
+                        tema_id=tema_auto.id,
+                        categoria='colores',
+                        propiedad='color-light-text',
+                        valor=color
+                    )
+                elif categoria == 'texto_oscuro':
+                    prop = PropiedadTema(
+                        tema_id=tema_auto.id,
+                        categoria='colores',
+                        propiedad='color-dark-text',
+                        valor=color
+                    )
+                else:
+                    continue
+                    
+                db.add(prop)
+        
+        # Desactivar otros temas
+        db.query(TemaPersonalizacion).update({'activo': False})
+        
+        # Activar tema automático
+        tema_auto.activo = True
+        
+        # Actualizar contador de uso del fondo
+        fondo.uso_contador = (fondo.uso_contador or 0) + 1
+        fondo.fecha_uso = datetime.utcnow()
+        
+        db.commit()
+        
+        return jsonify({
+            'message': 'Fondo aplicado al chatbot exitosamente',
+            'tema_id': tema_auto.id,
+            'fondo_aplicado': {
+                'id': fondo.id,
+                'nombre': fondo.nombre,
+                'uso_contador': fondo.uso_contador
+            },
+            'colores_aplicados': colores_automaticos
+        })
+        
+    except Exception as e:
+        db.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        db.close()
+
+
 @chatbot_api_bp.route('/temas/<int:tema_id>/fondo', methods=['PUT'])
 def actualizar_fondo_tema(tema_id):
     """Actualizar el fondo de un tema específico"""
-    db = SessionLocal()
+    db = get_db_session()
     try:
         from .models import TemaPersonalizacion, PropiedadTema, FondoPersonalizado
         

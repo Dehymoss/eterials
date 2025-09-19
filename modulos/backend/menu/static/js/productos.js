@@ -456,7 +456,7 @@ class GestorProductos {
         
         try {
             // NUEVA URL DE LA API LIBRE DE BÚSQUEDA DE IMÁGENES
-            const response = await fetch(`/menu-admin/api/imagenes/buscar?nombre=${encodeURIComponent(nombreProducto)}&limite=6`);
+            const response = await fetch(`/menu-admin/api/imagenes/buscar/?nombre=${encodeURIComponent(nombreProducto)}&limite=6`);
             
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);

@@ -14,7 +14,7 @@ imagenes_bp = Blueprint('imagenes', __name__)
 # Configuración de imágenes
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), '../static/uploads/productos')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
-MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+MAX_FILE_SIZE = 20 * 1024 * 1024  # 20MB
 
 def allowed_file(filename):
     """Verificar si la extensión del archivo está permitida"""

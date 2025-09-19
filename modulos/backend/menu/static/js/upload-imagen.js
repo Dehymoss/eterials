@@ -7,7 +7,7 @@ class SistemaUploadImagen {
     constructor() {
         this.baseURL = '/menu-admin';
         this.imagenActual = null;
-        this.maxTamano = 5 * 1024 * 1024; // 5MB
+        this.maxTamano = 20 * 1024 * 1024; // 20MB
         this.tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
         
         this.inicializar();

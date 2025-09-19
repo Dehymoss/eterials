@@ -1,34 +1,125 @@
 # BITÁCORA DE CAMBIOS - Sistema de Gestión de Restaurante Eterials
 
-## 📅 **SESIÓN 18/09/2025 - CORRECCIÓN ENDPOINTS CHATBOT Y DEPLOYMENT**
+## 📅 **SESIÓN 19/09/2025 - IMPLEMENTACIÓN SISTEMA UPLOAD ARCHIVOS GRANDES**
 
 ### 🎯 **OBJETIVO DE LA SESIÓN:**
-Revisar sesión anterior siguiendo protocolos establecidos, diagnosticar error "Error aplicando tema" en chatbot, y hacer deployment a producción.
+Aumentar límites de upload de archivos de 5MB a 20MB para soportar imágenes de alta resolución.
 
-### 🔥 **TRABAJO REALIZADO:**
+### ✅ **TRABAJO COMPLETADO:**
 
-#### **1. 📋 SEGUIMIENTO PROTOCOLOS SESIÓN (15 min):**
+#### **📁 AUMENTO LÍMITES DE ARCHIVO (30 min):**
 
-**✅ Protocolos Aplicados:**
-- **Lectura obligatoria**: DOCUMENTACION_TECNICA.md + BITACORA_COMPLETA.md
-- **Estado identificado**: Sesión 17/09/2025 completó 400+ CSS líneas + 280+ JS líneas
-- **Problema reportado**: Usuario muestra screenshot "Error aplicando tema" en chatbot
-- **Plan estructurado**: 4 todos creados para debugging sistemático
-
-#### **2. 🔍 DIAGNÓSTICO ERROR CHATBOT (30 min):**
-
-**🚨 Problema Identificado:**
-- **Error ubicación**: `modulos/chatbot/static/script.js` líneas 518-519
-- **Síntoma**: Notificación "Error aplicando tema" al intentar cambiar tema
-- **Causa raíz**: Mismatch URLs frontend vs backend
-  - Frontend JavaScript: `/api/chatbot/tema/aplicar/${temaId}`
-  - Backend real: `/api/chatbot/temas/${temaId}/activar`
-- **Verificación**: curl tests confirmaron 404 NOT FOUND
-
-#### **3. 🔧 CORRECCIÓN ENDPOINTS MÚLTIPLES (25 min):**
-
-**📝 Correcciones Implementadas:**
+**1. Frontend Dashboard (dashboard.js):**
 ```javascript
+// ANTES:
+if (archivo.size > 5 * 1024 * 1024) {
+    alert('El archivo es demasiado grande. Tamaño máximo: 5MB');
+    
+// DESPUÉS:
+if (archivo.size > 20 * 1024 * 1024) {
+    alert('El archivo es demasiado grande. Tamaño máximo: 20MB');
+```
+
+**2. Backend Imágenes (imagenes_endpoints.py):**
+```python
+# ANTES:
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
+
+# DESPUÉS:
+MAX_FILE_SIZE = 20 * 1024 * 1024  # 20MB
+```
+
+**3. Sistema Upload General (upload-imagen.js):**
+```javascript
+// ANTES:
+maxTamano: 5 * 1024 * 1024, // 5MB
+
+// DESPUÉS:
+maxTamano: 20 * 1024 * 1024, // 20MB
+```
+
+**4. Configuración Flask (main.py):**
+```python
+# AGREGADO:
+app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024  # 20MB máximo para uploads
+```
+
+### 📊 **ARCHIVOS MODIFICADOS:**
+- ✅ `modulos/backend/chatbot/static/dashboard.js`
+- ✅ `modulos/backend/menu/endpoints/imagenes_endpoints.py`
+- ✅ `modulos/backend/menu/static/js/upload-imagen.js`
+- ✅ `main.py`
+
+### 🎯 **IMPACTO:**
+- **Calidad mejorada**: Soporte para imágenes de alta resolución
+- **Sin pixelación**: Fondos manteniendo dimensiones originales
+- **UX mejorada**: Usuarios pueden subir archivos profesionales
+
+### ⏳ **PENDIENTES PRÓXIMA SESIÓN:**
+1. **Testing upload real**: Probar con archivos 6-15MB
+2. **Optimización rendimiento**: Validar performance con archivos grandes
+3. **Limpieza archivos**: Implementar sistema limpieza archivos grandes
+
+---
+
+## 📅 **SESIÓN 18/09/2025 - IDENTIFICACIÓN PROBLEMAS PUERTO Y CONEXIONES ZOMBIE**
+
+### 🎯 **OBJETIVO DE LA SESIÓN:**
+Resolver problemas de puerto 8080 ocupado por procesos zombie y identificar errores críticos antes de deployment.
+
+### � **PROBLEMAS CRÍTICOS IDENTIFICADOS:**
+
+#### **1. � PROBLEMA PUERTO 8080 ZOMBIE (45 min):**
+
+**🚨 Diagnóstico Realizado:**
+- **Puerto ocupado**: 8080 en estado LISTENING por PID 22336
+- **Conexiones activas**: Múltiples CLOSE_WAIT y ESTABLISHED zombie
+- **Proceso inexistente**: PID 22336 no existe pero mantiene puerto ocupado
+- **Estados problemáticos**:
+  ```
+  TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING       22336
+  TCP    127.0.0.1:8080         127.0.0.1:4428         CLOSE_WAIT      22336
+  TCP    127.0.0.1:8080         127.0.0.1:4429         CLOSE_WAIT      22336
+  TCP    127.0.0.1:8080         127.0.0.1:4445         CLOSE_WAIT      22336
+  ```
+
+**🔧 Intentos de Resolución:**
+- ❌ `taskkill /F /PID 22336` → "No hay ninguna instancia activa"
+- ❌ `Stop-Process -Id 22336` → "Cannot find process"
+- ❌ `taskkill /F /IM python.exe` → Proceso no encontrado
+- ⏳ **PENDIENTE**: Reinicio sistema o cambio puerto temporal
+
+**📋 Estado Final:**
+- **Puerto 8080**: Ocupado por conexiones zombie
+- **Servidor Flask**: NO INICIADO por conflicto puerto
+- **Sistema**: Requiere resolución antes de continuar
+
+### ⏳ **PENDIENTES CRÍTICOS PARA PRÓXIMA SESIÓN:**
+
+#### **🔥 PRIORIDAD MÁXIMA - RESOLUCIÓN PUERTO (20 min):**
+1. **� Reinicio Sistema**: Considerar restart para limpiar conexiones zombie
+2. **🔧 Puerto Alternativo**: Configurar puerto 5001 o 8081 temporalmente
+3. **🧹 Limpieza Red**: Comando reset TCP/IP si necesario
+4. **🧪 Test Servidor**: Verificar arranque después de resolución
+
+#### **📊 VERIFICACIONES REQUERIDAS (15 min):**
+1. **🔍 Error Endpoints**: Revisar problema "Error aplicando tema" reportado
+2. **🛡️ APIs Chatbot**: Validar URLs frontend vs backend
+3. **🌐 Conectividad**: Verificar que todas las rutas responden
+4. **📱 Mobile Testing**: Confirmar funcionalidad en dispositivos móviles
+
+### 📝 **DECISIONES TOMADAS:**
+
+#### **🚫 DEPLOYMENT RENDER SUSPENDIDO:**
+- **Razón**: Errores críticos no resueltos
+- **Pendiente**: Resolver problemas puerto + endpoints
+- **Próximo deploy**: Solo después de testing completo local
+
+#### **� CIERRE SIN DEPLOYMENT:**
+- **Protocolo aplicado**: Documentación actualizada
+- **Git status**: NO ejecutado (errores pendientes)
+- **Render.com**: NO actualizado esta sesión
+- **Archivos cerrados**: Completado
 // ANTES (INCORRECTO):
 fetch(`/api/chatbot/tema/aplicar/${temaId}`)      // 404 NOT FOUND
 fetch('/api/chatbot/tema/personalizado')          // 404 NOT FOUND

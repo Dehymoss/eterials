@@ -5,11 +5,11 @@
 
 /* --- Fondo y fuente general --- */
 body {
-    background-color: #232323;
-    background-image: url('assets/clean-gray-paper.png');
+    background-color: #000000;
+    background-image: url('assets/black-paper.png');
     background-repeat: repeat;
-    background-size: cover;
-    background-position: center;
+    background-size: auto;
+    background-position: center center;
     color: #fffbe7;
     font-family: 'Patrick Hand', cursive;
     text-align: center;
@@ -1901,3 +1901,246 @@ select:hover, input[type="text"]:hover {
         flex-direction: column;
     }
 }
+
+/* ======================================================
+   🎨 TÍTULO PRINCIPAL "ETERIALS" - TAMAÑO Y PROFUNDIDAD
+   ====================================================== */
+
+.titulo-principal {
+    font-family: 'Dancing Script', cursive;
+    font-size: 5rem; /* Tamaño mucho más grande */
+    font-weight: 700;
+    color: #fff; /* Blanco base para efecto neón */
+    text-align: center;
+    margin: 30px 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    position: relative;
+    z-index: 10;
+    
+    /* EFECTO NEÓN ESPECTACULAR */
+    text-shadow: 
+        /* Núcleo brillante blanco */
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 15px #fff,
+        
+        /* Capas de neón dorado intenso */
+        0 0 20px #d4af37,
+        0 0 35px #d4af37,
+        0 0 50px #d4af37,
+        0 0 75px #d4af37,
+        0 0 100px #d4af37,
+        
+        /* Resplandor externo dorado */
+        0 0 125px #f4e4c1,
+        0 0 150px #f4e4c1,
+        
+        /* Sombra de profundidad 3D */
+        4px 4px 0px #2c1810,
+        5px 5px 0px #2c1810,
+        6px 6px 0px #2c1810,
+        7px 7px 0px #2c1810,
+        8px 8px 0px #2c1810,
+        
+        /* Sombra externa dramática */
+        10px 10px 30px rgba(0, 0, 0, 0.9);
+    
+    /* Transformación 3D más pronunciada */
+    transform: perspective(1000px) rotateX(8deg) rotateY(-2deg);
+    
+    /* Animación de neón pulsante */
+    animation: neonPulse 2s ease-in-out infinite alternate;
+    
+    /* Filtro de brillo adicional */
+    filter: brightness(1.2) contrast(1.1);
+}
+
+/* ANIMACIÓN DE NEÓN ULTRA ESPECTACULAR */
+@keyframes neonPulse {
+    0% {
+        text-shadow: 
+            /* Núcleo */
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 15px #fff,
+            
+            /* Neón dorado base */
+            0 0 20px #d4af37,
+            0 0 35px #d4af37,
+            0 0 50px #d4af37,
+            0 0 75px #d4af37,
+            0 0 100px #d4af37,
+            
+            /* Resplandor */
+            0 0 125px #f4e4c1,
+            0 0 150px #f4e4c1,
+            
+            /* Profundidad 3D */
+            4px 4px 0px #2c1810,
+            5px 5px 0px #2c1810,
+            6px 6px 0px #2c1810,
+            7px 7px 0px #2c1810,
+            8px 8px 0px #2c1810,
+            
+            /* Sombra externa */
+            10px 10px 30px rgba(0, 0, 0, 0.9);
+        
+        filter: brightness(1.2) contrast(1.1);
+        transform: perspective(1000px) rotateX(8deg) rotateY(-2deg) scale(1);
+    }
+    
+    50% {
+        text-shadow: 
+            /* Núcleo más intenso */
+            0 0 8px #fff,
+            0 0 15px #fff,
+            0 0 25px #fff,
+            
+            /* Neón dorado intensificado */
+            0 0 30px #d4af37,
+            0 0 50px #d4af37,
+            0 0 80px #d4af37,
+            0 0 120px #d4af37,
+            0 0 160px #d4af37,
+            
+            /* Resplandor expandido */
+            0 0 200px #f4e4c1,
+            0 0 250px #f4e4c1,
+            
+            /* Mantener profundidad */
+            4px 4px 0px #2c1810,
+            5px 5px 0px #2c1810,
+            6px 6px 0px #2c1810,
+            7px 7px 0px #2c1810,
+            8px 8px 0px #2c1810,
+            
+            /* Sombra más pronunciada */
+            12px 12px 40px rgba(0, 0, 0, 0.95);
+        
+        filter: brightness(1.4) contrast(1.2);
+        transform: perspective(1000px) rotateX(8deg) rotateY(-2deg) scale(1.02);
+    }
+    
+    100% {
+        text-shadow: 
+            /* Núcleo súper brillante */
+            0 0 10px #fff,
+            0 0 20px #fff,
+            0 0 30px #fff,
+            
+            /* Neón dorado al máximo */
+            0 0 40px #d4af37,
+            0 0 60px #d4af37,
+            0 0 100px #d4af37,
+            0 0 140px #d4af37,
+            0 0 180px #d4af37,
+            
+            /* Resplandor máximo */
+            0 0 220px #f4e4c1,
+            0 0 280px #f4e4c1,
+            0 0 320px rgba(244, 228, 193, 0.3),
+            
+            /* Profundidad constante */
+            4px 4px 0px #2c1810,
+            5px 5px 0px #2c1810,
+            6px 6px 0px #2c1810,
+            7px 7px 0px #2c1810,
+            8px 8px 0px #2c1810,
+            
+            /* Sombra dramática */
+            15px 15px 50px rgba(0, 0, 0, 1);
+        
+        filter: brightness(1.6) contrast(1.3);
+        transform: perspective(1000px) rotateX(8deg) rotateY(-2deg) scale(1.05);
+    }
+}
+
+/* EFECTO HOVER PARA INTERACTIVIDAD */
+.titulo-principal:hover {
+    animation-duration: 0.5s;
+    cursor: default;
+    
+    text-shadow: 
+        /* Núcleo ultra brillante */
+        0 0 15px #fff,
+        0 0 25px #fff,
+        0 0 35px #fff,
+        
+        /* Neón dorado explosivo */
+        0 0 50px #d4af37,
+        0 0 80px #d4af37,
+        0 0 120px #d4af37,
+        0 0 160px #d4af37,
+        0 0 200px #d4af37,
+        
+        /* Resplandor extremo */
+        0 0 250px #f4e4c1,
+        0 0 300px #f4e4c1,
+        0 0 350px rgba(244, 228, 193, 0.5),
+        
+        /* Profundidad mejorada */
+        6px 6px 0px #2c1810,
+        7px 7px 0px #2c1810,
+        8px 8px 0px #2c1810,
+        9px 9px 0px #2c1810,
+        10px 10px 0px #2c1810,
+        
+        /* Sombra extrema */
+        20px 20px 60px rgba(0, 0, 0, 1);
+    
+    filter: brightness(2) contrast(1.5);
+    transform: perspective(1000px) rotateX(8deg) rotateY(-2deg) scale(1.08);
+}
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+    .titulo-principal {
+        font-size: 3.5rem; /* Más pequeño en móviles pero aún prominente */
+        letter-spacing: 3px;
+        margin: 20px 0 15px 0;
+        
+        /* Neón reducido para móviles (mejor rendimiento) */
+        text-shadow: 
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 15px #d4af37,
+            0 0 25px #d4af37,
+            0 0 40px #d4af37,
+            0 0 60px #f4e4c1,
+            3px 3px 0px #2c1810,
+            4px 4px 0px #2c1810,
+            5px 5px 0px #2c1810,
+            8px 8px 20px rgba(0, 0, 0, 0.8);
+        
+        transform: perspective(800px) rotateX(6deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-principal {
+        font-size: 2.8rem; /* Ajuste para pantallas muy pequeñas */
+        letter-spacing: 2px;
+        margin: 15px 0 10px 0;
+        
+        /* Neón simplificado para pantallas pequeñas */
+        text-shadow: 
+            0 0 3px #fff,
+            0 0 8px #fff,
+            0 0 12px #d4af37,
+            0 0 20px #d4af37,
+            0 0 30px #d4af37,
+            2px 2px 0px #2c1810,
+            3px 3px 0px #2c1810,
+            6px 6px 15px rgba(0, 0, 0, 0.7);
+        
+        transform: perspective(600px) rotateX(4deg);
+        animation-duration: 3s; /* Animación más lenta para mejor rendimiento */
+    }
+}
+
+/* ======================================================
+   📱 OPTIMIZACIONES PARA PANTALLAS DE ALTA RESOLUCIÓN
+   ====================================================== */
+
+/* FIN DEL ARCHIVO CSS */

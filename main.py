@@ -36,6 +36,7 @@ print("📦 Registrando blueprints...")
 # Crear aplicación Flask principal
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'eterials_restaurant_2025_secure_key'
+app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024  # 20MB máximo para uploads
 
 # Configurar CORS para APIs
 CORS(app)
@@ -139,8 +140,8 @@ if __name__ == "__main__":
     # Inicializar base de datos
     initialize_database()
     
-    # Configuración para producción/desarrollo
-    port = int(os.environ.get('PORT', 8080))
+    # Configuración simple - puerto fijo 8080
+    port = 8080
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
     
     print(f"🌐 Servidor iniciando en puerto {port}")
@@ -155,5 +156,13 @@ if __name__ == "__main__":
     print(f"   🍳 Cocina: http://127.0.0.1:{port}/cocina")
     print("=" * 50)
     
-    # Iniciar servidor
-    app.run(debug=debug_mode, host='0.0.0.0', port=port)
+    # Iniciar servidor directamente en puerto 8080
+    try:
+        app.run(debug=debug_mode, host='0.0.0.0', port=port, use_reloader=False)
+    except OSError as e:
+        if "Address already in use" in str(e):
+            print(f"❌ Error: Puerto {port} ocupado")
+            print("� Sugerencia: Ejecuta 'taskkill /F /IM python.exe' para limpiar procesos")
+            print("🔄 O espera unos segundos e intenta de nuevo")
+        else:
+            raise e

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Debug - Eterials</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .file-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed #fff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .preview {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .color-palette {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .color-sample {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+            cursor: pointer;
+        }
+        #log {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Dashboard Chatbot - Debug Mode</h1>
+            <p>Panel simplificado para debugging del sistema de fondos</p>
+        </div>
+
+        <!-- Estado del Sistema -->
+        <div class="section">
+            <h3>📊 Estado del Sistema</h3>
+            <p>Puerto actual: <span id="puerto-actual">8082</span></p>
+            <p>Estado backend: <span id="estado-backend">Verificando...</span></p>
+            <button class="btn" onclick="verificarEstado()">🔄 Verificar Estado</button>
+        </div>
+
+        <!-- Subida de Fondos Simplificada -->
+        <div class="section">
+            <h3>🖼️ Subida de Fondos (Simplificada)</h3>
+            <div class="file-input" onclick="document.getElementById('file-input').click()">
+                📁 Haz clic para seleccionar imagen
+                <input type="file" id="file-input" accept="image/*" style="display: none;">
+            </div>
+            <div id="preview-container"></div>
+            <div id="color-palette" class="color-palette"></div>
+            <button class="btn" onclick="subirFondo()" id="btn-subir" disabled>📤 Subir Fondo</button>
+        </div>
+
+        <!-- Log de Actividad -->
+        <div class="section">
+            <h3>📋 Log de Actividad</h3>
+            <div id="log"></div>
+            <button class="btn" onclick="limpiarLog()">🗑️ Limpiar Log</button>
+        </div>
+    </div>
+
+    <script>
+        let archivoSeleccionado = null;
+        let coloresExtraidos = {};
+
+        function log(mensaje) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${mensaje}<br>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(mensaje);
+        }
+
+        function limpiarLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        async function verificarEstado() {
+            log('🔍 Verificando estado del backend...');
+            try {
+                const response = await fetch('/api/chatbot/dashboard/resumen');
+                if (response.ok) {
+                    log('✅ Backend chatbot respondiendo correctamente');
+                    document.getElementById('estado-backend').textContent = 'Operativo';
+                    document.getElementById('estado-backend').style.color = '#28a745';
+                } else {
+                    log(`⚠️ Backend responde con código ${response.status}`);
+                    document.getElementById('estado-backend').textContent = `Error ${response.status}`;
+                    document.getElementById('estado-backend').style.color = '#dc3545';
+                }
+            } catch (error) {
+                log(`❌ Error conectando con backend: ${error.message}`);
+                document.getElementById('estado-backend').textContent = 'Sin conexión';
+                document.getElementById('estado-backend').style.color = '#dc3545';
+            }
+        }
+
+        // Manejo de archivos
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                archivoSeleccionado = file;
+                log(`📁 Archivo seleccionado: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`);
+                
+                // Mostrar preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview';
+                    const container = document.getElementById('preview-container');
+                    container.innerHTML = '';
+                    container.appendChild(img);
+                    
+                    // Extraer colores (simulado por simplicidad)
+                    setTimeout(() => {
+                        extraerColores(img);
+                    }, 100);
+                };
+                reader.readAsDataURL(file);
+                
+                document.getElementById('btn-subir').disabled = false;
+            }
+        });
+
+        function extraerColores(img) {
+            log('🎨 Extrayendo colores dominantes...');
+            
+            // Canvas para análisis de colores
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            ctx.drawImage(img, 0, 0);
+            
+            // Colores de ejemplo (en producción usaríamos un algoritmo real)
+            const coloresEjemplo = [
+                '#1e3c72', '#2a5298', '#4169e1', '#6495ed', '#87ceeb'
+            ];
+            
+            const paletteDiv = document.getElementById('color-palette');
+            paletteDiv.innerHTML = '';
+            
+            coloresEjemplo.forEach((color, index) => {
+                const colorDiv = document.createElement('div');
+                colorDiv.className = 'color-sample';
+                colorDiv.style.backgroundColor = color;
+                colorDiv.title = color;
+                colorDiv.onclick = () => log(`🎯 Color seleccionado: ${color}`);
+                paletteDiv.appendChild(colorDiv);
+            });
+            
+            coloresExtraidos = {
+                primario: coloresEjemplo[0],
+                secundario: coloresEjemplo[1],
+                acento: coloresEjemplo[2]
+            };
+            
+            log(`✅ Colores extraídos: ${Object.values(coloresExtraidos).join(', ')}`);
+        }
+
+        async function subirFondo() {
+            if (!archivoSeleccionado) {
+                log('❌ No hay archivo seleccionado');
+                return;
+            }
+
+            log('📤 Iniciando subida de fondo...');
+            
+            const formData = new FormData();
+            formData.append('archivo', archivoSeleccionado);
+            formData.append('nombre', `Debug ${Date.now()}`);
+
+            try {
+                const response = await fetch('/api/chatbot/fondos/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    log('✅ Fondo subido correctamente');
+                    log(`📋 ID del fondo: ${result.fondo.id}`);
+                    log(`📏 Tamaño: ${(result.fondo.tamaño_archivo/1024).toFixed(2)} KB`);
+                    
+                    // Aplicar fondo automáticamente
+                    aplicarFondo(result.fondo.id);
+                } else {
+                    log(`❌ Error subiendo fondo: ${result.error}`);
+                }
+            } catch (error) {
+                log(`❌ Error de conexión: ${error.message}`);
+            }
+        }
+
+        async function aplicarFondo(fondoId) {
+            log(`🎨 Aplicando fondo ID: ${fondoId}...`);
+            
+            try {
+                const response = await fetch(`/api/chatbot/fondos/${fondoId}/aplicar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        colores_automaticos: coloresExtraidos
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    log('✅ Fondo aplicado al chatbot');
+                    log(`🎭 Tema generado: ${result.tema.nombre}`);
+                } else {
+                    log(`❌ Error aplicando fondo: ${result.error}`);
+                }
+            } catch (error) {
+                log(`❌ Error aplicando fondo: ${error.message}`);
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Dashboard debug inicializado');
+            verificarEstado();
+        });
+    </script>
+</body>
+</html>

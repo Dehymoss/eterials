@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eterials Gastro-Café</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Merriweather:wght@300;400;700&family=Dancing+Script:wght@400;700&family=Caveat:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <!-- Ejemplo de referencia a archivos estáticos del blueprint -->
-    <link rel="stylesheet" href="{{ url_for('chatbot.static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('chatbot.static', filename='style.css') }}?v=20250919j">
 </head>
 <body>
     <div class="contenedor-central">
@@ -51,7 +50,7 @@
                 <span class="estrella" data-valor="2">&#9733;</span>
                 <span class="estrella" data-valor="1">&#9733;</span>
             </div>
-            <button class="boton" onclick="enviarCalificacion()" data-icon="⭐">ENVIAR</button>
+            <button onclick="enviarCalificacion()" class="boton" data-icon="📨">ENVIAR CALIFICACIÓN</button>
         </div>
 
         <!-- Comentarios -->
@@ -60,7 +59,7 @@
             <div class="input-row">
                 <textarea id="comentario" placeholder="Escribe tus comentarios aquí..."></textarea>
             </div>
-            <button class="boton" data-icon="📨">ENVIAR</button>
+            <button class="boton" data-icon="�">ENVIAR</button>
         </div>
 
         <!-- Redes sociales -->
@@ -70,6 +69,7 @@
             <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok">🎵</a>
             <a href="https://goo.gl/maps" target="_blank" rel="noopener noreferrer" title="Ubicación">📍</a>
         </div>
+        
     </div>
 
     <!-- Bloque taza y humareda animada -->
@@ -119,7 +119,6 @@
         <div class="nota nota-azul nota-19"><span>♫</span></div>
     </div>
 
-    <!-- Scripts del chatbot -->
-    <script src="{{ url_for('chatbot.static', filename='script.js') }}"></script>
+    <script src="{{ url_for('chatbot.static', filename='script.js') }}?v=20250919i"></script>
 </body>
 </html>

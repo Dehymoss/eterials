@@ -603,13 +603,14 @@ body {
 
 .background-item {
     position: relative;
-    aspect-ratio: 16/9;
     border-radius: 10px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
+    display: inline-block;
+    width: auto;
 }
 
 .background-item:hover {
@@ -617,9 +618,8 @@ body {
 }
 
 .background-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    /* height y object-fit se definen inline en JavaScript */
 }
 
 .background-overlay {
@@ -652,6 +652,28 @@ body {
 
 .background-overlay button:hover {
     background: white;
+}
+
+.background-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+    padding: 1rem 0.5rem 0.5rem;
+    text-align: center;
+}
+
+.background-info h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.background-info small {
+    opacity: 0.8;
+    font-size: 0.7rem;
 }
 
 /* Formularios */

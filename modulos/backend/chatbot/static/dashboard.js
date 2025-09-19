@@ -299,17 +299,21 @@ class ChatbotDashboard {
             
             container.innerHTML = fondos.map(fondo => `
                 <div class="background-item">
-                    <img src="${fondo.url}" alt="${fondo.nombre}" loading="lazy">
+                    <img src="${fondo.archivo_url}" alt="${fondo.nombre}" loading="lazy" style="max-width: 100%; height: 150px; object-fit: cover;">
                     <div class="background-overlay">
-                        <button onclick="previsualizarFondo('${fondo.url}')" title="Previsualizar">
-                            <i class="fas fa-eye"></i>
+                        <button onclick="aplicarFondoChatbot(${fondo.id}, '${fondo.archivo_url}')" title="Aplicar al Chatbot" style="background: #28a745; color: white;">
+                            <i class="fas fa-paint-brush"></i>
                         </button>
-                        <button onclick="activarFondo(${fondo.id})" title="Activar">
-                            <i class="fas fa-check"></i>
+                        <button onclick="previsualizarFondo('${fondo.archivo_url}')" title="Previsualizar">
+                            <i class="fas fa-eye"></i>
                         </button>
                         <button onclick="eliminarFondo(${fondo.id})" title="Eliminar" style="color: #e53e3e;">
                             <i class="fas fa-trash"></i>
                         </button>
+                    </div>
+                    <div class="background-info">
+                        <h4>${fondo.nombre}</h4>
+                        <small>${fondo.archivo_original || 'Imagen personalizada'}</small>
                     </div>
                 </div>
             `).join('');
@@ -379,8 +383,8 @@ class ChatbotDashboard {
                 continue;
             }
             
-            if (file.size > 5 * 1024 * 1024) {
-                this.mostrarError(`${file.name} es demasiado grande (máximo 5MB)`);
+            if (file.size > 20 * 1024 * 1024) {
+                this.mostrarError(`${file.name} es demasiado grande (máximo 20MB)`);
                 continue;
             }
             
@@ -394,10 +398,10 @@ class ChatbotDashboard {
     async subirFondo(file) {
         try {
             const formData = new FormData();
-            formData.append('fondo', file);
+            formData.append('archivo', file);
             formData.append('nombre', file.name.split('.')[0]);
             
-            const response = await fetch('/api/chatbot/fondos', {
+            const response = await fetch('/api/chatbot/fondos/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -1011,3 +1015,220 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ Funciones de personalización inicializadas');
 });
+
+/**
+ * Aplicar fondo al chatbot y generar paleta de colores automática
+ */
+async function aplicarFondoChatbot(fondoId, imagenUrl) {
+    try {
+        console.log(`🎨 Aplicando fondo ${fondoId} al chatbot...`);
+        
+        // 1. Extraer colores dominantes de la imagen
+        const colores = await extraerColoresDominantes(imagenUrl);
+        
+        // 2. Aplicar fondo al chatbot
+        const response = await fetch(`/api/chatbot/fondos/${fondoId}/aplicar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                colores_automaticos: colores
+            })
+        });
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        const resultado = await response.json();
+        console.log('✅ Fondo aplicado:', resultado);
+        
+        mostrarNotificacion(`Fondo aplicado al chatbot con paleta automática`, 'success');
+        
+        // 3. Actualizar vista previa si está visible
+        actualizarVistaPreviaChatbot();
+        
+        // 4. Notificar al chatbot para que actualice el tema
+        notificarCambioDeTema();
+        
+    } catch (error) {
+        console.error('❌ Error aplicando fondo:', error);
+        mostrarNotificacion(`Error aplicando fondo: ${error.message}`, 'error');
+    }
+}
+
+/**
+ * Extraer colores dominantes de una imagen base64
+ */
+function extraerColoresDominantes(imagenUrl) {
+    return new Promise((resolve) => {
+        // Crear canvas temporal para analizar la imagen
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Redimensionar para análisis más rápido
+            const size = 50;
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Dibujar imagen redimensionada
+            ctx.drawImage(img, 0, 0, size, size);
+            
+            // Obtener datos de píxeles
+            const imageData = ctx.getImageData(0, 0, size, size);
+            const data = imageData.data;
+            
+            // Analizar colores (simplificado)
+            let r = 0, g = 0, b = 0;
+            let pixelCount = 0;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                r += data[i];
+                g += data[i + 1];
+                b += data[i + 2];
+                pixelCount++;
+            }
+            
+            // Calcular color promedio
+            r = Math.round(r / pixelCount);
+            g = Math.round(g / pixelCount);
+            b = Math.round(b / pixelCount);
+            
+            // Generar paleta basada en el color promedio
+            const paleta = generarPaletaColores(r, g, b);
+            resolve(paleta);
+        };
+        
+        img.onerror = function() {
+            // Si hay error, usar paleta por defecto
+            resolve({
+                primario: '#1a365d',
+                secundario: '#2d3748', 
+                acento: '#3182ce',
+                texto_claro: '#ffffff',
+                texto_oscuro: '#1a202c'
+            });
+        };
+        
+        img.src = imagenUrl;
+    });
+}
+
+/**
+ * Generar paleta de colores basada en RGB
+ */
+function generarPaletaColores(r, g, b) {
+    // Convertir a HSL para manipular mejor
+    const hsl = rgbToHsl(r, g, b);
+    
+    return {
+        primario: `hsl(${hsl[0]}, ${Math.max(hsl[1], 50)}%, ${Math.max(hsl[2] - 20, 20)}%)`,
+        secundario: `hsl(${(hsl[0] + 30) % 360}, ${Math.max(hsl[1], 40)}%, ${Math.max(hsl[2] - 10, 30)}%)`,
+        acento: `hsl(${(hsl[0] + 60) % 360}, ${Math.max(hsl[1], 60)}%, ${Math.min(hsl[2] + 10, 70)}%)`,
+        texto_claro: '#ffffff',
+        texto_oscuro: hsl[2] > 50 ? '#1a202c' : '#f7fafc'
+    };
+}
+
+/**
+ * Convertir RGB a HSL
+ */
+function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+}
+
+/**
+ * Actualizar vista previa del chatbot
+ */
+function actualizarVistaPreviaChatbot() {
+    // Esta función se puede expandir para mostrar una vista previa
+    console.log('🔄 Actualizando vista previa del chatbot...');
+}
+
+/**
+ * Notificar al chatbot que debe actualizar su tema
+ */
+function notificarCambioDeTema() {
+    console.log('📢 Notificando cambio de tema al chatbot...');
+    
+    // Enviar mensaje a todas las ventanas del chatbot abiertas
+    const mensaje = {
+        tipo: 'ACTUALIZAR_TEMA',
+        timestamp: Date.now()
+    };
+    
+    // Usar localStorage para comunicación entre pestañas
+    localStorage.setItem('chatbot_tema_actualizado', JSON.stringify(mensaje));
+    
+    // Limpiar después de un momento
+    setTimeout(() => {
+        localStorage.removeItem('chatbot_tema_actualizado');
+    }, 1000);
+}
+
+/**
+ * Previsualizar fondo
+ */
+function previsualizarFondo(imagenUrl) {
+    // Crear modal de previsualización
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8); display: flex; align-items: center;
+        justify-content: center; z-index: 10000; cursor: pointer;
+    `;
+    
+    const img = document.createElement('img');
+    img.src = imagenUrl;
+    img.style.cssText = 'max-width: 90%; max-height: 90%; object-fit: contain;';
+    
+    modal.appendChild(img);
+    modal.onclick = () => modal.remove();
+    document.body.appendChild(modal);
+}
+
+/**
+ * Eliminar fondo
+ */
+async function eliminarFondo(fondoId) {
+    if (!confirm('¿Estás seguro de eliminar este fondo?')) return;
+    
+    try {
+        const response = await fetch(`/api/chatbot/fondos/${fondoId}`, {
+            method: 'DELETE'
+        });
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        mostrarNotificacion('Fondo eliminado correctamente', 'success');
+        
+        // Recargar galería
+        if (window.dashboardManager && window.dashboardManager.currentSection === 'fondos') {
+            await window.dashboardManager.cargarFondos();
+        }
+        
+    } catch (error) {
+        console.error('❌ Error eliminando fondo:', error);
+        mostrarNotificacion(`Error eliminando fondo: ${error.message}`, 'error');
+    }
+}

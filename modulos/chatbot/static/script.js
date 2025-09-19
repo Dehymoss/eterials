@@ -312,7 +312,34 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cargar configuración de timeout
     cargarTimeoutConfiguracion();
+    
+    // Escuchar cambios de tema desde el dashboard
+    escucharCambiosDeTema();
 });
+
+// Nueva función para escuchar cambios de tema
+function escucharCambiosDeTema() {
+    // Escuchar cambios en localStorage
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'chatbot_tema_actualizado') {
+            console.log('🔄 Tema actualizado detectado, recargando...');
+            // Recargar configuraciones del backend
+            cargarConfiguracionesBackend();
+        }
+    });
+    
+    // También verificar periódicamente por si no se detecta el evento
+    setInterval(() => {
+        const mensaje = localStorage.getItem('chatbot_tema_actualizado');
+        if (mensaje) {
+            const datos = JSON.parse(mensaje);
+            if (Date.now() - datos.timestamp < 2000) { // Mensaje reciente
+                console.log('🔄 Tema actualizado detectado (polling), recargando...');
+                cargarConfiguracionesBackend();
+            }
+        }
+    }, 1000);
+}
 
 // Nueva función para cargar configuraciones del backend
 async function cargarConfiguracionesBackend() {
@@ -321,7 +348,7 @@ async function cargarConfiguracionesBackend() {
         const responseTheme = await fetch('/api/chatbot/tema/activo');
         if (responseTheme.ok) {
             const tema = await responseTheme.json();
-            aplicarTema(tema);
+            aplicarTemaEstetico(tema);  // Cambiar nombre para evitar conflicto
         }
         
     } catch (error) {
@@ -330,8 +357,13 @@ async function cargarConfiguracionesBackend() {
 }
 
 // Nueva función para aplicar tema dinámico
-function aplicarTema(tema) {
-    if (!tema || !tema.propiedades) return;
+function aplicarTemaEstetico(tema) {
+    if (!tema || !tema.propiedades) {
+        console.warn('⚠️ Tema no válido o sin propiedades:', tema);
+        return;
+    }
+    
+    console.log('🎨 Aplicando tema:', tema.nombre, 'con propiedades:', tema.propiedades);
     
     // Crear estilos dinámicos basados en el tema
     let estilosDinamicos = document.getElementById('tema-dinamico');
@@ -346,6 +378,7 @@ function aplicarTema(tema) {
     // Aplicar propiedades del tema
     Object.keys(tema.propiedades).forEach(propiedad => {
         const valor = tema.propiedades[propiedad];
+        console.log(`🔧 Procesando propiedad: ${propiedad} = ${valor}`);
         
         switch (propiedad) {
             case 'background_color':
@@ -359,11 +392,20 @@ function aplicarTema(tema) {
                 css += `body { color: ${valor} !important; }`;
                 break;
             case 'background_image':
-                css += `body { background-image: url('${valor}') !important; background-size: cover; background-position: center; }`;
+                // Si la URL ya tiene url(), la usamos directamente, si no, la envolvemos
+                const urlImagen = valor.startsWith('url(') ? valor : `url('${valor}')`;
+                css += `body { 
+                    background-image: ${urlImagen} !important; 
+                    background-size: auto !important; 
+                    background-position: center !important; 
+                    background-repeat: no-repeat !important;
+                }`;
+                console.log('🖼️ Aplicando fondo en tamaño original:', urlImagen);
                 break;
         }
     });
     
+    console.log('📝 CSS generado:', css);
     estilosDinamicos.textContent = css;
     console.log('✅ Tema aplicado:', tema.nombre);
 }

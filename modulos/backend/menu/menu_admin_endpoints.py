@@ -213,3 +213,78 @@ def buscar_imagenes_fallback(query):
 # ⏳ Próximos endpoints por migrar:
 # - estadisticas_endpoints.py → /api/estadisticas/* - Reportes y analytics
 # - backup_endpoints.py → /api/backup/* - Gestión de backups
+
+# --- FUNCIÓN TEMPORAL DE BÚSQUEDA DE IMÁGENES ---
+@menu_admin_bp.route('/api/imagenes/buscar/', methods=['GET'])
+@menu_admin_bp.route('/api/imagenes/buscar', methods=['GET'])
+def buscar_imagenes_temporal():
+    """Función temporal de búsqueda de imágenes hasta que se migre completamente"""
+    try:
+        nombre = request.args.get('nombre', '').strip()
+        limite = min(int(request.args.get('limite', 6)), 20)
+        
+        if not nombre:
+            return jsonify({'success': False, 'error': 'Nombre del producto requerido'}), 400
+        
+        # BASE DE DATOS CURADA DE IMÁGENES POR CATEGORÍA
+        imagenes_curadas = {
+            'cerveza': [
+                'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1594736797933-d0d39d634bdd?w=400&h=300&fit=crop'
+            ],
+            'capuccino': [
+                'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1558618666-d2c51c2cac5c?w=400&h=300&fit=crop'
+            ],
+            'cafe': [
+                'https://images.unsplash.com/photo-1495774856032-8b90bbb32b32?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?w=400&h=300&fit=crop'
+            ],
+            'pizza': [
+                'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1595708684082-a173bb3a06c5?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=400&h=300&fit=crop',
+                'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=400&h=300&fit=crop'
+            ]
+        }
+        
+        # Detectar categoría del producto
+        nombre_lower = nombre.lower()
+        categoria_detectada = None
+        imagenes_seleccionadas = []
+        
+        # Buscar coincidencias exactas o parciales
+        for categoria, urls in imagenes_curadas.items():
+            if categoria in nombre_lower or any(word in nombre_lower for word in categoria.split()):
+                categoria_detectada = categoria
+                imagenes_seleccionadas = urls[:limite]
+                break
+        
+        # Si no hay coincidencia específica, usar imágenes de "cafe" como fallback
+        if not imagenes_seleccionadas:
+            categoria_detectada = 'cafe'
+            imagenes_seleccionadas = imagenes_curadas['cafe'][:limite]
+        
+        return jsonify({
+            'imagenes': imagenes_seleccionadas,
+            'total': len(imagenes_seleccionadas),
+            'query': nombre,
+            'categoria': categoria_detectada
+        })
+            
+    except Exception as e:
+        return jsonify({
+            'error': f'Error buscando imágenes: {str(e)}',
+            'imagenes': [],
+            'total': 0
+        }), 500
