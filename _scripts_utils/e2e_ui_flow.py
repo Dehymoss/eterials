@@ -2,7 +2,7 @@ import requests
 import time
 
 BASE = 'http://127.0.0.1:5001'
-UPLOAD = BASE + '/menu-admin/subir-imagen'
+UPLOAD = BASE + '/menu-admin/api/imagenes/subir-imagen'
 CREATE = BASE + '/menu-admin/api/productos'
 LIST = BASE + '/menu-admin/api/productos'
 

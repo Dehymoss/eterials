@@ -138,7 +138,7 @@ class SistemaUploadImagen {
         this.mostrarCargando(true);
 
         try {
-            const response = await fetch(`${this.baseURL}/subir-imagen`, {
+            const response = await fetch(`${this.baseURL}/api/imagenes/subir-imagen`, {
                 method: 'POST',
                 body: formData
             });

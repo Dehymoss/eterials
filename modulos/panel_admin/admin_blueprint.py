@@ -17,6 +17,27 @@ def dashboard_admin():
     """Dashboard principal administrativo via /admin/admin."""
     return render_template('dashboard.html')
 
+@admin_bp.route('/cambiar-fondos')
+def cambiar_fondos():
+    """Interfaz simple para cambiar fondos de chatbot"""
+    import os
+    try:
+        fondos_file_path = os.path.join(os.getcwd(), 'cambiar_fondos_simple.html')
+        with open(fondos_file_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        return '''
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Error - Archivo no encontrado</title>
+        </head>
+        <body>
+            <h1>Error: No se encontró el archivo cambiar_fondos_simple.html</h1>
+        </body>
+        </html>
+        '''
+
 @admin_bp.route('/debug-dashboard')
 def debug_dashboard():
     """Dashboard simplificado para debugging"""

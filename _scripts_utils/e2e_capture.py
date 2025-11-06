@@ -20,14 +20,14 @@ upload_response = None
 upload_attempts = []
 
 try:
-    lines.append('\nPOST /menu-admin/subir-imagen (intentando varias claves de archivo)')
+    lines.append('\nPOST /menu-admin/api/imagenes/subir-imagen (intentando varias claves de archivo)')
     for key in file_keys:
         # reset buffer for each attempt
         bio_template.seek(0)
         files = {key: ('capu_test.jpg', bio_template, 'image/jpeg')}
         lines.append(f'-- Intentando clave de archivo: "{key}"')
         try:
-            r2 = requests.post(BASE + '/menu-admin/subir-imagen', files=files, timeout=15)
+            r2 = requests.post(BASE + '/menu-admin/api/imagenes/subir-imagen', files=files, timeout=15)
             lines.append(f'STATUS {r2.status_code}')
             lines.append(r2.text)
             upload_attempts.append({'key': key, 'status': r2.status_code, 'text': r2.text})

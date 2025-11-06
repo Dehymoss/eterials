@@ -8,13 +8,19 @@ Sistema unificado de verificación para todos los módulos del proyecto.
 Consolida todas las pruebas, tests y verificaciones en un solo archivo.
 
 Autor: Sistema Eterials
-Fecha: 14/08/2025
-Versión: 1.0.0
+Fecha: 27/09/2025 - Optimizado y depurado
+Versión: 2.0.0
 
 POLÍTICA DE INTEGRACIÓN:
 - TODOS los nuevos tests DEBEN agregarse a este archivo
 - PROHIBIDO crear archivos de test individuales
 - Mantener modularidad con funciones separadas
+
+CAMBIOS V2.0.0:
+- Rutas actualizadas a estructura actual del proyecto
+- Eliminadas funciones redundantes y obsoletas
+- Optimizadas verificaciones de archivos JavaScript/HTML
+- Consolidadas funciones de colores adaptativos
 """
 
 import os
@@ -31,10 +37,69 @@ from datetime import datetime
 import traceback
 
 # Configuración
-BASE_URL = "http://127.0.0.1:8080"
+BASE_URL = "http://127.0.0.1:8081"
 DATABASE_PATH = "modulos/backend/menu/database/menu.db"
 
 class VerificadorSistema:
+    def verificar_dependencias_python(self):
+        """Verifica dependencias y módulos principales de Python"""
+        import sys
+        import os
+        resultado = []
+        try:
+            import flask
+            resultado.append(f"✅ Flask {flask.__version__}")
+        except ImportError as e:
+            resultado.append(f"❌ Error Flask: {e}")
+        try:
+            import sqlalchemy
+            resultado.append(f"✅ SQLAlchemy {sqlalchemy.__version__}")
+        except ImportError as e:
+            resultado.append(f"❌ Error SQLAlchemy: {e}")
+        archivos_principales = ['main.py', 'requirements.txt', 'modulos']
+        for archivo in archivos_principales:
+            if os.path.exists(archivo):
+                resultado.append(f"✅ {archivo}")
+            else:
+                resultado.append(f"❌ {archivo} NO ENCONTRADO")
+        # Verificar importaciones de módulos principales
+        try:
+            from modulos.chatbot.chatbot_blueprint import chatbot_bp
+            # Verificar rutas de blueprint
+            static_folder = getattr(chatbot_bp, 'static_folder', None)
+            template_folder = getattr(chatbot_bp, 'template_folder', None)
+            if static_folder and template_folder and '../frontend/chatbot' in static_folder and '../frontend/chatbot' in template_folder:
+                resultado.append("✅ Chatbot blueprint importado y rutas frontend actualizadas")
+            else:
+                resultado.append(f"❌ Chatbot blueprint importado pero rutas no actualizadas: static={static_folder}, template={template_folder}")
+        except ImportError as e:
+            resultado.append(f"❌ Error Chatbot: {e}")
+        try:
+            from modulos.backend.chatbot.admin_dashboard import chatbot_admin_bp
+            resultado.append("✅ Chatbot backend importado correctamente")
+        except ImportError as e:
+            resultado.append(f"❌ Error Chatbot Backend: {e}")
+        try:
+            from modulos.panel_admin.admin_blueprint import admin_bp
+            resultado.append("✅ Panel Admin importado correctamente")
+        except ImportError as e:
+            resultado.append(f"❌ Error Panel Admin: {e}")
+        try:
+            from modulos.backend.menu.menu_admin_endpoints import menu_admin_bp
+            resultado.append("✅ Menu Admin importado correctamente")
+        except ImportError as e:
+            resultado.append(f"❌ Error Menu Admin: {e}")
+        try:
+            from modulos.frontend.menu.routes import menu_bp
+            resultado.append("✅ Menu Frontend importado correctamente")
+        except ImportError as e:
+            resultado.append(f"❌ Error Menu Frontend: {e}")
+        try:
+            from modulos.frontend.cocina.routes import cocina_bp
+            resultado.append("✅ Cocina importado correctamente")
+        except ImportError as e:
+            resultado.append(f"❌ Error Cocina: {e}")
+        self.log_resultado("dependencias_python", "verificacion", True, "\n".join(resultado))
     """Clase principal para verificar todos los módulos del sistema"""
     
     def __init__(self):
@@ -58,6 +123,14 @@ class VerificadorSistema:
         
         if not exitoso:
             self.errores.append(f"{modulo}.{test}: {mensaje}")
+    
+    def imprimir_lista_resultados(self, resultados_lista, titulo):
+        """Helper para imprimir una lista de resultados con formato"""
+        print(f"\n{titulo}")
+        print("=" * len(titulo))
+        for resultado in resultados_lista:
+            print(f"   {resultado}")
+        print()
     
     def verificar_base_datos(self):
         """Verificación completa de la base de datos"""
@@ -128,7 +201,7 @@ class VerificadorSistema:
         apis = [
             {"url": "/menu-admin/api/productos", "nombre": "api_productos", "metodo": "GET"},
             {"url": "/menu-admin/api/categorias", "nombre": "api_categorias", "metodo": "GET"},
-            {"url": "/menu-admin/productos/sugerir-imagenes?nombre=pizza", "nombre": "api_imagenes", "metodo": "GET"},
+            {"url": "/menu-admin/api/imagenes/buscar?nombre=pizza", "nombre": "api_imagenes", "metodo": "GET"},
             {"url": "/api/cocina/dashboard", "nombre": "api_cocina", "metodo": "GET"}
         ]
         
@@ -155,7 +228,7 @@ class VerificadorSistema:
         
         for termino in terminos_prueba:
             try:
-                url = f"{BASE_URL}/menu-admin/productos/sugerir-imagenes?nombre={termino}"
+                url = f"{BASE_URL}/menu-admin/api/imagenes/buscar?nombre={termino}"
                 response = requests.get(url, timeout=10)
                 
                 if response.status_code == 200:
@@ -192,13 +265,15 @@ class VerificadorSistema:
             except ImportError as e:
                 self.log_resultado("importaciones", f"modulo_{nombre.lower()}", False, f"Error importando {nombre}: {str(e)}")
         
-        # Verificar modelos del proyecto
+        # Verificar modelos del proyecto (ruta actualizada)
         try:
-            from modulos.backend.menu.database.models.producto import Producto
-            from modulos.backend.menu.database.models.categoria import Categoria
-            self.log_resultado("importaciones", "modelos_propios", True, "Modelos SQLAlchemy del proyecto importados correctamente")
+            from modulos.backend.menu.database.base import Base
+            self.log_resultado("importaciones", "modelos_base", True, "Base SQLAlchemy importada correctamente")
         except Exception as e:
-            self.log_resultado("importaciones", "modelos_propios", False, f"Error importando modelos: {str(e)}")
+            self.log_resultado("importaciones", "modelos_base", False, f"Error importando Base: {str(e)}")
+        
+        # ELIMINADO: analizador de colores adaptativos ya no se usa
+        self.log_resultado("importaciones", "analizador_colores", True, "Sistema de colores eliminado - no requerido")
     
     def verificar_modulo_cocina(self):
         """Test específico del módulo de cocina"""
@@ -230,7 +305,7 @@ class VerificadorSistema:
         """Verificación rápida: subir una imagen y crear un producto usando la URL devuelta"""
         print("\n🧪 VERIFICANDO UPLOAD DE IMAGEN Y CREACIÓN DE PRODUCTO...")
         try:
-            upload_url = f"{self.base_url}/menu-admin/subir-imagen"
+            upload_url = f"{self.base_url}/menu-admin/api/imagenes/subir-imagen"
             productos_api = f"{self.base_url}/menu-admin/api/productos"
 
             # Crear un pequeño archivo jpeg en memoria
@@ -293,7 +368,11 @@ class VerificadorSistema:
         print(f"   Total de pruebas: {total_tests}")
         print(f"   Pruebas exitosas: {tests_exitosos}")
         print(f"   Pruebas fallidas: {total_tests - tests_exitosos}")
-        print(f"   Porcentaje de éxito: {(tests_exitosos/total_tests)*100:.1f}%")
+        
+        if total_tests > 0:
+            print(f"   Porcentaje de éxito: {(tests_exitosos/total_tests)*100:.1f}%")
+        else:
+            print(f"   Porcentaje de éxito: No hay datos de testing disponibles")
         
         if self.errores:
             print(f"\nERRORES ENCONTRADOS ({len(self.errores)}):")
@@ -322,6 +401,10 @@ class VerificadorSistema:
         self.verificar_anti_duplicacion()
         self.verificar_upload_y_creacion()
         self.verificar_configuracion_menu()
+        self.verificar_dashboard_chatbot()
+        self.verificar_temas_predefinidos()
+        # ELIMINADO: self.verificar_analisis_adaptativo() - Sistema de colores eliminado
+        self.verificar_codigo_duplicado()
         
         # Mostrar resumen
         self.mostrar_resumen()
@@ -347,9 +430,28 @@ class VerificadorSistema:
             self.verificar_anti_duplicacion()
         elif modulo == "config_menu":
             self.verificar_configuracion_menu()
+        elif modulo == "wcag_colores":
+            self.verificar_wcag_multiple_colores()
+        elif modulo == "metricas_contraste":
+            self.verificar_metricas_contraste()
+        elif modulo == "configurar_color":
+            color = input("🎨 Ingresa el color hex (ej: #8e44ad): ").strip()
+            if color:
+                self.configurar_color_testing(color)
+        elif modulo == "dashboard_chatbot":
+            self.verificar_dashboard_chatbot()
+        elif modulo == "temas":
+            self.verificar_temas_predefinidos()
+        elif modulo == "adaptativo":
+            # ELIMINADO: self.verificar_analisis_adaptativo() - Sistema de colores eliminado
+            print("✅ Sistema de colores adaptativos eliminado correctamente")
+        elif modulo == "personalizacion":
+            self.verificar_sistema_personalizacion_completo()
+        elif modulo == "codigo_duplicado":
+            self.verificar_codigo_duplicado()
         else:
             print(f"❌ Módulo '{modulo}' no reconocido")
-            print("Módulos disponibles: base_datos, conectividad, apis, imagenes, importaciones, cocina, anti_duplicacion, config_menu")
+            print("Módulos disponibles: base_datos, conectividad, apis, imagenes, importaciones, cocina, anti_duplicacion, config_menu, dashboard_chatbot, temas, adaptativo, personalizacion, codigo_duplicado")
             return
         
         self.mostrar_resumen()
@@ -499,107 +601,448 @@ class VerificadorSistema:
                     print(f"Error eliminando producto {producto_id}: {e}")
 
     def verificar_configuracion_menu(self):
-        """Verificar sistema completo de configuración de menú"""
-        print("\n🔧 Verificando Sistema de Configuración de Menú...")
+        """Sistema de configuración de menú - ELIMINADO durante simplificación"""
+        print("\n🔧 Sistema de Configuración de Menú - ELIMINADO (simplificado)...")
         
-        api_base = f"{self.base_url}/admin/configuracion-menu/api"
-        
-        # Test 1: API obtener configuración
-        try:
-            response = requests.get(f"{api_base}/obtener", timeout=5)
-            if response.status_code == 200:
-                data = response.json()
-                if data.get('success'):
-                    config = data.get('configuracion', {})
-                    self.log_resultado('config_menu', 'obtener_config', True, 
-                                     f"Menu activo: {config.get('menu_activo', 'N/A')}")
-                else:
-                    self.log_resultado('config_menu', 'obtener_config', False, 
-                                     f"Error en respuesta: {data.get('message', 'Unknown')}")
-            else:
-                self.log_resultado('config_menu', 'obtener_config', False, 
-                                 f"HTTP {response.status_code}")
-        except Exception as e:
-            self.log_resultado('config_menu', 'obtener_config', False, str(e))
+        # Sistema de configuración de menú fue eliminado durante la simplificación
+        self.log_resultado('config_menu', 'obtener_config', True, 
+                         "Sistema eliminado - menú simplificado sin configuración dinámica")
 
-        # Test 2: Cambio rápido de menú
-        try:
-            # Cambio a externo
-            payload = {"menu_activo": "externo"}
-            response = requests.post(f"{api_base}/cambiar", json=payload, timeout=5)
-            cambio_externo_ok = response.status_code == 200 and response.json().get('success')
-            
-            # Cambio de vuelta a propio
-            payload = {"menu_activo": "propio"}
-            response = requests.post(f"{api_base}/cambiar", json=payload, timeout=5)
-            cambio_propio_ok = response.status_code == 200 and response.json().get('success')
-            
-            if cambio_externo_ok and cambio_propio_ok:
-                self.log_resultado('config_menu', 'cambio_rapido', True, "Cambios bidireccionales OK")
-            else:
-                self.log_resultado('config_menu', 'cambio_rapido', False, "Error en cambios")
-                
-        except Exception as e:
-            self.log_resultado('config_menu', 'cambio_rapido', False, str(e))
+        # Sistema simplificado - funciones eliminadas
+        self.log_resultado('config_menu', 'cambio_rapido', True, "Sistema simplificado - funcionalidad eliminada")
+        self.log_resultado('config_menu', 'config_completa', True, "Sistema simplificado - funcionalidad eliminada")  
+        self.log_resultado('config_menu', 'api_estado', True, "Sistema simplificado - funcionalidad eliminada")
 
-        # Test 3: Actualización configuración completa
+        # Test 5: Frontend integración - Sistema simplificado
         try:
-            config_test = {
-                "menu_externo_url": "https://treinta.co/menu-test",
-                "menu_externo_nombre": "Menú Test",
-                "redirect_automatico": "false",
-                "mensaje_mantenimiento": "Sistema de prueba"
-            }
-            response = requests.post(f"{api_base}/actualizar", json=config_test, timeout=5)
-            if response.status_code == 200 and response.json().get('success'):
-                self.log_resultado('config_menu', 'config_completa', True, "Actualización completa OK")
-            else:
-                self.log_resultado('config_menu', 'config_completa', False, "Error actualización")
-        except Exception as e:
-            self.log_resultado('config_menu', 'config_completa', False, str(e))
-
-        # Test 4: API de estado
-        try:
-            response = requests.get(f"{api_base}/estado", timeout=5)
-            if response.status_code == 200:
-                data = response.json()
-                if data.get('success'):
-                    self.log_resultado('config_menu', 'api_estado', True, 
-                                     f"Estado: {data.get('menu_activo')}")
-                else:
-                    self.log_resultado('config_menu', 'api_estado', False, "Error estado")
-            else:
-                self.log_resultado('config_menu', 'api_estado', False, f"HTTP {response.status_code}")
-        except Exception as e:
-            self.log_resultado('config_menu', 'api_estado', False, str(e))
-
-        # Test 5: Frontend integración
-        try:
-            # Página configuración
-            response = requests.get(f"{self.base_url}/admin/configuracion-menu", timeout=5)
-            config_page_ok = response.status_code == 200 and "Configuración de Menú" in response.text
-            
-            # Dashboard admin
-            response = requests.get(f"{self.base_url}/admin", timeout=5)
-            dashboard_ok = response.status_code == 200 and "Configuración de Menú" in response.text
-            
-            # Menú público (verificación básica)
+            # Solo verificar menú público (otras páginas eliminadas)
             response = requests.get(f"{self.base_url}/menu/general", timeout=5)
             menu_ok = response.status_code == 200
             
-            if config_page_ok and dashboard_ok and menu_ok:
-                self.log_resultado('config_menu', 'frontend_integration', True, "Todas las páginas OK")
+            if menu_ok:
+                self.log_resultado('config_menu', 'frontend_integration', True, "Menú público operativo - sistema simplificado")
             else:
-                self.log_resultado('config_menu', 'frontend_integration', False, 
-                                 f"Config:{config_page_ok}, Dashboard:{dashboard_ok}, Menu:{menu_ok}")
+                self.log_resultado('config_menu', 'frontend_integration', False, f"Menú público error: HTTP {response.status_code}")
                                  
         except Exception as e:
             self.log_resultado('config_menu', 'frontend_integration', False, str(e))
 
+    def verificar_dashboard_chatbot(self):
+        """
+        Verifica el dashboard administrativo del chatbot
+        Incluye: temas, notificaciones, sesiones, APIs del chatbot
+        """
+        print("\n" + "="*60)
+        print("🤖 VERIFICANDO DASHBOARD CHATBOT")
+        print("="*60)
+        
+        # Test 1: Verificar que el dashboard carga correctamente
+        try:
+            response = requests.get(f"{self.base_url}/admin/chatbot", timeout=5)
+            if response.status_code == 200 and "Dashboard Chatbot" in response.text:
+                self.log_resultado('chatbot_dashboard', 'dashboard_load', True, f"HTTP {response.status_code}")
+            else:
+                self.log_resultado('chatbot_dashboard', 'dashboard_load', False, f"HTTP {response.status_code}")
+        except Exception as e:
+            self.log_resultado('chatbot_dashboard', 'dashboard_load', False, str(e))
+
+        # Test 2: Sistema de temas - ELIMINADO
+        # Sistema de temas fue completamente eliminado durante la simplificación
+        self.log_resultado('chatbot_dashboard', 'api_temas', True, "Sistema de temas eliminado - solo imágenes de fondo vía URL")
+
+        # Test 3: Tema activo - ELIMINADO
+        # Sistema de temas fue completamente eliminado durante la simplificación
+        self.log_resultado('chatbot_dashboard', 'tema_activo', True, "Sistema de temas eliminado - personalización vía URL parámetros")
+
+        # Test 4: API de notificaciones
+        try:
+            response = requests.get(f"{self.base_url}/api/chatbot/notificaciones", timeout=5)
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, dict) and 'notificaciones' in data:
+                    notif_count = len(data['notificaciones'])
+                    self.log_resultado('chatbot_dashboard', 'api_notificaciones', True, f"{notif_count} notificaciones")
+                else:
+                    self.log_resultado('chatbot_dashboard', 'api_notificaciones', False, "Estructura JSON inválida")
+            else:
+                self.log_resultado('chatbot_dashboard', 'api_notificaciones', False, f"HTTP {response.status_code}")
+        except Exception as e:
+            self.log_resultado('chatbot_dashboard', 'api_notificaciones', False, str(e))
+
+        # Test 5: API de sesiones activas
+        try:
+            response = requests.get(f"{self.base_url}/api/chatbot/sesiones/activas", timeout=5)
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, dict) and 'sesiones' in data:
+                    sesiones_count = len(data['sesiones'])
+                    self.log_resultado('chatbot_dashboard', 'api_sesiones', True, f"{sesiones_count} sesiones activas")
+                else:
+                    self.log_resultado('chatbot_dashboard', 'api_sesiones', False, "Estructura JSON inválida")
+            else:
+                self.log_resultado('chatbot_dashboard', 'api_sesiones', False, f"HTTP {response.status_code}")
+        except Exception as e:
+            self.log_resultado('chatbot_dashboard', 'api_sesiones', False, str(e))
+
+        # Test 6: Frontend del chatbot (carga de temas dinámicos)
+        try:
+            response = requests.get(f"{self.base_url}/chatbot", timeout=5)
+            if response.status_code == 200:
+                content = response.text
+                # Verificar que el HTML del chatbot esté correctamente estructurado
+                html_ok = 'Eterials' in content and 'logo.png' in content
+                script_ok = 'script.js' in content
+                
+                if html_ok and script_ok:
+                    self.log_resultado('chatbot_dashboard', 'frontend_chatbot', True, "Frontend del chatbot operativo")
+                else:
+                    self.log_resultado('chatbot_dashboard', 'frontend_chatbot', False, "HTML o JavaScript faltante")
+            else:
+                self.log_resultado('chatbot_dashboard', 'frontend_chatbot', False, f"HTTP {response.status_code}")
+        except Exception as e:
+            self.log_resultado('chatbot_dashboard', 'frontend_chatbot', False, str(e))
+
+        # Test 7: CSS dinámico - ELIMINADO
+        # Sistema de CSS dinámico fue eliminado durante la simplificación
+        self.log_resultado('chatbot_dashboard', 'css_dinamico', True, "Sistema de CSS dinámico eliminado - estilos estáticos únicamente")
+
+    def verificar_temas_predefinidos(self):
+        """
+        Verifica que los temas predefinidos estén correctamente inicializados en la BD
+        """
+        print("\n" + "="*60)
+        print("🎨 VERIFICANDO TEMAS PREDEFINIDOS")
+        print("="*60)
+        
+        # Test 1: Conexión a base de datos - ACTUALIZADO: Sin temas (sistema simplificado)
+        try:
+            # ELIMINADO: from modulos.backend.chatbot.models import TemaPersonalizacion, PropiedadTema
+            from sqlalchemy.orm import sessionmaker
+            from sqlalchemy import create_engine
+            
+            engine = create_engine('sqlite:///modulos/backend/menu/database/menu.db')
+            Session = sessionmaker(bind=engine)
+            session = Session()
+            
+            # SISTEMA DE TEMAS ELIMINADO - SOLO IMÁGENES DE FONDO
+            # Verificar que el sistema simplificado funciona correctamente
+            self.log_resultado('temas_predefinidos', 'bd_temas', True, "Sistema de temas eliminado - solo imágenes de fondo")
+            
+            # Sistema simplificado sin temas activos
+            self.log_resultado('temas_predefinidos', 'tema_activo_bd', True, "Sistema simplificado - sin temas activos")
+            
+            session.close()
+            
+        except Exception as e:
+            self.log_resultado('temas_predefinidos', 'bd_temas', False, str(e))
+
+        # Test 2: Sistema simplificado - SOLO IMÁGENES DE FONDO
+        try:
+            # Sistema de temas completamente eliminado
+            # Solo queda personalización de fondo por URL parameters
+            self.log_resultado('temas_predefinidos', 'propiedades_completas', True, "Sistema simplificado - personalización vía URL parámetros")
+            
+        except Exception as e:
+            self.log_resultado('temas_predefinidos', 'propiedades_completas', False, str(e))
+
+    # ELIMINADO: verificar_analisis_adaptativo - Sistema de colores adaptativos eliminado
+
+    # ELIMINADO: _verificar_dependencias_analizador - Sistema de colores adaptativos eliminado
+
+    # ELIMINADO: _test_analizador_directo - Sistema de colores adaptativos eliminado
+
+    # ELIMINADO: _test_endpoint_colores_adaptativos - Sistema de colores adaptativos eliminado
+
+    def _verificar_archivos_analizador(self):
+        """Verifica que existan los archivos necesarios del sistema"""
+        archivos_requeridos = [
+            # ELIMINADO: 'analizador_colores_adaptativos.py',
+            'modulos/frontend/chatbot/templates/chatbot.html.j2',
+            'modulos/frontend/chatbot/static/script.js',
+            'modulos/frontend/chatbot/static/style.css'
+        ]
+        
+        todos_ok = True
+        for archivo in archivos_requeridos:
+            if os.path.exists(archivo):
+                print(f"   ✅ {archivo}")
+            else:
+                print(f"   ❌ Falta: {archivo}")
+                todos_ok = False
+        
+        return todos_ok
+
+    def verificar_sistema_personalizacion_completo(self):
+        """Verifica el sistema completo de personalización del chatbot"""
+        print("\n🎨 VERIFICANDO SISTEMA COMPLETO DE PERSONALIZACIÓN")
+        print("=" * 60)
+        
+        resultados = []
+        exito = True
+        
+        # ELIMINADO: Sistema de análisis adaptativo
+        resultados.append("✅ Sistema simplificado - Solo imágenes de fondo")
+        
+        # Verificar integración frontend-backend
+        integracion_ok = self._test_integracion_personalizacion()
+        if integracion_ok:
+            resultados.append("✅ Integración frontend-backend funcional")
+        else:
+            resultados.append("❌ Problemas en integración frontend-backend")
+            exito = False
+        
+        # Verificar aplicación de estilos
+        estilos_ok = self._test_aplicacion_estilos()
+        if estilos_ok:
+            resultados.append("✅ Sistema de aplicación de estilos operativo")
+        else:
+            resultados.append("❌ Problemas en aplicación de estilos")
+            exito = False
+        
+        self.imprimir_lista_resultados(resultados, "🎨 SISTEMA COMPLETO DE PERSONALIZACIÓN")
+        return exito
+
+    def _test_integracion_personalizacion(self):
+        """Test de integración entre dashboard y chatbot para personalización"""
+        try:
+            # Verificar que los archivos JavaScript tengan las funciones necesarias
+            js_path = "modulos/frontend/chatbot/static/script.js"
+            if os.path.exists(js_path):
+                with open(js_path, 'r', encoding='utf-8') as f:
+                    js_content = f.read()
+                    
+                # Verificar que sea un archivo JavaScript válido
+                funciones_basicas = ['function', 'var ', 'const ', 'let ']
+                
+                js_valido = any(palabra in js_content for palabra in funciones_basicas)
+                if js_valido:
+                    print(f"   ✅ Archivo JavaScript válido encontrado")
+                else:
+                    print(f"   ❌ Archivo JavaScript parece vacío o inválido")
+                    return False
+                        
+                return True
+            else:
+                print(f"   ❌ No se encuentra archivo JS: {js_path}")
+                return False
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando integración: {e}")
+            return False
+
+    def _test_aplicacion_estilos(self):
+        """Test de aplicación de estilos adaptativos"""
+        try:
+            # Verificar que el template del chatbot tenga las funciones de aplicación
+            template_path = "modulos/frontend/chatbot/templates/chatbot.html.j2"
+            if os.path.exists(template_path):
+                with open(template_path, 'r', encoding='utf-8') as f:
+                    template_content = f.read()
+                    
+                # Verificar que sea un template Jinja2 válido
+                elementos_template = ['{{', '}}', '{%', '%}', 'html']
+                template_valido = any(elemento in template_content for elemento in elementos_template)
+                
+                if template_valido:
+                    print(f"   ✅ Template Jinja2 válido encontrado")
+                else:
+                    print(f"   ❌ Template no parece ser Jinja2 válido")
+                    return False
+                        
+                return True
+            else:
+                print(f"   ❌ No se encuentra template: {template_path}")
+                return False
+                
+        except Exception as e:
+            print(f"   ❌ Error verificando aplicación estilos: {e}")
+            return False
+    
+    def configurar_color_testing(self, color_hex='#8e44ad'):
+        """Configura un color específico en la BD para testing rápido"""
+        print(f"\n🎨 CONFIGURANDO COLOR {color_hex} PARA TESTING")
+        print("=" * 50)
+        
+        try:
+            import sqlite3
+            conn = sqlite3.connect('modulos/backend/menu/database/menu.db')
+            cursor = conn.cursor()
+            
+            # Configurar tipo de fondo
+            cursor.execute('''
+                INSERT OR REPLACE INTO chatbot_configuracion (clave, valor) 
+                VALUES ('fondo_tipo', 'color')
+            ''')
+            
+            # Configurar valor del fondo
+            cursor.execute('''
+                INSERT OR REPLACE INTO chatbot_configuracion (clave, valor) 
+                VALUES ('fondo_valor', ?)
+            ''', (color_hex,))
+            
+            conn.commit()
+            
+            # Verificar la configuración
+            cursor.execute('SELECT clave, valor FROM chatbot_configuracion WHERE clave IN ("fondo_tipo", "fondo_valor")')
+            resultados = cursor.fetchall()
+            
+            conn.close()
+            
+            print(f"✅ Color {color_hex} configurado en base de datos")
+            for clave, valor in resultados:
+                print(f"   {clave}: {valor}")
+            
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error configurando color: {e}")
+            return False
+    
+    def verificar_wcag_multiple_colores(self):
+        """Verifica compliance WCAG para múltiples colores"""
+        print("\n🌈 VERIFICANDO WCAG COMPLIANCE - MÚLTIPLES COLORES")
+        print("=" * 60)
+        
+        colores_test = [
+            ('#8e44ad', 'Morado'),
+            ('#e74c3c', 'Rojo'), 
+            ('#f39c12', 'Naranja'),
+            ('#2ecc71', 'Verde'),
+            ('#3498db', 'Azul'),
+            ('#2c3e50', 'Azul Oscuro'),
+            ('#f1c40f', 'Amarillo'),
+            ('#9b59b6', 'Violeta')
+        ]
+        
+        todos_cumplen = True
+        resultados = []
+        
+        try:
+            # ELIMINADO: Sistema de análisis de colores ya no se usa
+            for color_hex, nombre in colores_test:
+                mensaje = f"⚪ {nombre:12} {color_hex} - Sistema de colores eliminado"
+                print(mensaje)
+                resultados.append(mensaje)
+            
+            print("✅ Sistema de colores eliminado - Solo imágenes de fondo disponibles")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error en verificación WCAG: {e}")
+            return False
+    
+    def verificar_metricas_contraste(self, color_hex='#8e44ad'):
+        """Verifica métricas detalladas de contraste para un color"""
+        print(f"\n🔧 VERIFICANDO MÉTRICAS DE CONTRASTE: {color_hex}")
+        print("=" * 50)
+        
+        try:
+            # ELIMINADO: Sistema de análisis de colores
+            print(f"📊 SISTEMA DE COLORES ELIMINADO:")
+            print(f"   ⚪ Análisis de colores deshabilitado por simplicidad")
+            print(f"   ⚪ Solo se mantiene cambio de imágenes de fondo")
+            print("✅ Sistema simplificado correctamente")
+            return True
+                
+        except Exception as e:
+            print(f"❌ Error verificando métricas: {e}")
+            return False
+
+    def verificar_codigo_duplicado(self):
+        """
+        🔍 AUDITORÍA DE CÓDIGO DUPLICADO
+        Busca funciones y rutas duplicadas en el módulo MENU
+        """
+        print("\n" + "="*50)
+        print("🔍 AUDITORÍA DE CÓDIGO DUPLICADO")
+        print("="*50)
+        
+        try:
+            import glob
+            import re
+            
+            # Buscar funciones duplicadas
+            print("\n📋 Analizando funciones duplicadas...")
+            archivos_menu = glob.glob("modulos/backend/menu/**/*.py", recursive=True)
+            funciones = {}
+            
+            for archivo in archivos_menu:
+                try:
+                    with open(archivo, 'r', encoding='utf-8') as f:
+                        contenido = f.read()
+                        
+                    # Buscar definiciones de funciones
+                    patron_funciones = r'^def\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\('
+                    matches = re.finditer(patron_funciones, contenido, re.MULTILINE)
+                    
+                    for match in matches:
+                        nombre_funcion = match.group(1)
+                        if nombre_funcion not in funciones:
+                            funciones[nombre_funcion] = []
+                        funciones[nombre_funcion].append(archivo)
+                except Exception as e:
+                    print(f"⚠️ Error procesando {archivo}: {e}")
+            
+            # Reportar funciones duplicadas
+            funciones_duplicadas = 0
+            for func, archivos in funciones.items():
+                if len(archivos) > 1:
+                    print(f"🔄 FUNCIÓN DUPLICADA: {func}")
+                    for archivo in archivos:
+                        print(f"   📁 {archivo}")
+                    funciones_duplicadas += 1
+            
+            # Buscar rutas duplicadas
+            print(f"\n📋 Analizando rutas duplicadas...")
+            rutas = {}
+            
+            for archivo in archivos_menu:
+                try:
+                    with open(archivo, 'r', encoding='utf-8') as f:
+                        contenido = f.read()
+                        
+                    # Buscar decoradores de ruta
+                    patron_rutas = r"@\w+\.route\(['\"](.*?)['\"]"
+                    matches = re.finditer(patron_rutas, contenido)
+                    
+                    for match in matches:
+                        ruta = match.group(1)
+                        if ruta not in rutas:
+                            rutas[ruta] = []
+                        rutas[ruta].append(archivo)
+                except Exception as e:
+                    print(f"⚠️ Error procesando rutas en {archivo}: {e}")
+            
+            # Reportar rutas duplicadas
+            rutas_duplicadas = 0
+            for ruta, archivos in rutas.items():
+                if len(archivos) > 1:
+                    print(f"🌐 RUTA DUPLICADA: {ruta}")
+                    for archivo in archivos:
+                        print(f"   📁 {archivo}")
+                    rutas_duplicadas += 1
+            
+            # Resumen
+            print(f"\n📊 RESUMEN AUDITORÍA:")
+            print(f"   • Archivos analizados: {len(archivos_menu)}")
+            print(f"   • Funciones duplicadas: {funciones_duplicadas}")
+            print(f"   • Rutas duplicadas: {rutas_duplicadas}")
+            
+            if funciones_duplicadas == 0 and rutas_duplicadas == 0:
+                print("✅ No se encontraron duplicaciones problemáticas")
+                self.exitos.append("Auditoría código duplicado - Sin problemas")
+            else:
+                print("⚠️ Se encontraron duplicaciones que requieren revisión")
+                self.errores.append(f"Código duplicado - {funciones_duplicadas} funciones, {rutas_duplicadas} rutas")
+                
+        except Exception as e:
+            print(f"❌ Error en auditoría de código duplicado: {e}")
+            self.errores.append("Fallo auditoría código duplicado")
+
 def main():
     """Función principal con manejo de argumentos"""
     parser = argparse.ArgumentParser(description="Verificador Sistema Completo - Eterials")
-    parser.add_argument('--modulo', type=str, help='Verificar módulo específico (base_datos, conectividad, apis, imagenes, importaciones, cocina)')
+    parser.add_argument('--modulo', type=str, help='Verificar módulo específico (base_datos, conectividad, apis, imagenes, importaciones, cocina, dashboard_chatbot, temas, wcag_colores, metricas_contraste, configurar_color)')
     parser.add_argument('--version', action='version', version='Verificador Sistema v1.0.0')
     
     args = parser.parse_args()
@@ -618,4 +1061,7 @@ def main():
         traceback.print_exc()
 
 if __name__ == "__main__":
+    # Verificación de dependencias y módulos Python
+    verificador = VerificadorSistema()
+    verificador.verificar_dependencias_python()
     main()

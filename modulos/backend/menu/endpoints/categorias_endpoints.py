@@ -10,6 +10,7 @@ import os
 import re
 from modulos.backend.menu.database.models.categoria import Categoria
 from modulos.backend.menu.database.models.subcategoria import Subcategoria
+from modulos.backend.menu.endpoints.subcategorias_endpoints import subcategoria_to_dict
 
 # Configuración de base de datos
 DB_PATH = os.path.join(os.path.dirname(__file__), '../database', 'menu.db')
@@ -148,17 +149,7 @@ def categoria_to_dict(categoria):
         'orden': getattr(categoria, 'orden', 0)
     }
 
-def subcategoria_to_dict(subcategoria):
-    """Convierte un objeto Subcategoria a diccionario para JSON"""
-    return {
-        'id': subcategoria.id,
-        'codigo': getattr(subcategoria, 'codigo', ''),
-        'nombre': subcategoria.nombre,
-        'descripcion': getattr(subcategoria, 'descripcion', ''),
-        'categoria_id': subcategoria.categoria_id,
-        'tipo': getattr(subcategoria, 'tipo', ''),
-        'activa': getattr(subcategoria, 'activa', True)
-    }
+# subcategoria_to_dict importada del módulo especializado
 
 @categorias_bp.route('/previsualizar-icono', methods=['GET', 'POST'])
 def previsualizar_icono():

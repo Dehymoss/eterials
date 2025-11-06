@@ -1,32 +1,9 @@
+// Función de saludo simplificada
 function obtenerSaludo() {
     let hora = new Date().getHours();
     if (hora >= 6 && hora < 12) return "Buenos días";
     if (hora >= 12 && hora < 18) return "Buenas tardes";
     return "Buenas noches";
-}
-
-// Nueva función para obtener saludo personalizado del backend
-async function obtenerSaludoPersonalizado() {
-    try {
-        const response = await fetch('/api/chatbot/saludo');
-        if (response.ok) {
-            const config = await response.json();
-            
-            let hora = new Date().getHours();
-            if (hora >= 6 && hora < 12 && config.saludo_manana) {
-                return config.saludo_manana;
-            } else if (hora >= 12 && hora < 18 && config.saludo_tarde) {
-                return config.saludo_tarde;
-            } else if (config.saludo_noche) {
-                return config.saludo_noche;
-            }
-        }
-    } catch (error) {
-        console.warn('⚠️ Usando saludo por defecto:', error);
-    }
-    
-    // Fallback al saludo por defecto
-    return obtenerSaludo();
 }
 
 async function mostrarSaludo() {
@@ -341,74 +318,7 @@ function escucharCambiosDeTema() {
     }, 1000);
 }
 
-// Nueva función para cargar configuraciones del backend
-async function cargarConfiguracionesBackend() {
-    try {
-        // Cargar tema activo
-        const responseTheme = await fetch('/api/chatbot/tema/activo');
-        if (responseTheme.ok) {
-            const tema = await responseTheme.json();
-            aplicarTemaEstetico(tema);  // Cambiar nombre para evitar conflicto
-        }
-        
-    } catch (error) {
-        console.warn('⚠️ Error cargando configuraciones del backend:', error);
-    }
-}
-
-// Nueva función para aplicar tema dinámico
-function aplicarTemaEstetico(tema) {
-    if (!tema || !tema.propiedades) {
-        console.warn('⚠️ Tema no válido o sin propiedades:', tema);
-        return;
-    }
-    
-    console.log('🎨 Aplicando tema:', tema.nombre, 'con propiedades:', tema.propiedades);
-    
-    // Crear estilos dinámicos basados en el tema
-    let estilosDinamicos = document.getElementById('tema-dinamico');
-    if (!estilosDinamicos) {
-        estilosDinamicos = document.createElement('style');
-        estilosDinamicos.id = 'tema-dinamico';
-        document.head.appendChild(estilosDinamicos);
-    }
-    
-    let css = '';
-    
-    // Aplicar propiedades del tema
-    Object.keys(tema.propiedades).forEach(propiedad => {
-        const valor = tema.propiedades[propiedad];
-        console.log(`🔧 Procesando propiedad: ${propiedad} = ${valor}`);
-        
-        switch (propiedad) {
-            case 'background_color':
-                css += `body { background-color: ${valor} !important; }`;
-                break;
-            case 'accent_color':
-                css += `.boton { background: ${valor} !important; }`;
-                css += `.titulo-principal { color: ${valor} !important; }`;
-                break;
-            case 'text_color':
-                css += `body { color: ${valor} !important; }`;
-                break;
-            case 'background_image':
-                // Si la URL ya tiene url(), la usamos directamente, si no, la envolvemos
-                const urlImagen = valor.startsWith('url(') ? valor : `url('${valor}')`;
-                css += `body { 
-                    background-image: ${urlImagen} !important; 
-                    background-size: auto !important; 
-                    background-position: center !important; 
-                    background-repeat: no-repeat !important;
-                }`;
-                console.log('🖼️ Aplicando fondo en tamaño original:', urlImagen);
-                break;
-        }
-    });
-    
-    console.log('📝 CSS generado:', css);
-    estilosDinamicos.textContent = css;
-    console.log('✅ Tema aplicado:', tema.nombre);
-}
+// SISTEMA DE TEMAS ELIMINADO - Solo personalización por URL parámetros disponible
 
 // Nueva función para restaurar sesión existente
 async function restaurarSesionExistente() {
@@ -871,3 +781,45 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
         }, 300);
     }, 3000);
 }
+
+/* ======================================================
+   🌫️🎶 HUMAREDA MUSICAL DINÁMICA
+   ====================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+    const humareda = document.querySelector(".humareda");
+
+    function crearParticula() {
+        if (!humareda) return;
+
+        const particula = document.createElement("div");
+        particula.className = "particula";
+
+        // Notas y colores posibles
+        const notas = ["♪", "♫", "♬", "♩", "♭", "♯"];
+        const colores = ["nota-amarilla", "nota-rosa", "nota-verde", "nota-morada", "nota-azul"];
+
+        // Aleatorios
+        const nota = notas[Math.floor(Math.random() * notas.length)];
+        const color = colores[Math.floor(Math.random() * colores.length)];
+
+        particula.textContent = nota;
+        particula.classList.add(color);
+
+        // Posición horizontal aleatoria
+        const offsetX = (Math.random() * 60) - 30;
+        particula.style.left = `${50 + offsetX}%`;
+
+        // Tamaño y duración aleatorios
+        const size = 30 + Math.random() * 30;
+        particula.style.setProperty("--humo-size", `${size}px`);
+        const duracion = 6 + Math.random() * 6;
+        particula.style.animationDuration = `${duracion}s`;
+
+        humareda.appendChild(particula);
+
+        setTimeout(() => particula.remove(), duracion * 1000);
+    }
+
+    // Generar nuevas partículas periódicamente
+    setInterval(crearParticula, 1200);
+});

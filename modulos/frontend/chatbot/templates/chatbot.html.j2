@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eterials Gastro-Café</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Caveat:wght@700&family=Kaushan+Script:wght@400&family=Great+Vibes&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('chatbot.static', filename='style.css') }}?v=20251104_menus_dinamicos_v10">
+</head>
+<body{% if fondo_css %} style="{{ fondo_css }}"{% endif %}>
+    <!-- Banner Header Sutil -->
+    <div class="banner-header">
+        <img src="{{ url_for('chatbot.static', filename='assets/logo.png') }}" alt="Logo Eterials" class="banner-logo">
+        <div class="banner-titulo">Eterials</div>
+    </div>
+
+    <div class="contenedor-central">
+        <!-- Saludo dinámico -->
+        <div id="saludo"></div>
+
+        <!-- Nombre -->
+        <div id="nombre-container" class="input-container transparent-container">
+            <p>Escribe tu nombre para personalizar tu experiencia:</p>
+            <div class="input-row">
+                <input type="text" id="nombre" placeholder="Escribe tu nombre" autocomplete="off">
+            </div>
+            <button class="boton" onclick="guardarNombre()" data-icon="💾">GUARDAR NOMBRE</button>
+        </div>
+
+        <!-- Opciones -->
+        <div class="opciones-container">
+            <h3>Selecciona una opción:</h3>
+            <a id="btn-menu" class="boton" href="/menu/general" target="_blank" rel="noopener noreferrer" data-icon="🍽️">MENÚ</a>
+            <a id="btn-cancionero" class="boton" target="_blank" rel="noopener noreferrer" data-icon="🎵">CANCIONERO</a>
+            <a id="btn-mesero" class="boton" target="_blank" rel="noopener noreferrer" data-icon="🔔">LLAMAR AL MESERO</a>
+            <a id="btn-galeria" class="boton" target="_blank" rel="noopener noreferrer" data-icon="📸">GALERÍA</a>
+            <a id="btn-eventos" class="boton" target="_blank" rel="noopener noreferrer" data-icon="🎪">PRÓXIMOS EVENTOS</a>
+            <a id="btn-karaoke" class="boton" target="_blank" rel="noopener noreferrer" data-icon="🎤">KARAOKE</a>
+            <a id="btn-contactenos" class="boton" target="_blank" rel="noopener noreferrer" data-icon="📞">CONTÁCTENOS</a>
+        </div>
+
+        <!-- Calificación -->
+        <div class="input-container transparent-container">
+            <label>⭐ Califícanos:</label>
+            <div class="estrellas" id="estrellas-calificacion">
+                <span class="estrella" data-valor="5">&#9733;</span>
+                <span class="estrella" data-valor="4">&#9733;</span>
+                <span class="estrella" data-valor="3">&#9733;</span>
+                <span class="estrella" data-valor="2">&#9733;</span>
+                <span class="estrella" data-valor="1">&#9733;</span>
+            </div>
+            <button onclick="enviarCalificacion()" class="boton" data-icon="📨">ENVIAR CALIFICACIÓN</button>
+        </div>
+
+        <!-- Comentarios -->
+        <div class="input-container transparent-container">
+            <label for="comentario">Déjanos tus comentarios:</label>
+            <div class="input-row">
+                <textarea id="comentario" placeholder="Escribe tus comentarios aquí..."></textarea>
+            </div>
+            <button class="boton" data-icon="✉️">ENVIAR</button>
+        </div>
+
+        <!-- Redes sociales -->
+        <div class="redes">
+            <a href="https://facebook.com" target="_blank" title="Facebook">⚜</a>
+            <a href="https://instagram.com" target="_blank" title="Instagram">❋</a>
+            <a href="https://tiktok.com" target="_blank" title="TikTok">♫</a>
+            <a href="https://goo.gl/maps" target="_blank" title="Ubicación">⌘</a>
+        </div>
+    </div>
+
+    <!-- Bloque taza y humareda animada -->
+    <div class="taza-esquina">
+        <img src="{{ url_for('chatbot.static', filename='assets/taza.png') }}" alt="Eterials taza">
+    </div>
+    <div class="humareda" id="humareda-container">
+        <!-- Humareda generada dinámicamente por JavaScript -->
+    </div>
+
+    <!-- Sistema de personalización dinámica via URL -->
+    <script>
+        // Leer parámetros URL para personalización en tiempo real
+        function aplicarPersonalizacionURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Leer parámetros de fondo
+            const fondoTipo = urlParams.get('fondo_tipo');
+            const fondoValor = urlParams.get('fondo_valor');
+            
+            // Leer parámetros de colores adaptativos
+            const coloresAdaptativos = {
+                text_color: urlParams.get('text_color'),
+                title_color: urlParams.get('title_color'),
+                accent_color: urlParams.get('accent_color'),
+                button_color: urlParams.get('button_color'),
+                button_text_color: urlParams.get('button_text_color'),
+                es_imagen_oscura: urlParams.get('es_imagen_oscura') === 'true'
+            };
+            
+            // Aplicar fondo
+            if (fondoTipo && fondoValor) {
+                console.log(`🎨 Aplicando fondo desde URL: ${fondoTipo} = ${fondoValor}`);
+                
+                if (fondoTipo === 'color') {
+                    document.body.style.backgroundColor = fondoValor;
+                    document.body.style.backgroundImage = 'none';
+                } else if (fondoTipo === 'imagen') {
+                    document.body.style.backgroundImage = `url('${fondoValor}')`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                    document.body.style.backgroundAttachment = 'fixed';
+                }
+                
+                // Aplicar colores adaptativos si están disponibles
+                if (coloresAdaptativos.text_color) {
+                    aplicarColoresAdaptativosWindows(coloresAdaptativos);
+                }
+            }
+            
+            // Leer parámetros de preview rápido (para testing)
+            const previewFondo = urlParams.get('preview_fondo');
+            if (previewFondo) {
+                try {
+                    const fondoConfig = JSON.parse(decodeURIComponent(previewFondo));
+                    console.log('🔍 Modo preview:', fondoConfig);
+                    
+                    if (fondoConfig.tipo === 'color') {
+                        document.body.style.backgroundColor = fondoConfig.valor;
+                        document.body.style.backgroundImage = 'none';
+                    } else if (fondoConfig.tipo === 'imagen') {
+                        document.body.style.backgroundImage = `url('${fondoConfig.valor}')`;
+                        document.body.style.backgroundSize = 'cover';
+                        document.body.style.backgroundPosition = 'center';
+                    }
+                } catch (e) {
+                    console.log('Error parseando preview_fondo:', e);
+                }
+            }
+        }
+        
+        // Función para aplicar colores adaptativos estilo Windows
+        function aplicarColoresAdaptativosWindows(colores) {
+            console.log('🎨 Aplicando colores adaptativos Windows-style:', colores);
+            
+            // Crear CSS dinámico para colores adaptativos
+            let style = document.getElementById('tema-adaptativo-chatbot');
+            if (!style) {
+                style = document.createElement('style');
+                style.id = 'tema-adaptativo-chatbot';
+                document.head.appendChild(style);
+            }
+            
+            style.textContent = `
+                /* 🎨 Tema Adaptativo Windows-style para Chatbot */
+                body, body * {
+                    color: ${colores.text_color} !important;
+                }
+                
+                h1.titulo-principal,
+                .banner-titulo,
+                h3 {
+                    color: ${colores.title_color} !important;
+                }
+                
+                .boton {
+                    background-color: ${colores.button_color} !important;
+                    color: ${colores.button_text_color} !important;
+                    border: none !important;
+                }
+                
+                .boton:hover {
+                    filter: brightness(1.1) !important;
+                    transform: translateY(-2px) !important;
+                }
+                
+                input[type="text"], 
+                input[type="number"],
+                .input-container input {
+                    background-color: ${colores.es_imagen_oscura ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.9)'} !important;
+                    color: ${colores.text_color} !important;
+                    border: 2px solid ${colores.accent_color} !important;
+                }
+                
+                .input-container,
+                .separador {
+                    background-color: ${colores.es_imagen_oscura ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.8)'} !important;
+                    backdrop-filter: blur(10px) !important;
+                }
+                
+                /* Acentos adaptativos */
+                .accent,
+                .highlight {
+                    color: ${colores.accent_color} !important;
+                }
+            `;
+            
+            console.log(`✅ Tema adaptativo ${colores.es_imagen_oscura ? 'OSCURO' : 'CLARO'} aplicado al chatbot`);
+        }
+        
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aplicar personalización URL
+            aplicarPersonalizacionURL();
+            
+            // Generar humareda dinámicamente
+            const humaredaContainer = document.getElementById('humareda-container');
+            if (humaredaContainer) {
+                const notasSymbols = ['♪', '♫', '♬', '♩', '♭', '♯'];
+                const coloresNotas = ['nota-amarilla', 'nota-rosa', 'nota-verde', 'nota-morada', 'nota-azul'];
+                
+                // Generar 8 nubes de humo
+                for (let i = 0; i < 8; i++) {
+                    const humoNube = document.createElement('div');
+                    humoNube.className = `humo-nube humo-nube-${i}`;
+                    humaredaContainer.appendChild(humoNube);
+                }
+                
+                // Generar 12 notas musicales
+                for (let i = 0; i < 12; i++) {
+                    const nota = document.createElement('div');
+                    const simbolo = notasSymbols[i % notasSymbols.length]; // Distribuir uniformemente
+                    const color = coloresNotas[i % coloresNotas.length];
+                    
+                    nota.className = `nota ${color} nota-${i}`;
+                    nota.innerHTML = `<span>${simbolo}</span>`;
+                    humaredaContainer.appendChild(nota);
+                }
+                
+                console.log('🎵 Humareda y notas musicales generadas');
+            }
+        });
+    </script>
+
+    <!-- Script de saludo automático -->
+    <script>
+        // Generar saludo automático basado en la hora
+        function generarSaludoAutomatico() {
+            const ahora = new Date();
+            const hora = ahora.getHours();
+            let saludo = '';
+            
+            if (hora >= 6 && hora < 12) {
+                saludo = '¡Buenos días! ☀️';
+            } else if (hora >= 12 && hora < 18) {
+                saludo = '¡Buenas tardes! 🌅';
+            } else {
+                saludo = '¡Buenas noches! 🌙';
+            }
+            
+            // Agregar mensaje de bienvenida
+            saludo += '<br><span style="font-size: 0.9em;">Bienvenido</span>';
+            
+            const elementoSaludo = document.getElementById('saludo');
+            if (elementoSaludo) {
+                elementoSaludo.innerHTML = `<h2 style="text-align: center; margin-bottom: 20px; font-family: 'Dancing Script', cursive;">${saludo}</h2>`;
+            }
+            
+            console.log('✅ Saludo automático generado:', saludo);
+        }
+        
+        // Ejecutar saludo inmediatamente
+        generarSaludoAutomatico();
+    </script>
+
+    <!-- Script de configuración de menús dinámicos -->
+    <script>
+        // Cargar configuración de menús desde el dashboard
+        async function cargarConfiguracionMenus() {
+            try {
+                console.log('📋 Cargando configuración de menús para chatbot...');
+                
+                const response = await fetch('/api/chatbot/configuracion/menus');
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Error desconocido');
+                }
+                
+                const config = data.configuracion;
+                console.log('✅ Configuración de menús recibida:', config);
+                
+                // Actualizar botones de menú basado en configuración
+                actualizarBotonesMenu(config);
+                
+            } catch (error) {
+                console.error('❌ Error cargando configuración de menús:', error);
+                // Fallback: mostrar solo menú principal
+                actualizarBotonesMenu({
+                    menu_principal_activo: true,
+                    menu_principal_url: '/menu/general',
+                    menu_alternativo_activo: false,
+                    menu_alternativo_url: ''
+                });
+            }
+        }
+        
+        // Actualizar los botones de menú en la interfaz
+        function actualizarBotonesMenu(config) {
+            const contenedorOpciones = document.querySelector('.opciones-container');
+            
+            if (!contenedorOpciones) {
+                console.error('❌ No se encontró el contenedor de opciones');
+                return;
+            }
+            
+            // Buscar botones de menú existentes
+            const botonMenuPrincipal = document.getElementById('btn-menu');
+            let botonMenuAlternativo = document.getElementById('btn-menu-alternativo');
+            
+            // Manejar menú principal
+            if (config.menu_principal_activo && botonMenuPrincipal) {
+                botonMenuPrincipal.href = config.menu_principal_url || '/menu/general';
+                botonMenuPrincipal.style.display = 'inline-block';
+                console.log('✅ Menú principal activado:', config.menu_principal_url);
+            } else if (botonMenuPrincipal) {
+                botonMenuPrincipal.style.display = 'none';
+                console.log('❌ Menú principal desactivado');
+            }
+            
+            // Manejar menú alternativo
+            if (config.menu_alternativo_activo && config.menu_alternativo_url) {
+                // Crear botón alternativo si no existe
+                if (!botonMenuAlternativo) {
+                    botonMenuAlternativo = document.createElement('a');
+                    botonMenuAlternativo.id = 'btn-menu-alternativo';
+                    botonMenuAlternativo.className = 'boton';
+                    botonMenuAlternativo.setAttribute('data-icon', '🍽️');
+                    botonMenuAlternativo.textContent = 'MENÚ ALTERNATIVO';
+                    botonMenuAlternativo.target = '_blank';
+                    botonMenuAlternativo.rel = 'noopener noreferrer';
+                    
+                    // Insertar después del menú principal
+                    if (botonMenuPrincipal && botonMenuPrincipal.nextElementSibling) {
+                        contenedorOpciones.insertBefore(botonMenuAlternativo, botonMenuPrincipal.nextElementSibling);
+                    } else {
+                        contenedorOpciones.appendChild(botonMenuAlternativo);
+                    }
+                }
+                
+                botonMenuAlternativo.href = config.menu_alternativo_url;
+                botonMenuAlternativo.style.display = 'inline-block';
+                console.log('✅ Menú alternativo activado:', config.menu_alternativo_url);
+            } else if (botonMenuAlternativo) {
+                botonMenuAlternativo.style.display = 'none';
+                console.log('❌ Menú alternativo desactivado');
+            }
+        }
+        
+        // Cargar configuración al inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pequeño delay para asegurar que el DOM esté completamente listo
+            setTimeout(cargarConfiguracionMenus, 500);
+            
+            // Agregar event listener al botón de menú para debugging
+            const botonMenu = document.getElementById('btn-menu');
+            if (botonMenu) {
+                botonMenu.addEventListener('click', function(e) {
+                    console.log('🔍 Clic en botón menú. URL actual:', this.href);
+                    if (this.href === '#' || this.href.includes('#')) {
+                        console.log('⚠️ URL no configurada correctamente, redirigiendo a menú por defecto');
+                        this.href = '/menu/general';
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- Script principal integrado en el HTML -->
+
+</body>
+</html>

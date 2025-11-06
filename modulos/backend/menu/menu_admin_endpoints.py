@@ -35,43 +35,7 @@ from modulos.backend.menu.endpoints.productos_endpoints import productos_bp
 from modulos.backend.menu.endpoints.categorias_endpoints import categorias_bp
 from modulos.backend.menu.endpoints.imagenes_endpoints import imagenes_bp
 
-# --- FUNCIONES HELPER PARA SERIALIZACIÓN (COMPATIBILIDAD) ---
-def producto_to_dict(producto):
-    """Convierte un objeto Producto a diccionario para JSON"""
-    
-    # Función helper para acceso seguro a relaciones
-    def safe_get_relation_attr(obj, attr, default=None):
-        try:
-            if obj:
-                return getattr(obj, attr, default)
-            return default
-        except:
-            return default
-    
-    producto_dict = {
-        'id': producto.id,
-        'codigo': producto.codigo,
-        'nombre': producto.nombre,
-        'precio': float(producto.precio) if producto.precio else 0.0,
-        'descripcion': producto.descripcion,
-        'imagen_url': producto.imagen_url,
-        'categoria_id': producto.categoria_id,
-        'categoria_nombre': safe_get_relation_attr(producto.categoria, 'titulo'),
-        'subcategoria_id': producto.subcategoria_id,
-        'subcategoria_nombre': safe_get_relation_attr(producto.subcategoria, 'nombre'),
-        'disponible': producto.disponible,
-        'tiempo_preparacion': producto.tiempo_preparacion,
-        'popularidad': producto.popularidad
-    }
-    
-    # Obtener ingredientes asociados
-    try:
-        ingredientes = producto.ingredientes if producto.ingredientes else []
-        producto_dict['ingredientes'] = [ingrediente.nombre for ingrediente in ingredientes]
-    except:
-        producto_dict['ingredientes'] = []
-    
-    return producto_dict
+# --- FUNCIONES HELPER ELIMINADAS - YA EXISTEN EN MÓDULOS ESPECIALIZADOS ---
 
 # Blueprint principal
 menu_admin_bp = Blueprint(
@@ -85,6 +49,7 @@ menu_admin_bp = Blueprint(
 # Registrar sub-blueprints después de definir el blueprint principal (evitar imports circulares)
 menu_admin_bp.register_blueprint(productos_bp, url_prefix='/api/productos')
 menu_admin_bp.register_blueprint(categorias_bp, url_prefix='/api/categorias')
+menu_admin_bp.register_blueprint(imagenes_bp, url_prefix='/api/imagenes')
 
 # ===== RUTAS PRINCIPALES DE TEMPLATES =====
 
@@ -288,3 +253,14 @@ def buscar_imagenes_temporal():
             'imagenes': [],
             'total': 0
         }), 500
+
+
+# --- ENDPOINT DE UPLOAD DE IMÁGENES ---
+# --- ENDPOINT PARA SERVIR ARCHIVOS SUBIDOS ---
+@menu_admin_bp.route('/static/uploads/productos/<filename>')
+def uploaded_file(filename):
+    """Servir archivos subidos"""
+    import os
+    from flask import send_from_directory
+    uploads_path = os.path.join(os.path.dirname(__file__), 'static', 'uploads', 'productos')
+    return send_from_directory(uploads_path, filename)

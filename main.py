@@ -107,7 +107,16 @@ try:
 except ImportError as e:
     print(f"❌ Error cargando Dashboard Cocina: {e}")
 
-print(f"🎉 {blueprints_cargados}/5 módulos cargados exitosamente")
+# 🥘 API Backend de cocina
+try:
+    from modulos.backend.cocina.cocina_api import cocina_api_bp
+    app.register_blueprint(cocina_api_bp)
+    print("✅ API Cocina registrada: /api/cocina")
+    blueprints_cargados += 1
+except ImportError as e:
+    print(f"❌ Error cargando API Cocina: {e}")
+
+print(f"🎉 {blueprints_cargados}/8 módulos cargados exitosamente")
 
 # Ruta principal de bienvenida
 @app.route('/')
@@ -140,10 +149,10 @@ if __name__ == "__main__":
     # Inicializar base de datos
     initialize_database()
     
-    # Configuración simple - puerto fijo 8080
-    port = 8080
+    # Puerto dinámico: 8081 local, variable PORT en Render.com
+    port = int(os.environ.get('PORT', 8081))
     debug_mode = os.environ.get('FLASK_ENV') != 'production'
-    
+
     print(f"🌐 Servidor iniciando en puerto {port}")
     print(f"🔧 Modo debug: {'ON' if debug_mode else 'OFF'}")
     print("=" * 50)
@@ -155,8 +164,7 @@ if __name__ == "__main__":
     print(f"   📱 Menú: http://127.0.0.1:{port}/menu/general")
     print(f"   🍳 Cocina: http://127.0.0.1:{port}/cocina")
     print("=" * 50)
-    
-    # Iniciar servidor directamente en puerto 8080
+
     try:
         app.run(debug=debug_mode, host='0.0.0.0', port=port, use_reloader=False)
     except OSError as e:

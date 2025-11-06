@@ -1,235 +1,179 @@
 /* ======================================================
    🎨 ESTILOS PRINCIPALES - MENÚ DÍA & CHATBOT
    Fondo tiza, botones vintage con efecto neón cálido
+   Optimizado - Eterials Chatbot
    ====================================================== */
+
+/* ----------------------------------------
+   RESET / BASE
+   ---------------------------------------- */
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 
 /* --- Fondo y fuente general --- */
 body {
-    background-color: #000000;
-    background-image: url('assets/black-paper.png');
-    background-repeat: repeat;
-    background-size: auto;
-    background-position: center center;
+    background: #000 url('assets/black-paper.png') repeat center center;
+    background-size: 300px 225px;
+    background-attachment: fixed;
     color: #fffbe7;
     font-family: 'Patrick Hand', cursive;
     text-align: center;
     padding: 20px;
     position: relative;
-    margin: 0;
-    font-size: 18px;
     min-height: 100vh;
-    overflow-x: hidden;
-}
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(30, 30, 30, 0.3);
-    z-index: 0;
-    pointer-events: none;
-}
-body > * {
-    position: relative;
-    z-index: 1;
-}
-
-/* --- Variables globales de color --- */
-:root {
-    --color-primary: #d4af37;      /* Dorado elegante */
-    --color-secondary: #2c1810;    /* Marrón oscuro café */
-    --color-accent: #f4e4c1;       /* Crema cálido */
-    --color-text-light: #f9f7f1;   /* Blanco cálido */
-    --color-text-dark: #2c1810;    /* Texto oscuro */
-    --shadow-elegant: 0 8px 32px rgba(212, 175, 55, 0.2);
+    user-select: none;
 }
 
 /* ======================================================
-   ☕ LOGO SUPERIOR (ETERIALS) COMO VINILO A 30 RPM
+   ☁️ HUMO Y NOTAS MUSICALES (animación dinámica)
+   ====================================================== */
+
+.humareda {
+    position: fixed;
+    bottom: 90px;
+    right: 70px;
+    width: 150px;
+    height: 480px;
+    z-index: 998;
+    pointer-events: none;
+    overflow: visible;
+}
+
+/* Humo */
+.humo-nube {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle,
+        rgba(255,255,255,0.9) 0%,
+        rgba(240,240,240,0.6) 50%,
+        rgba(200,200,200,0.3) 100%);
+    border-radius: 50%;
+    opacity: 0.8;
+    filter: blur(3px);
+    animation: flotar-humo 10s infinite ease-in-out;
+}
+
+/* Notas musicales */
+.nota {
+    position: absolute;
+    font-size: 36px;
+    font-weight: bold;
+    color: #FFD700;
+    opacity: 0.9;
+    animation: flotar-nota 12s infinite ease-in-out;
+    filter: drop-shadow(0 0 10px currentColor);
+}
+
+/* Colores pastel */
+.nota-amarilla { color: #FFE4B5; }
+.nota-rosa     { color: #FFB6C1; }
+.nota-verde    { color: #98FB98; }
+.nota-morada   { color: #DDA0DD; }
+.nota-azul     { color: #87CEEB; }
+
+/* Animaciones */
+@keyframes flotar-humo {
+    0%   { transform: translateY(0) scale(0.6); opacity: 0.9; }
+    25%  { transform: translateY(-25vh) translateX(-10px) scale(0.8); opacity: 0.7; }
+    50%  { transform: translateY(-50vh) translateX(15px) scale(1.0); opacity: 0.5; }
+    75%  { transform: translateY(-75vh) translateX(-8px) scale(1.3); opacity: 0.3; }
+    100% { transform: translateY(-100vh) translateX(12px) scale(1.5); opacity: 0; }
+}
+
+@keyframes flotar-nota {
+    0%   { transform: translateY(0) scale(0.6) rotate(0deg); opacity: 1; }
+    25%  { transform: translateY(-25vh) translateX(10px) scale(0.9) rotate(15deg); opacity: 0.8; }
+    50%  { transform: translateY(-50vh) translateX(-15px) scale(1.1) rotate(-20deg); opacity: 0.6; }
+    75%  { transform: translateY(-75vh) translateX(12px) scale(1.3) rotate(25deg); opacity: 0.3; }
+    100% { transform: translateY(-100vh) translateX(-10px) scale(1.5) rotate(-15deg); opacity: 0; }
+}
+
+/* ======================================================
+   💿 LOGO GIRATORIO
    ====================================================== */
 .logo-eterials {
-    display: block;
-    position: fixed;
+    position: absolute;
     top: 25px;
     left: 25px;
     width: 120px;
-    max-width: 140px;
     height: auto;
-    animation: giro-vinilo-30rpm 8s linear infinite;
-    z-index: 10;
+    animation: giro-vinilo 6s linear infinite;
+    z-index: 1;  /* Reducido de 50 a 1 para evitar sobreposición */
     filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8));
 }
 
-.logo {
-    display: block;
-    position: fixed;
-    top: 25px;
-    left: 25px;
-    width: 120px;
-    max-width: 140px;
-    height: auto;
-    animation: giro-vinilo-30rpm 6s linear infinite;
-    z-index: 5;
-    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8));
-}
-@keyframes giro-vinilo-30rpm {
+@keyframes giro-vinilo {
     from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    to   { transform: rotate(360deg); }
 }
 
 /* ======================================================
    --- TÍTULOS ESTILO TIZA ---
    ====================================================== */
-/* Título principal ETERIALS con efectos neón dorados */
+
 .titulo-principal {
     font-family: 'Dancing Script', cursive;
     font-size: 56px;
     font-weight: 700;
     color: #FFD700;
-    letter-spacing: 3px;
-    margin: 40px 0 30px 0;
-    text-align: center;
-    text-transform: capitalize;
     text-shadow:
         0 0 15px #FFD700,
         0 0 30px #FFA500,
-        0 0 45px #FF8C00,
-        0 0 60px #FF4500,
-        0 0 5px #FFFF00,
-        3px 3px 0 #B8860B;
-    animation: parpadeo-neon 3s ease-in-out infinite alternate;
-    filter: brightness(1.2);
+        0 0 45px #FF8C00;
+    animation: parpadeo-neon 3s infinite alternate;
 }
 
 @keyframes parpadeo-neon {
-    0% { 
-        text-shadow:
-            0 0 15px #FFD700,
-            0 0 30px #FFA500,
-            0 0 45px #FF8C00,
-            0 0 60px #FF4500,
-            0 0 5px #FFFF00,
-            3px 3px 0 #B8860B;
-        filter: brightness(1.2);
-    }
-    100% { 
-        text-shadow:
-            0 0 25px #FFD700,
-            0 0 40px #FFA500,
-            0 0 55px #FF8C00,
-            0 0 70px #FF4500,
-            0 0 15px #FFFF00,
-            3px 3px 0 #B8860B;
-        filter: brightness(1.4);
-    }
+    0% { filter: brightness(1); }
+    100% { filter: brightness(1.3); }
 }
 
-h1:not(.titulo-principal) {
-    font-family: 'Dancing Script', cursive;
-    font-size: 48px;
-    color: #FFD700;
-    letter-spacing: 2px;
-    margin-bottom: 15px;
-    font-weight: 700;
-    /* Efectos neón dorados tenues y flotantes */
-    text-shadow:
-        0 0 10px rgba(255, 215, 0, 0.8),    /* Brillo dorado tenue */
-        0 0 20px rgba(255, 215, 0, 0.6),    /* Brillo medio */
-        0 0 30px rgba(255, 215, 0, 0.4),    /* Brillo exterior */
-        0 0 40px rgba(255, 215, 0, 0.2),    /* Brillo de fondo */
-        0 4px 8px rgba(0, 0, 0, 0.3),       /* Sombra de profundidad */
-        0 8px 16px rgba(0, 0, 0, 0.2);      /* Sombra flotante */
-    /* Animación breathing sutil */
-    animation: breathing 4s ease-in-out infinite;
-    filter: blur(0.1px);
-    position: relative;
-    z-index: 10;
+/* ======================================================
+   🏆 BANNER HEADER SUTIL (LOGO + TÍTULO)
+   ====================================================== */
+.banner-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100px;
+    background: rgba(139, 115, 85, 0.12);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
-/* Subtítulos y textos importantes en dorado neón tenue */
-h2, h3, .tiza-amarilla {
+
+.banner-logo {
+    width: 70px;
+    height: 70px;
+    animation: giro-vinilo 8s linear infinite;
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.7));
+}
+
+.banner-titulo {
+    font-family: 'Great Vibes', 'Allura', 'Dancing Script', cursive;
+    font-size: 2.5rem;
     color: #FFD700;
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
-    font-weight: 600;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    margin: 0;
     text-align: center;
-    /* Efectos neón dorados tenues - menos intensos que h1 */
-    text-shadow:
-        0 0 8px rgba(255, 215, 0, 0.6),     /* Brillo dorado tenue */
-        0 0 15px rgba(255, 215, 0, 0.4),    /* Brillo medio */
-        0 0 25px rgba(255, 215, 0, 0.2),    /* Brillo exterior sutil */
-        0 3px 6px rgba(0, 0, 0, 0.3),       /* Sombra de profundidad */
-        0 6px 12px rgba(0, 0, 0, 0.2);      /* Sombra flotante */
-    margin: 30px 0;
-    letter-spacing: 2px;
-    position: relative;
-    z-index: 10;
-}
-
-/* Animación breathing sutil para títulos flotantes */
-@keyframes breathing {
-    0%, 100% { 
-        transform: scale(1);
-        filter: blur(0.1px) brightness(1);
-    }
-    50% { 
-        transform: scale(1.02);
-        filter: blur(0.1px) brightness(1.1);
-        text-shadow:
-            0 0 12px rgba(255, 215, 0, 0.9),
-            0 0 25px rgba(255, 215, 0, 0.7),
-            0 0 35px rgba(255, 215, 0, 0.5),
-            0 0 45px rgba(255, 215, 0, 0.3),
-            0 4px 8px rgba(0, 0, 0, 0.3),
-            0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-}
-
-/* Estilo especial para saludos */
-.saludo-destacado {
-    color: #FFA07A;  /* Luz salmón cálida */
-    font-family: 'Playfair Display', serif;
-    font-size: 48px;
-    font-weight: 700;
-    text-shadow:
-        0 0 15px #FFA07A,
-        0 0 25px #FF7F50,
-        0 0 35px #FF6347,
-        0 3px 0 #CD853F;
-    display: block;
-    margin-bottom: 15px;
-}
-
-.saludo-mensaje {
-    color: #F4E4C1;
-    font-family: 'Caveat', cursive;
-    font-size: 24px;
-    font-weight: 600;
-    text-shadow:
-        0 1px 0 #8B4513,
-        0 0 10px rgba(244, 228, 193, 0.8);
-    line-height: 1.8;
-}
-
-label, #saludo, .estrella, .redes a, textarea, input[type="text"] {
-    color: #FFA07A;  /* Luz cálida tipo salmón suave */
-    font-family: 'Caveat', cursive;
-    font-size: 22px;
-    text-shadow:
-        0 0 4px #fffbe7,
-        0 1px 0 #fff,
-        0 0 3px #fff;
-    filter: blur(0.1px);
-}
-
-p {
-    font-size: 20px;
-    color: #fffbe7;
-    font-family: 'Patrick Hand', cursive;
-    text-shadow:
-        0 0 4px #fffbe7,
-        0 1px 0 #fff,
-        0 0 3px #fff;
-    filter: blur(0.1px);
-    margin-bottom: 15px;
+    flex-grow: 1;
 }
 
 /* ======================================================
@@ -238,1909 +182,211 @@ p {
 .contenedor-central {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
-    padding-top: 140px; /* Espacio para el logo */
+    padding: 140px 20px 20px;
     z-index: 5;
     position: relative;
-    display: block;
-    visibility: visible;
-    min-height: 50vh;
 }
 
 /* ======================================================
-   📱 CONTENEDOR DE NOMBRE CENTRADO
+   🚗 BOTONES PLACAS VINTAGE
    ====================================================== */
-#nombre-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin: 30px auto;
-    max-width: 400px;
-}
-
-#nombre-container .input-row {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin: 15px 0;
-}
-
-#nombre-container input {
-    text-align: center;
-    max-width: 300px;
-}
-
-.contenedor-central > div {
-    margin-bottom: 30px;
-}
-
-/* Espaciado especial para la sección de botones principales */
-.contenedor-central > div:nth-child(4) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 40px;
-    width: 100%;
-}
-
-.contenedor-central > div:nth-child(4) .boton {
-    width: auto;
-    min-width: 200px;
-    max-width: 90%;
-    text-align: center;
-    margin: 0 !important;
-    display: block !important;
-    flex: none;
-    padding: 14px 30px;
-}
-
-/* Espaciado especial para inputs */
-.input-container {
-    margin-bottom: 35px;
-    padding: 20px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 15px;
-}
-
-/* Contenedor para inputs centrados */
-.input-row {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    max-width: 400px;
-}
-
-/* Botones dentro de input-container también centrados */
-.input-container .boton {
-    margin: 10px auto;
-    display: block;
-}
-
-/* ======================================================
-   🚗 BOTONES PLACAS VINTAGE REALISTAS RESPONSIVE
-   ====================================================== */
-
-/* Variables CSS para responsive */
 :root {
-    --placa-width-mobile: 280px;
-    --placa-height-mobile: 60px;
-    --placa-font-mobile: 16px;
-    --placa-icon-mobile: 24px;
-    
-    --placa-width-tablet: 320px;
-    --placa-height-tablet: 70px;
-    --placa-font-tablet: 18px;
-    --placa-icon-tablet: 28px;
-    
-    --placa-width-desktop: 380px;
-    --placa-height-desktop: 80px;
-    --placa-font-desktop: 20px;
-    --placa-icon-desktop: 32px;
+    --placa-width: 300px;
+    --placa-height: 70px;
+    --placa-font: 18px;
 }
 
-/* Estilo principal del botón vintage con tonos sutiles */
 .boton {
-    display: inline-block;
-    width: var(--placa-width-mobile);
-    height: var(--placa-height-mobile);
-    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--placa-width);
+    height: var(--placa-height);
     margin: 15px auto;
-    font-size: var(--placa-font-mobile);
-    border-radius: 12px;
+    font-size: var(--placa-font);
     font-family: 'Caveat', cursive;
     font-weight: 700;
-    color: #2A1810 !important; /* Color oscuro para contraste */
+    background: linear-gradient(135deg, #8B7355, #D4AF37);
+    border: 2px solid #6B5B47;
+    border-radius: 12px;
+    color: #2A1810;
     text-decoration: none;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    
-    /* Gradiente sutil terracota/dorado */
-    background: linear-gradient(135deg, 
-        #8B7355 0%,     /* Marrón cálido suave */
-        #A0826D 25%,    /* Terracota suave */
-        #C19A6B 50%,    /* Camel dorado */
-        #D4AF37 75%,    /* Dorado elegante */
-        #8B7355 100%    /* Marrón cálido */
-    ) !important;
-    
-    /* Bordes elegantes sutiles */
-    border: 2px solid #6B5B47 !important;
-    border-top-color: #A0826D;
-    border-left-color: #A0826D;
-    
-    /* Sombras sutiles para profundidad */
-    box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 3px rgba(255, 255, 255, 0.4),
-        inset 0 -1px 3px rgba(0, 0, 0, 0.2) !important;
-    
-    /* Texto con relieve sutil */
-    text-shadow: 
-        1px 1px 0 rgba(255, 255, 255, 0.7),
-        0 1px 2px rgba(0, 0, 0, 0.3) !important;
-    
     cursor: pointer;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    
-    /* Centrar contenido */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-align: center;
 }
 
-/* Iconos vintage dentro del botón */
-.boton::before {
-    content: attr(data-icon);
-    font-size: calc(var(--placa-font-mobile) * 1.4);
-    display: inline-block;
-    margin-right: 8px;
-    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
-}
-
-/* Efectos sutiles al hover */
 .boton:hover {
-    transform: translateY(-2px) scale(1.01);
-    
-    /* Efectos dorados sutiles */
-    box-shadow: 
-        0 0 12px #D4AF37,
-        0 6px 12px rgba(0, 0, 0, 0.4),
-        inset 0 2px 4px rgba(255, 255, 255, 0.5),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.3) !important;
-    
-    /* Brillo sutil en el texto */
-    text-shadow: 
-        1px 1px 0 rgba(255, 255, 255, 0.8),
-        0 1px 3px rgba(0, 0, 0, 0.4),
-        0 0 8px #D4AF37 !important;
-    
-    color: #1A0F0A !important;
-}
-
-.boton:active {
-    transform: translateY(-1px) scale(0.99);
-    box-shadow: 
-        0 0 8px #D4AF37,
-        0 3px 6px rgba(0, 0, 0, 0.5),
-        inset 0 2px 4px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* Efectos de desgaste vintage mejorados */
-.boton::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.05) 0%, transparent 30%),
-        radial-gradient(circle at 80% 70%, rgba(0, 0, 0, 0.03) 0%, transparent 25%),
-        radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 20%);
-    border-radius: 12px;
-    pointer-events: none;
+    transform: translateY(-3px);
+    box-shadow: 0 0 12px #D4AF37;
 }
 
 /* ======================================================
-   📱 RESPONSIVE BREAKPOINTS PARA PLACAS VINTAGE
+   ⭐ ESTRELLAS CALIFICACIÓN
    ====================================================== */
-
-/* TABLET (768px y superior) */
-@media screen and (min-width: 768px) {
-    :root {
-        --placa-width-mobile: var(--placa-width-tablet);
-        --placa-height-mobile: var(--placa-height-tablet);
-        --placa-font-mobile: var(--placa-font-tablet);
-        --placa-icon-mobile: var(--placa-icon-tablet);
-    }
-    
-    .boton {
-        margin: 15px 10px;
-        gap: 10px;
-    }
-    
-    /* Títulos más grandes en tablet */
-    h1 { font-size: 80px; }
-    h2, h3 { font-size: 42px; }
-    
-    /* Taza más grande */
-    .taza-esquina {
-        width: 100px;
-        height: 100px;
-    }
-}
-
-/* DESKTOP (1024px y superior) */
-@media screen and (min-width: 1024px) {
-    :root {
-        --placa-width-mobile: var(--placa-width-desktop);
-        --placa-height-mobile: var(--placa-height-desktop);
-        --placa-font-mobile: var(--placa-font-desktop);
-        --placa-icon-mobile: var(--placa-icon-desktop);
-    }
-    
-    .boton {
-        margin: 18px 12px;
-        gap: 12px;
-    }
-    
-    /* Títulos más grandes en desktop */
-    h1 { font-size: 90px; }
-    h2, h3 { font-size: 48px; }
-    
-    /* Taza más grande */
-    .taza-esquina {
-        width: 120px;
-        height: 120px;
-    }
-    
-    /* Efectos hover más dramáticos en desktop */
-    .boton:hover {
-        transform: translateY(-4px);
-        box-shadow: 
-            0 16px 28px rgba(0, 0, 0, 0.6),
-            inset 0 4px 8px rgba(255, 255, 255, 0.8),
-            inset 0 -4px 8px rgba(0, 0, 0, 0.4),
-            inset -4px 0 12px rgba(0, 0, 0, 0.2),
-            inset 4px 0 12px rgba(255, 255, 255, 0.5),
-            0 0 25px rgba(139, 69, 19, 0.4);
-    }
-}
-
-/* PANTALLAS EXTRA GRANDES (1440px y superior) */
-@media screen and (min-width: 1440px) {
-    :root {
-        --placa-width-desktop: 420px;
-        --placa-height-desktop: 90px;
-        --placa-font-desktop: 22px;
-        --placa-icon-desktop: 36px;
-    }
-    
-    h1 { font-size: 100px; }
-    h2, h3 { font-size: 52px; }
-}
-/* (Eliminado bloque huérfano que causaba error de sintaxis) */
-.boton::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        transparent, 
-        rgba(255, 220, 150, 0.6), 
-        rgba(255, 255, 255, 0.4), 
-        rgba(222, 184, 135, 0.5),
-        transparent);
-    transform: rotate(45deg);
-    transition: all 0.8s ease;
-    opacity: 0;
-}
-.boton:hover {
-    transform: translateY(-3px) scale(1.05);
-    background: linear-gradient(135deg, #A0826D, #C19A6B, #D4AF37);
-    box-shadow: 
-        0 0 25px rgba(212, 175, 55, 0.8),
-        0 0 35px rgba(212, 175, 55, 0.6),
-        0 0 25px rgba(255, 165, 0, 0.9),
-        0 0 15px rgba(255, 140, 0, 0.7),
-        inset 0 3px 6px rgba(255, 255, 255, 0.3),
-        0 10px 35px rgba(0, 0, 0, 0.5);
-    color: var(--color-text-dark);
-    border-color: #F4E4BC;
-}
-.boton:hover::before {
-    opacity: 1;
-    transform: translateX(100%) translateY(100%) rotate(45deg);
-}
-.boton:active {
-    transform: translateY(-1px) scale(0.98);
-    background: linear-gradient(135deg, #8B7355, #A0826D);
-}
-.boton:focus {
-    outline: none;
-    box-shadow: 
-        0 0 30px rgba(160, 130, 109, 0.9),
-        0 4px 15px rgba(0, 0, 0, 0.3),
-        0 0 0 3px rgba(212, 175, 55, 0.4);
-}
+.estrellas { display: flex; justify-content: center; gap: 6px; }
+.estrella { font-size: 24px; color: #ccc; cursor: pointer; }
+.estrella.activa { color: #FFD700; text-shadow: 0 0 8px #FFD700; }
 
 /* ======================================================
-   ☕ TAZA & HUMO CON NOTAS MUSICALES - LIMPIO Y FUNCIONAL
+   🌐 REDES SOCIALES
+   ====================================================== */
+.redes { display: flex; justify-content: center; gap: 15px; margin: 30px 0; }
+.redes a { font-size: 28px; text-decoration: none; transition: 0.3s; }
+.redes a:hover { transform: scale(1.2); text-shadow: 0 0 12px currentColor; }
+
+/* ======================================================
+   📝 INPUTS
+   ====================================================== */
+input[type="text"], textarea {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    border: 2px solid #D4AF37;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    color: #fffbe7;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+textarea { min-height: 100px; resize: vertical; }
+
+/* ======================================================
+   ☕ TAZA
    ====================================================== */
 .taza-esquina {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: auto;
     z-index: 999;
     animation: balanceo 4s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(139, 69, 19, 0.6));
 }
 
-.taza-esquina img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
+.taza-esquina img { width: 100%; height: auto; }
 
-/* ======================================================
-   🎵 HUMAREDA REALISTA - VERSION FINAL
-   ====================================================== */
-.humareda {
-    position: fixed;
-    bottom: 100px;  /* Desde el centro de la taza */
-    right: 75px;    /* Centrado en la taza */
-    width: 30px;    
-    height: calc(100vh - 120px);  
-    z-index: 998;
-    pointer-events: none;
-}
-
-/* Humo visible y realista - MÁS GRANDE */
-.humo-nube {
-    position: absolute;
-    width: 60px;    /* Aumentado de 40px a 60px */
-    height: 60px;   /* Aumentado de 40px a 60px */
-    background: radial-gradient(circle, 
-        rgba(255, 255, 255, 1.0) 0%, 
-        rgba(240, 240, 240, 0.8) 50%, 
-        rgba(200, 200, 200, 0.5) 100%);
-    border-radius: 50%;
-    animation: flotar-humo-dinamico 10s infinite linear; /* Animación más larga y dinámica */
-    opacity: 1.0;
-    filter: blur(2px); /* Más blur para efecto realista */
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.8); /* Resplandor más grande */
-}
-
-/* Posiciones simplificadas - todas desde abajo */
-.humo-nube-0 { left: 5px; bottom: 0px; animation-delay: 0s; }
-.humo-nube-1 { left: 15px; bottom: 0px; animation-delay: 1s; }
-.humo-nube-2 { left: 10px; bottom: 0px; animation-delay: 2s; }
-.humo-nube-3 { left: 20px; bottom: 0px; animation-delay: 3s; }
-.humo-nube-4 { left: 8px; bottom: 0px; animation-delay: 4s; }
-.humo-nube-5 { left: 18px; bottom: 0px; animation-delay: 5s; }
-.humo-nube-6 { left: 12px; bottom: 0px; animation-delay: 6s; }
-.humo-nube-7 { left: 16px; bottom: 0px; animation-delay: 7s; }
-
-/* Animación simple y efectiva */
-@keyframes flotar-humo-final {
-    0% { 
-        transform: translateY(0) translateX(0) scale(0.4);
-        opacity: 1.0;
-    }
-    25% {
-        transform: translateY(-25vh) translateX(-3px) scale(0.7);
-        opacity: 0.7;
-    }
-    50% {
-        transform: translateY(-50vh) translateX(4px) scale(1.0);
-        opacity: 0.5;
-    }
-    75% {
-        transform: translateY(-75vh) translateX(-2px) scale(1.3);
-        opacity: 0.3;
-    }
-    100% {
-        transform: translateY(-100vh) translateX(3px) scale(1.6);
-        opacity: 0;
-    }
-}
-
-/* Animación más dinámica con movimiento serpenteante */
-@keyframes flotar-humo-dinamico {
-    0% { 
-        transform: translateY(0) translateX(0) scale(0.5) rotate(0deg);
-        opacity: 1.0;
-    }
-    15% {
-        transform: translateY(-15vh) translateX(-8px) scale(0.7) rotate(15deg);
-        opacity: 0.9;
-    }
-    30% {
-        transform: translateY(-30vh) translateX(12px) scale(0.9) rotate(-10deg);
-        opacity: 0.8;
-    }
-    45% {
-        transform: translateY(-45vh) translateX(-6px) scale(1.1) rotate(20deg);
-        opacity: 0.6;
-    }
-    60% {
-        transform: translateY(-60vh) translateX(15px) scale(1.3) rotate(-15deg);
-        opacity: 0.5;
-    }
-    75% {
-        transform: translateY(-75vh) translateX(-10px) scale(1.5) rotate(25deg);
-        opacity: 0.3;
-    }
-    90% {
-        transform: translateY(-90vh) translateX(8px) scale(1.7) rotate(-12deg);
-        opacity: 0.1;
-    }
-    100% {
-        transform: translateY(-100vh) translateX(5px) scale(2.0) rotate(30deg);
-        opacity: 0;
-    }
-}
-
-/* Animación específica para notas musicales - más danzante */
-@keyframes flotar-notas-musicales {
-    0% { 
-        transform: translateY(0) translateX(0) scale(0.6) rotate(0deg);
-        opacity: 1.0;
-    }
-    10% {
-        transform: translateY(-10vh) translateX(-12px) scale(0.8) rotate(-20deg);
-        opacity: 0.95;
-    }
-    25% {
-        transform: translateY(-25vh) translateX(18px) scale(1.0) rotate(25deg);
-        opacity: 0.85;
-    }
-    40% {
-        transform: translateY(-40vh) translateX(-15px) scale(1.1) rotate(-30deg);
-        opacity: 0.75;
-    }
-    55% {
-        transform: translateY(-55vh) translateX(22px) scale(1.2) rotate(35deg);
-        opacity: 0.65;
-    }
-    70% {
-        transform: translateY(-70vh) translateX(-18px) scale(1.3) rotate(-25deg);
-        opacity: 0.5;
-    }
-    85% {
-        transform: translateY(-85vh) translateX(14px) scale(1.4) rotate(40deg);
-        opacity: 0.3;
-    }
-    100% {
-        transform: translateY(-100vh) translateX(-8px) scale(1.6) rotate(-15deg);
-        opacity: 0;
-    }
-}
-
-/* Animación de balanceo para la taza */
 @keyframes balanceo {
-    0%, 100% { transform: rotate(-2deg); }
+    0%,100% { transform: rotate(-2deg); }
     50% { transform: rotate(2deg); }
 }
 
 /* ======================================================
-   🎵 NOTAS MUSICALES CON COLORES PASTELES - MÁS GRANDES
+   📱 RESPONSIVE
    ====================================================== */
-.nota {
-    position: absolute;
-    width: 40px;    /* Aumentado de 30px a 40px */
-    height: 40px;   /* Aumentado de 30px a 40px */
-    font-size: 28px; /* Aumentado de 20px a 28px */
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    animation: flotar-notas-musicales 12s infinite linear; /* Animación específica para notas */
-    opacity: 0.9;
-    filter: drop-shadow(0 0 12px currentColor); /* Mayor resplandor */
-    pointer-events: none;
-    text-shadow: 0 0 15px currentColor; /* Mayor brillo */
+@media (max-width: 768px) {
+    .titulo-principal { font-size: 42px; }
+    .taza-esquina { width: 90px; }
+    .humareda { width: 120px; height: 380px; right: 60px; }
+    .nota { font-size: 20px; }
 }
 
-/* Colores pasteles para cada tipo de nota */
-.nota-amarilla {
-    color: #FFE4B5; /* Amarillo pastel suave */
-    background: radial-gradient(circle, rgba(255, 228, 181, 0.3), transparent);
+@media (max-width: 480px) {
+    .titulo-principal { font-size: 32px; }
+    .taza-esquina { width: 70px; }
+    .humareda { width: 100px; height: 320px; right: 50px; }
+    .nota { font-size: 16px; }
 }
-
-.nota-rosa {
-    color: #FFB6C1; /* Rosa pastel */
-    background: radial-gradient(circle, rgba(255, 182, 193, 0.3), transparent);
-}
-
-.nota-verde {
-    color: #98FB98; /* Verde pastel */
-    background: radial-gradient(circle, rgba(152, 251, 152, 0.3), transparent);
-}
-
-.nota-morada {
-    color: #DDA0DD; /* Morado pastel */
-    background: radial-gradient(circle, rgba(221, 160, 221, 0.3), transparent);
-}
-
-.nota-azul {
-    color: #87CEEB; /* Azul pastel */
-    background: radial-gradient(circle, rgba(135, 206, 235, 0.3), transparent);
-}
-
-/* Posiciones de las notas - igual que el humo pero ligeramente desplazadas */
-.nota-0 { left: 8px; bottom: 0px; animation-delay: 0.5s; }
-.nota-1 { left: 18px; bottom: 0px; animation-delay: 1.5s; }
-.nota-2 { left: 13px; bottom: 0px; animation-delay: 2.5s; }
-.nota-3 { left: 23px; bottom: 0px; animation-delay: 3.5s; }
-.nota-4 { left: 11px; bottom: 0px; animation-delay: 4.5s; }
-.nota-5 { left: 21px; bottom: 0px; animation-delay: 5.5s; }
-.nota-6 { left: 15px; bottom: 0px; animation-delay: 6.5s; }
-.nota-7 { left: 19px; bottom: 0px; animation-delay: 7.5s; }
-.nota-8 { left: 9px; bottom: 0px; animation-delay: 0.2s; }
-.nota-9 { left: 17px; bottom: 0px; animation-delay: 1.2s; }
-.nota-10 { left: 14px; bottom: 0px; animation-delay: 2.2s; }
-.nota-11 { left: 22px; bottom: 0px; animation-delay: 3.2s; }
-.nota-12 { left: 12px; bottom: 0px; animation-delay: 4.2s; }
-.nota-13 { left: 20px; bottom: 0px; animation-delay: 5.2s; }
-.nota-14 { left: 16px; bottom: 0px; animation-delay: 6.2s; }
-.nota-15 { left: 10px; bottom: 0px; animation-delay: 7.2s; }
-.nota-16 { left: 7px; bottom: 0px; animation-delay: 0.8s; }
-.nota-17 { left: 24px; bottom: 0px; animation-delay: 1.8s; }
-.nota-18 { left: 6px; bottom: 0px; animation-delay: 2.8s; }
-.nota-19 { left: 25px; bottom: 0px; animation-delay: 3.8s; }
 
 /* ======================================================
-   ⭐ ESTRELLAS DE CALIFICACIÓN
+   📋 CONTENEDORES TRANSPARENTES
    ====================================================== */
-.estrellas {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    margin: 15px 0;
-}
-
-.estrella {
-    font-size: 24px;
-    color: #ccc;
-    cursor: pointer;
+.input-container {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px auto;
+    max-width: 450px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
-.estrella.activa,
-.estrella:hover {
-    color: #ffe066;
-    text-shadow: 0 0 10px #ffe066;
+.input-container:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* ======================================================
-   🌐 REDES SOCIALES
-   ====================================================== */
-.redes {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 30px 0;
-}
-
-.redes a {
-    font-size: 32px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-.redes a:hover {
-    transform: scale(1.2);
-    text-shadow: 0 0 15px currentColor;
-}
-
-/* ======================================================
-   📝 INPUTS Y TEXTAREA
-   ====================================================== */
+/* Mejorar transparencia de inputs y textareas */
 input[type="text"], textarea {
-    width: 100%;
-    max-width: 400px;
-    padding: 15px;
-    border: 2px solid var(--color-primary);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fffbe7;
-    font-family: 'Patrick Hand', cursive;
-    font-size: 18px;
-    margin: 10px 0;
-    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(5px);
+    border: 2px solid rgba(212, 175, 55, 0.4);
+    border-radius: 8px;
 }
 
 input[type="text"]:focus, textarea:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(212, 175, 55, 0.6);
+    border-color: #D4AF37;
     outline: none;
-    border-color: #ffe066;
-    box-shadow: 0 0 10px rgba(255, 224, 102, 0.5);
-}
-
-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.input-row {
-    display: flex;
-    justify-content: center;
-    margin: 15px 0;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 /* ======================================================
-   📱 MEDIA QUERIES RESPONSIVE
-   ====================================================== */
-@media (max-width: 768px) {
-    h1 { font-size: 48px; }
-    h2, h3 { font-size: 28px; }
-    p, label { font-size: 18px; }
-    body { font-size: 16px; }
-    .logo, .logo-eterials { 
-        width: 60px; 
-        max-width: 70px; 
-        top: 15px; 
-        left: 15px; 
-    }
-    .taza-esquina { max-width: 8vw; min-width: 55px; }
-    .humo-nube { width: 15px; height: 15px; }
-    .nota { font-size: 18px; }
-    .contenedor-central > div:nth-child(4) .boton { 
-        min-width: 180px;
-        padding: 12px 25px;
-    }
-}
-@media (max-width: 480px) {
-    h1 { font-size: 36px; }
-    h2, h3 { font-size: 24px; }
-    p, label { font-size: 16px; }
-    body { font-size: 14px; } 
-    .logo, .logo-eterials { 
-        width: 50px; 
-        max-width: 60px; 
-        top: 10px; 
-        left: 10px; 
-    }
-    .taza-esquina { max-width: 10vw; min-width: 60px; }
-    .humo-nube { width: 12px; height: 12px; }
-    .nota { font-size: 16px; }
-    .contenedor-central > div:nth-child(4) .boton { 
-        min-width: 160px;
-        padding: 10px 20px;
-    }
-}
-
-/* ======================================================
-   🚫 CONTROL DE DESBORDES
-   ====================================================== */
-html, body {
-    overflow-x: hidden;
-    width: 100%;
-}
-
-/* ======================================================
-   🎨 SECCIÓN DE GESTIÓN DE TEMAS PERSONALIZADOS
+   📱 MEDIA QUERIES - FONDO RESPONSIVO OPTIMIZADO
    ====================================================== */
 
-/* Sección de Temas */
-.themes-section {
-    background: rgba(35, 35, 35, 0.8);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid var(--color-primary);
-    box-shadow: var(--shadow-elegant);
-}
-
-.themes-section h3 {
-    color: var(--color-primary);
-    margin-bottom: 15px;
-    border-bottom: 2px solid var(--color-primary);
-    padding-bottom: 8px;
-    font-family: 'Dancing Script', cursive;
-    font-size: 28px;
-    text-shadow: 0 0 10px var(--color-primary);
-}
-
-.themes-grid-predefined {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.theme-card {
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.1) 0%, rgba(244, 228, 193, 0.05) 100%);
-    border-radius: 12px;
-    padding: 20px;
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(5px);
-}
-
-.theme-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
-    border-color: var(--color-primary);
-}
-
-.theme-card.active {
-    border-color: var(--color-primary);
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.2) 0%, rgba(244, 228, 193, 0.1) 100%);
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-}
-
-.theme-card.active::before {
-    content: "✓ ACTIVO";
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--color-primary);
-    color: var(--color-text-dark);
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 10px;
-    font-weight: bold;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-.theme-preview {
-    width: 100%;
-    height: 120px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--color-primary);
-}
-
-.theme-info h4 {
-    color: var(--color-text-light);
-    margin-bottom: 8px;
-    font-size: 16px;
-    font-family: 'Dancing Script', cursive;
-}
-
-.theme-info p {
-    color: var(--color-accent);
-    font-size: 12px;
-    margin-bottom: 10px;
-}
-
-.theme-colors {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-}
-
-.color-dot {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.theme-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-theme {
-    flex: 1;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Patrick Hand', cursive;
-}
-
-.btn-apply-theme {
-    background: var(--color-primary);
-    color: var(--color-text-dark);
-    font-weight: bold;
-}
-
-.btn-apply-theme:hover {
-    background: var(--color-secondary);
-    color: var(--color-text-light);
-    transform: translateY(-2px);
-}
-
-.btn-edit-theme {
-    background: #17a2b8;
-    color: white;
-}
-
-.btn-edit-theme:hover {
-    background: #138496;
-    transform: translateY(-2px);
-}
-
-/* Personalización Manual */
-.manual-config-tabs {
-    display: flex;
-    background: rgba(15, 15, 20, 0.95);
-    border-radius: 12px;
-    padding: 8px;
-    margin-bottom: 25px;
-    gap: 6px;
-    border: 2px solid var(--color-primary);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-}
-
-.config-tab {
-    flex: 1;
-    padding: 16px 20px;
-    border: none;
-    background: rgba(45, 45, 55, 0.4);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 16px;
-    color: #ffffff;
-    font-family: 'Patrick Hand', cursive;
-    font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.config-tab.active {
-    background: linear-gradient(135deg, #d4af37, #b8941f);
-    color: #1a1a1a;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
-    font-weight: bold;
-    text-shadow: none;
-    border: 1px solid #d4af37;
-}
-
-.config-tab:hover:not(.active) {
-    background: rgba(212, 175, 55, 0.3);
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.2);
-}
-
-.config-panel {
-    display: none;
-    background: linear-gradient(135deg, rgba(15, 15, 25, 0.95), rgba(25, 25, 35, 0.95));
-    border-radius: 12px;
-    padding: 30px;
-    border: 2px solid var(--color-primary);
-    backdrop-filter: blur(15px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    margin-bottom: 20px;
-}
-
-.config-panel.active {
-    display: block;
-    animation: fadeInUp 0.3s ease-out;
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Controles de Color */
-.color-controls {
-    display: grid;
-    gap: 25px;
-}
-
-.color-group {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.15), rgba(212, 175, 55, 0.1));
-    border-radius: 12px;
-    border: 2px solid rgba(212, 175, 55, 0.4);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.color-group:hover {
-    border-color: var(--color-primary);
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.2), rgba(212, 175, 55, 0.15));
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
-}
-
-.color-group label {
-    min-width: 140px;
-    font-weight: 700;
-    color: #ffffff;
-    font-family: 'Patrick Hand', cursive;
-    font-size: 18px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-}
-
-.color-input-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex: 1;
-}
-
-.color-input-group input[type="color"] {
-    width: 60px;
-    height: 50px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 3px solid var(--color-primary);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-}
-
-.color-input-group input[type="color"]:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.5);
-}
-
-.color-input-group input[type="text"] {
-    padding: 12px 16px;
-    border: 2px solid var(--color-primary);
-    border-radius: 8px;
-    width: 120px;
-    font-family: 'Courier New', monospace;
-    background: rgba(15, 15, 25, 0.9);
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    text-align: center;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-}
-
-.color-input-group input[type="text"]:focus {
-    outline: none;
-    border-color: #d4af37;
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-    background: rgba(25, 25, 35, 0.95);
-}
-
-/* Controles de Tipografía */
-.typography-controls {
-    display: grid;
-    gap: 25px;
-}
-
-.font-group {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.15), rgba(212, 175, 55, 0.1));
-    border-radius: 12px;
-    border: 2px solid rgba(212, 175, 55, 0.4);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.font-group:hover {
-    border-color: var(--color-primary);
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.2), rgba(212, 175, 55, 0.15));
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
-}
-
-.font-group label {
-    min-width: 180px;
-    font-weight: 700;
-    color: #ffffff;
-    font-family: 'Patrick Hand', cursive;
-    font-size: 18px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-}
-
-.font-group select {
-    flex: 1;
-    padding: 14px 18px;
-    border: 2px solid var(--color-primary);
-    border-radius: 8px;
-    background: rgba(15, 15, 25, 0.9);
-    color: #ffffff;
-    font-family: 'Patrick Hand', cursive;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.font-group select:focus {
-    outline: none;
-    border-color: #d4af37;
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-    background: rgba(25, 25, 35, 0.95);
-}
-
-.font-preview {
-    background: linear-gradient(135deg, rgba(15, 15, 25, 0.95), rgba(25, 25, 35, 0.9));
-    border: 3px dashed var(--color-primary);
-    border-radius: 12px;
-    padding: 25px;
-    margin: 25px 0;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-}
-
-.font-preview h4 {
-    color: var(--color-primary);
-    margin-bottom: 20px;
-    font-family: 'Dancing Script', cursive;
-    font-size: 24px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-    text-align: center;
-}
-
-#typography-preview {
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.2), rgba(212, 175, 55, 0.1));
-    border-radius: 8px;
-    padding: 25px;
-    border: 2px solid rgba(212, 175, 55, 0.3);
-    color: #ffffff;
-    line-height: 1.6;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
-
-/* Botones de acción mejorados */
-.apply-button, .preview-button, .save-button {
-    background: linear-gradient(135deg, #d4af37, #b8941f);
-    color: #1a1a1a;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-family: 'Patrick Hand', cursive;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-    margin: 8px;
-}
-
-.apply-button:hover, .preview-button:hover, .save-button:hover {
-    background: linear-gradient(135deg, #e6c24a, #d4af37);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
-}
-
-/* Mejoras para secciones de efectos y fondos */
-.effects-group, .background-group {
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.15), rgba(212, 175, 55, 0.1));
-    border-radius: 12px;
-    border: 2px solid rgba(212, 175, 55, 0.4);
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-}
-
-.effects-group:hover, .background-group:hover {
-    border-color: var(--color-primary);
-    background: linear-gradient(135deg, rgba(244, 228, 193, 0.2), rgba(212, 175, 55, 0.15));
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
-}
-
-.effects-group label, .background-group label {
-    color: #ffffff;
-    font-family: 'Patrick Hand', cursive;
-    font-size: 18px;
-    font-weight: 700;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-    display: block;
-    margin-bottom: 15px;
-}
-
-/* Estilos específicos para Vista Previa de Tipografías */
-#typography-preview .preview-primary {
-    font-size: 28px;
-    font-weight: bold;
-    color: var(--color-primary);
-    margin-bottom: 15px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-    text-align: center;
-}
-
-#typography-preview .preview-secondary {
-    font-size: 20px;
-    color: #ffffff;
-    margin-bottom: 12px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
-}
-
-#typography-preview .preview-accent {
-    font-size: 16px;
-    color: var(--color-accent);
-    margin-bottom: 10px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
-
-/* Selectores y inputs mejorados */
-select, input[type="text"], input[type="color"] {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-select:hover, input[type="text"]:hover {
-    border-color: #e6c24a;
-    background: rgba(35, 35, 45, 0.95);
-}
-
-/* Indicadores de estado para botones */
-.apply-button.loading {
-    background: linear-gradient(135deg, #999, #777);
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-.apply-button.success {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    animation: successPulse 0.6s ease-out;
-}
-
-@keyframes successPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-/* Divisores visuales */
-.config-divider {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
-    margin: 30px 0;
-    border-radius: 2px;
-}
-
-/* Tooltips para mejor UX */
-.tooltip {
-    position: relative;
-    cursor: help;
-}
-
-.tooltip::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    z-index: 10000;
-}
-
-.tooltip:hover::after {
-    opacity: 1;
-}
-
-/* Mejoras responsivas para personalización */
-@media screen and (max-width: 768px) {
-    .manual-config-tabs {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .config-tab {
-        text-align: center;
-    }
-    
-    .color-group, .font-group {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    .color-group label, .font-group label {
-        min-width: auto;
-        text-align: center;
-    }
-    
-    .color-input-group {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    #typography-preview .preview-primary {
-        font-size: 24px;
+/* Pantallas muy grandes - tamaño natural sin zoom */
+@media screen and (min-width: 1920px) {
+    body {
+        background-size: 200px 150px !important;
+        background-repeat: repeat !important;
     }
 }
 
-/* Estilos para botones de acción específicos */
-.action-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 25px;
-    padding: 20px 0;
-}
-
-.btn-preview, .btn-save, .btn-reset {
-    background: linear-gradient(135deg, #d4af37, #b8941f);
-    color: #1a1a1a;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 10px;
-    font-family: 'Patrick Hand', cursive;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.btn-preview {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    color: white;
-}
-
-.btn-reset {
-    background: linear-gradient(135deg, #f44336, #d32f2f);
-    color: white;
-}
-
-.btn-preview:hover, .btn-save:hover, .btn-reset:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-}
-
-.btn-preview:hover {
-    background: linear-gradient(135deg, #5cbf60, #4CAF50);
-}
-
-.btn-reset:hover {
-    background: linear-gradient(135deg, #f66356, #f44336);
-}
-
-/* Estados de carga mejorados */
-.btn-loading {
-    position: relative;
-    color: transparent !important;
-}
-
-.btn-loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ffffff;
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-/* Notificaciones toast mejoradas */
-.toast-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    color: white;
-    padding: 16px 24px;
-    border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    z-index: 10000;
-    opacity: 0;
-    transform: translateX(100%);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: 'Patrick Hand', cursive;
-    font-weight: 600;
-    max-width: 350px;
-}
-
-.toast-notification.show {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.toast-notification.error {
-    background: linear-gradient(135deg, #f44336, #d32f2f);
-}
-
-.toast-notification.warning {
-    background: linear-gradient(135deg, #ff9800, #f57c00);
-}
-
-.preview-primary {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: var(--color-primary);
-}
-
-.preview-secondary {
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: var(--color-text-light);
-}
-
-.preview-accent {
-    font-size: 14px;
-    font-style: italic;
-    color: var(--color-accent);
-}
-
-/* Controles de Botones */
-.button-controls {
-    display: grid;
-    gap: 20px;
-}
-
-.button-group {
-    padding: 15px;
-    background: rgba(244, 228, 193, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.button-group label {
-    display: block;
-    font-weight: 500;
-    color: var(--color-text-light);
-    margin-bottom: 10px;
-    font-family: 'Patrick Hand', cursive;
-}
-
-.gradient-builder {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.gradient-builder input[type="color"] {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 2px solid var(--color-primary);
-}
-
-.gradient-builder span {
-    font-weight: bold;
-    color: var(--color-accent);
-}
-
-.gradient-builder select {
-    padding: 8px;
-    border: 1px solid var(--color-primary);
-    border-radius: 6px;
-    background: rgba(35, 35, 35, 0.8);
-    color: var(--color-text-light);
-    font-family: 'Patrick Hand', cursive;
-}
-
-.button-preview {
-    background: rgba(35, 35, 35, 0.9);
-    border: 2px dashed var(--color-primary);
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px 0;
-}
-
-#button-preview-container {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.preview-button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 25px;
-    background: linear-gradient(135deg, var(--color-primary), #b8941f);
-    color: var(--color-text-dark);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    font-family: 'Patrick Hand', cursive;
-}
-
-.preview-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
-}
-
-/* Controles de Efectos */
-.effects-controls {
-    display: grid;
-    gap: 20px;
-}
-
-.effect-group {
-    padding: 15px;
-    background: rgba(244, 228, 193, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.effect-group label {
-    display: block;
-    font-weight: 500;
-    color: var(--color-text-light);
-    margin-bottom: 10px;
-    font-family: 'Patrick Hand', cursive;
-}
-
-.glow-builder {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-/* Controles de Fondos */
-.background-controls {
-    display: grid;
-    gap: 20px;
-}
-
-.bg-type-selector {
-    padding: 15px;
-    background: rgba(244, 228, 193, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.radio-group {
-    display: flex;
-    gap: 20px;
-    margin-top: 10px;
-}
-
-.radio-group label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    color: var(--color-text-light);
-    font-family: 'Patrick Hand', cursive;
-}
-
-.bg-option {
-    display: none;
-    padding: 15px;
-    background: rgba(244, 228, 193, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-
-.bg-option.active {
-    display: block;
-}
-
-.gradient-builder-advanced {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-/* Botones de Acción */
-.action-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--color-primary);
-}
-
-.btn-apply {
-    padding: 8px 16px;
-    background: var(--color-primary);
-    color: var(--color-text-dark);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 12px;
-    font-family: 'Patrick Hand', cursive;
-    font-weight: bold;
-}
-
-.btn-apply:hover {
-    background: var(--color-secondary);
-    color: var(--color-text-light);
-    transform: translateY(-1px);
-}
-
-.btn-preview {
-    padding: 12px 24px;
-    background: #17a2b8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Patrick Hand', cursive;
-    font-weight: bold;
-}
-
-.btn-preview:hover {
-    background: #138496;
-    transform: translateY(-2px);
-}
-
-.btn-save {
-    padding: 12px 24px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Patrick Hand', cursive;
-    font-weight: bold;
-}
-
-.btn-save:hover {
-    background: #218838;
-    transform: translateY(-2px);
-}
-
-/* Acciones Generales de Temas */
-.themes-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 30px;
-    padding: 20px;
-    background: rgba(35, 35, 35, 0.8);
-    border-radius: 12px;
-    border: 1px solid var(--color-primary);
-    backdrop-filter: blur(10px);
-}
-
-.btn-success {
-    background: #28a745;
-    color: white;
-}
-
-.btn-info {
-    background: #17a2b8;
-    color: white;
-}
-
-.btn-warning {
-    background: #ffc107;
-    color: #212529;
-}
-
-.btn-danger {
-    background: #dc3545;
-    color: white;
-}
-
-.themes-actions button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    font-family: 'Patrick Hand', cursive;
-}
-
-.themes-actions button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-/* Responsive Design para Temas */
-@media (max-width: 768px) {
-    .manual-config-tabs {
-        flex-direction: column;
-    }
-    
-    .config-tab {
-        text-align: center;
-    }
-    
-    .color-group,
-    .font-group,
-    .button-group,
-    .effect-group {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-    
-    .color-group label,
-    .font-group label {
-        min-width: auto;
-    }
-    
-    .themes-actions {
-        flex-direction: column;
+/* Pantallas de escritorio grandes */
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+    body {
+        background-size: 220px 165px !important;
+        background-repeat: repeat !important;
     }
 }
 
-/* ======================================================
-   🎨 TÍTULO PRINCIPAL "ETERIALS" - TAMAÑO Y PROFUNDIDAD
-   ====================================================== */
-
-.titulo-principal {
-    font-family: 'Dancing Script', cursive;
-    font-size: 5rem; /* Tamaño mucho más grande */
-    font-weight: 700;
-    color: #fff; /* Blanco base para efecto neón */
-    text-align: center;
-    margin: 30px 0 20px 0;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    position: relative;
-    z-index: 10;
-    
-    /* EFECTO NEÓN ESPECTACULAR */
-    text-shadow: 
-        /* Núcleo brillante blanco */
-        0 0 5px #fff,
-        0 0 10px #fff,
-        0 0 15px #fff,
-        
-        /* Capas de neón dorado intenso */
-        0 0 20px #d4af37,
-        0 0 35px #d4af37,
-        0 0 50px #d4af37,
-        0 0 75px #d4af37,
-        0 0 100px #d4af37,
-        
-        /* Resplandor externo dorado */
-        0 0 125px #f4e4c1,
-        0 0 150px #f4e4c1,
-        
-        /* Sombra de profundidad 3D */
-        4px 4px 0px #2c1810,
-        5px 5px 0px #2c1810,
-        6px 6px 0px #2c1810,
-        7px 7px 0px #2c1810,
-        8px 8px 0px #2c1810,
-        
-        /* Sombra externa dramática */
-        10px 10px 30px rgba(0, 0, 0, 0.9);
-    
-    /* Transformación 3D más pronunciada */
-    transform: perspective(1000px) rotateX(8deg) rotateY(-2deg);
-    
-    /* Animación de neón pulsante */
-    animation: neonPulse 2s ease-in-out infinite alternate;
-    
-    /* Filtro de brillo adicional */
-    filter: brightness(1.2) contrast(1.1);
-}
-
-/* ANIMACIÓN DE NEÓN ULTRA ESPECTACULAR */
-@keyframes neonPulse {
-    0% {
-        text-shadow: 
-            /* Núcleo */
-            0 0 5px #fff,
-            0 0 10px #fff,
-            0 0 15px #fff,
-            
-            /* Neón dorado base */
-            0 0 20px #d4af37,
-            0 0 35px #d4af37,
-            0 0 50px #d4af37,
-            0 0 75px #d4af37,
-            0 0 100px #d4af37,
-            
-            /* Resplandor */
-            0 0 125px #f4e4c1,
-            0 0 150px #f4e4c1,
-            
-            /* Profundidad 3D */
-            4px 4px 0px #2c1810,
-            5px 5px 0px #2c1810,
-            6px 6px 0px #2c1810,
-            7px 7px 0px #2c1810,
-            8px 8px 0px #2c1810,
-            
-            /* Sombra externa */
-            10px 10px 30px rgba(0, 0, 0, 0.9);
-        
-        filter: brightness(1.2) contrast(1.1);
-        transform: perspective(1000px) rotateX(8deg) rotateY(-2deg) scale(1);
-    }
-    
-    50% {
-        text-shadow: 
-            /* Núcleo más intenso */
-            0 0 8px #fff,
-            0 0 15px #fff,
-            0 0 25px #fff,
-            
-            /* Neón dorado intensificado */
-            0 0 30px #d4af37,
-            0 0 50px #d4af37,
-            0 0 80px #d4af37,
-            0 0 120px #d4af37,
-            0 0 160px #d4af37,
-            
-            /* Resplandor expandido */
-            0 0 200px #f4e4c1,
-            0 0 250px #f4e4c1,
-            
-            /* Mantener profundidad */
-            4px 4px 0px #2c1810,
-            5px 5px 0px #2c1810,
-            6px 6px 0px #2c1810,
-            7px 7px 0px #2c1810,
-            8px 8px 0px #2c1810,
-            
-            /* Sombra más pronunciada */
-            12px 12px 40px rgba(0, 0, 0, 0.95);
-        
-        filter: brightness(1.4) contrast(1.2);
-        transform: perspective(1000px) rotateX(8deg) rotateY(-2deg) scale(1.02);
-    }
-    
-    100% {
-        text-shadow: 
-            /* Núcleo súper brillante */
-            0 0 10px #fff,
-            0 0 20px #fff,
-            0 0 30px #fff,
-            
-            /* Neón dorado al máximo */
-            0 0 40px #d4af37,
-            0 0 60px #d4af37,
-            0 0 100px #d4af37,
-            0 0 140px #d4af37,
-            0 0 180px #d4af37,
-            
-            /* Resplandor máximo */
-            0 0 220px #f4e4c1,
-            0 0 280px #f4e4c1,
-            0 0 320px rgba(244, 228, 193, 0.3),
-            
-            /* Profundidad constante */
-            4px 4px 0px #2c1810,
-            5px 5px 0px #2c1810,
-            6px 6px 0px #2c1810,
-            7px 7px 0px #2c1810,
-            8px 8px 0px #2c1810,
-            
-            /* Sombra dramática */
-            15px 15px 50px rgba(0, 0, 0, 1);
-        
-        filter: brightness(1.6) contrast(1.3);
-        transform: perspective(1000px) rotateX(8deg) rotateY(-2deg) scale(1.05);
+/* Pantallas de escritorio estándar */
+@media screen and (min-width: 1200px) and (max-width: 1439px) {
+    body {
+        background-size: 250px 187px !important;
+        background-repeat: repeat !important;
     }
 }
 
-/* EFECTO HOVER PARA INTERACTIVIDAD */
-.titulo-principal:hover {
-    animation-duration: 0.5s;
-    cursor: default;
-    
-    text-shadow: 
-        /* Núcleo ultra brillante */
-        0 0 15px #fff,
-        0 0 25px #fff,
-        0 0 35px #fff,
-        
-        /* Neón dorado explosivo */
-        0 0 50px #d4af37,
-        0 0 80px #d4af37,
-        0 0 120px #d4af37,
-        0 0 160px #d4af37,
-        0 0 200px #d4af37,
-        
-        /* Resplandor extremo */
-        0 0 250px #f4e4c1,
-        0 0 300px #f4e4c1,
-        0 0 350px rgba(244, 228, 193, 0.5),
-        
-        /* Profundidad mejorada */
-        6px 6px 0px #2c1810,
-        7px 7px 0px #2c1810,
-        8px 8px 0px #2c1810,
-        9px 9px 0px #2c1810,
-        10px 10px 0px #2c1810,
-        
-        /* Sombra extrema */
-        20px 20px 60px rgba(0, 0, 0, 1);
-    
-    filter: brightness(2) contrast(1.5);
-    transform: perspective(1000px) rotateX(8deg) rotateY(-2deg) scale(1.08);
-}
-
-/* Responsivo para móviles */
-@media (max-width: 768px) {
-    .titulo-principal {
-        font-size: 3.5rem; /* Más pequeño en móviles pero aún prominente */
-        letter-spacing: 3px;
-        margin: 20px 0 15px 0;
-        
-        /* Neón reducido para móviles (mejor rendimiento) */
-        text-shadow: 
-            0 0 5px #fff,
-            0 0 10px #fff,
-            0 0 15px #d4af37,
-            0 0 25px #d4af37,
-            0 0 40px #d4af37,
-            0 0 60px #f4e4c1,
-            3px 3px 0px #2c1810,
-            4px 4px 0px #2c1810,
-            5px 5px 0px #2c1810,
-            8px 8px 20px rgba(0, 0, 0, 0.8);
-        
-        transform: perspective(800px) rotateX(6deg);
+/* Tablets y laptops */
+@media screen and (min-width: 1024px) and (max-width: 1199px) {
+    body {
+        background-size: 280px 210px !important;
+        background-repeat: repeat !important;
     }
 }
 
-@media (max-width: 480px) {
-    .titulo-principal {
-        font-size: 2.8rem; /* Ajuste para pantallas muy pequeñas */
-        letter-spacing: 2px;
-        margin: 15px 0 10px 0;
-        
-        /* Neón simplificado para pantallas pequeñas */
-        text-shadow: 
-            0 0 3px #fff,
-            0 0 8px #fff,
-            0 0 12px #d4af37,
-            0 0 20px #d4af37,
-            0 0 30px #d4af37,
-            2px 2px 0px #2c1810,
-            3px 3px 0px #2c1810,
-            6px 6px 15px rgba(0, 0, 0, 0.7);
-        
-        transform: perspective(600px) rotateX(4deg);
-        animation-duration: 3s; /* Animación más lenta para mejor rendimiento */
+/* Tablets en modo portrait */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    body {
+        background-size: 300px 225px !important;
+        background-repeat: repeat !important;
+        background-position: center top !important;
     }
 }
 
-/* ======================================================
-   📱 OPTIMIZACIONES PARA PANTALLAS DE ALTA RESOLUCIÓN
-   ====================================================== */
+/* Móviles grandes */
+@media screen and (min-width: 480px) and (max-width: 767px) {
+    body {
+        background-size: 280px 210px !important;
+        background-repeat: repeat !important;
+        background-position: center top !important;
+        padding: 15px !important;
+    }
+}
 
-/* FIN DEL ARCHIVO CSS */
+/* Móviles pequeños */
+@media screen and (max-width: 479px) {
+    body {
+        background-size: 260px 195px !important;
+        background-repeat: repeat !important;
+        background-position: center top !important;
+        padding: 10px !important;
+    }
+}

@@ -1,6 +1,4 @@
-<!DOCT    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('chatbot_admin.static', filename='dashboard.css') }}?v=20250917"> html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +6,7 @@
     <title>Dashboard Chatbot Administrativo - Eterials</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('chatbot_admin.static', filename='dashboard.css') }}?v=20250917">>
+    <link rel="stylesheet" href="{{ url_for('chatbot_admin.static', filename='dashboard_simple.css') }}?v=20250917">
 </head>
 <body>
     <div class="dashboard-container">
@@ -51,10 +49,8 @@
                     <i class="fas fa-star"></i> Calificaciones</a></li>
                 <li><a href="#notificaciones" onclick="mostrarSeccion('notificaciones')">
                     <i class="fas fa-bell"></i> Notificaciones</a></li>
-                <li><a href="#temas" onclick="mostrarSeccion('temas')">
-                    <i class="fas fa-palette"></i> Temas</a></li>
-                <li><a href="#fondos" onclick="mostrarSeccion('fondos')">
-                    <i class="fas fa-image"></i> Fondos Personalizados</a></li>
+                <li><a href="#personalizacion" onclick="mostrarSeccion('personalizacion')">
+                    <i class="fas fa-paint-brush"></i> Personalización</a></li>
                 <li><a href="#configuracion" onclick="mostrarSeccion('configuracion')">
                     <i class="fas fa-cog"></i> Configuración</a></li>
             </ul>
@@ -202,359 +198,147 @@
                 </div>
             </section>
 
-            <!-- Sección Temas -->
-            <section id="seccion-temas" class="dashboard-section">
-                <h2><i class="fas fa-palette"></i> Gestión de Temas Personalizados</h2>
+            <!-- =============================================== -->
+            <!-- SECCIÓN PERSONALIZACIÓN SIMPLIFICADA (SOLO FONDOS) -->  
+            <!-- =============================================== -->
+            <section id="seccion-personalizacion" class="dashboard-section">
+                <h2><i class="fas fa-image"></i> Fondos de Pantalla del Chatbot</h2>
+                <p class="section-description">Configura el fondo de pantalla de tu chatbot de manera sencilla y directa.</p>
                 
-                <!-- Temas Predefinidos -->
-                <div class="themes-section">
-                    <h3><i class="fas fa-star"></i> Temas Predefinidos de Eterials</h3>
-                    <div id="grid-temas-predefinidos" class="themes-grid-predefined">
-                        <div class="loading-message">
-                            <i class="fas fa-spinner fa-spin"></i> Cargando temas únicos...
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Personalización Manual -->
-                <div class="themes-section">
-                    <h3><i class="fas fa-sliders-h"></i> Personalización Manual</h3>
-                    
-                    <div class="manual-config-tabs">
-                        <button class="config-tab active" data-tab="colores" onclick="cambiarTabPersonalizacion('colores')">
-                            <i class="fas fa-paint-brush"></i> Colores
-                        </button>
-                        <button class="config-tab" data-tab="tipografia" onclick="cambiarTabPersonalizacion('tipografia')">
-                            <i class="fas fa-font"></i> Tipografías
-                        </button>
-                        <button class="config-tab" data-tab="botones" onclick="cambiarTabPersonalizacion('botones')">
-                            <i class="fas fa-square"></i> Botones
-                        </button>
-                        <button class="config-tab" data-tab="efectos" onclick="cambiarTabPersonalizacion('efectos')">
-                            <i class="fas fa-magic"></i> Efectos
-                        </button>
-                        <button class="config-tab" data-tab="fondos" onclick="cambiarTabPersonalizacion('fondos')">
-                            <i class="fas fa-image"></i> Fondos
-                        </button>
-                    </div>
-
-                    <!-- Panel de Colores -->
-                    <div id="panel-colores" class="config-panel active">
-                        <div class="color-controls">
-                            <div class="color-group">
-                                <label>Color Primario:</label>
-                                <div class="color-input-group">
-                                    <input type="color" id="color-primary" value="#d4af37">
-                                    <input type="text" id="color-primary-text" value="#d4af37" placeholder="#d4af37">
-                                    <button onclick="aplicarColor('primary')" class="btn-apply">Aplicar</button>
-                                </div>
-                            </div>
-                            
-                            <div class="color-group">
-                                <label>Color Secundario:</label>
-                                <div class="color-input-group">
-                                    <input type="color" id="color-secondary" value="#2c1810">
-                                    <input type="text" id="color-secondary-text" value="#2c1810" placeholder="#2c1810">
-                                    <button onclick="aplicarColor('secondary')" class="btn-apply">Aplicar</button>
-                                </div>
-                            </div>
-                            
-                            <div class="color-group">
-                                <label>Color de Acento:</label>
-                                <div class="color-input-group">
-                                    <input type="color" id="color-accent" value="#f4e4c1">
-                                    <input type="text" id="color-accent-text" value="#f4e4c1" placeholder="#f4e4c1">
-                                    <button onclick="aplicarColor('accent')" class="btn-apply">Aplicar</button>
-                                </div>
-                            </div>
-                            
-                            <div class="color-group">
-                                <label>Texto Claro:</label>
-                                <div class="color-input-group">
-                                    <input type="color" id="color-text-light" value="#fffbe7">
-                                    <input type="text" id="color-text-light-text" value="#fffbe7" placeholder="#fffbe7">
-                                    <button onclick="aplicarColor('text-light')" class="btn-apply">Aplicar</button>
-                                </div>
-                            </div>
-                            
-                            <div class="color-group">
-                                <label>Texto Oscuro:</label>
-                                <div class="color-input-group">
-                                    <input type="color" id="color-text-dark" value="#2c1810">
-                                    <input type="text" id="color-text-dark-text" value="#2c1810" placeholder="#2c1810">
-                                    <button onclick="aplicarColor('text-dark')" class="btn-apply">Aplicar</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button onclick="previsualizarCambios()" class="btn-preview">
-                                <i class="fas fa-eye"></i> Vista Previa
-                            </button>
-                            <button onclick="guardarTemaPersonalizado('colores')" class="btn-save">
-                                <i class="fas fa-save"></i> Guardar Cambios
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Panel de Tipografías -->
-                    <div id="panel-tipografia" class="config-panel">
-                        <div class="typography-controls">
-                            <div class="font-group">
-                                <label>Fuente Principal (Títulos):</label>
-                                <select id="font-primary">
-                                    <option value="'Dancing Script', cursive">Dancing Script (Elegante)</option>
-                                    <option value="'Playfair Display', serif">Playfair Display (Clásica)</option>
-                                    <option value="'Pacifico', cursive">Pacifico (Amigable)</option>
-                                    <option value="'Cinzel', serif">Cinzel (Elegante)</option>
-                                    <option value="'Great Vibes', cursive">Great Vibes (Cursiva)</option>
-                                    <option value="'Orbitron', sans-serif">Orbitron (Futurista)</option>
-                                    <option value="'Comfortaa', cursive">Comfortaa (Moderna)</option>
-                                </select>
-                                <button onclick="aplicarTipografia('primary')" class="btn-apply">Aplicar</button>
-                            </div>
-                            
-                            <div class="font-group">
-                                <label>Fuente Secundaria (Texto General):</label>
-                                <select id="font-secondary">
-                                    <option value="'Patrick Hand', cursive">Patrick Hand (Manual)</option>
-                                    <option value="'Open Sans', sans-serif">Open Sans (Limpia)</option>
-                                    <option value="'Roboto', sans-serif">Roboto (Moderna)</option>
-                                    <option value="'Quicksand', sans-serif">Quicksand (Suave)</option>
-                                    <option value="'Raleway', sans-serif">Raleway (Elegante)</option>
-                                    <option value="'Lato', sans-serif">Lato (Profesional)</option>
-                                    <option value="'Nunito', sans-serif">Nunito (Amigable)</option>
-                                </select>
-                                <button onclick="aplicarTipografia('secondary')" class="btn-apply">Aplicar</button>
-                            </div>
-                            
-                            <div class="font-group">
-                                <label>Fuente de Acento (Detalles):</label>
-                                <select id="font-accent">
-                                    <option value="'Merriweather', serif">Merriweather (Clásica)</option>
-                                    <option value="'Exo 2', sans-serif">Exo 2 (Tecnológica)</option>
-                                    <option value="'Caveat', cursive">Caveat (Casual)</option>
-                                    <option value="'Fredoka One', cursive">Fredoka One (Divertida)</option>
-                                    <option value="'Montserrat', sans-serif">Montserrat (Geométrica)</option>
-                                    <option value="'Source Sans Pro', sans-serif">Source Sans Pro (Técnica)</option>
-                                </select>
-                                <button onclick="aplicarTipografia('accent')" class="btn-apply">Aplicar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="font-preview">
-                            <h4>Vista Previa de Tipografías:</h4>
-                            <div id="typography-preview">
-                                <p class="preview-primary">Eterials Gastro-Café (Título Principal)</p>
-                                <p class="preview-secondary">Bienvenido a nuestra experiencia culinaria única (Texto General)</p>
-                                <p class="preview-accent">Especialidades del Chef (Texto de Acento)</p>
-                            </div>
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button onclick="previsualizarCambios()" class="btn-preview">
-                                <i class="fas fa-eye"></i> Vista Previa
-                            </button>
-                            <button onclick="guardarTemaPersonalizado('tipografia')" class="btn-save">
-                                <i class="fas fa-save"></i> Guardar Cambios
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Panel de Botones -->
-                    <div id="panel-botones" class="config-panel">
-                        <div class="button-controls">
-                            <div class="button-group">
-                                <label>Estilo de Botones:</label>
-                                <select id="button-style">
-                                    <option value="rounded">Redondeados (25px)</option>
-                                    <option value="semi-rounded">Semi-redondeados (15px)</option>
-                                    <option value="square">Cuadrados (5px)</option>
-                                    <option value="pill">Píldora (50px)</option>
-                                    <option value="sharp">Angular (0px)</option>
-                                </select>
-                                <button onclick="aplicarEstiloBotones()" class="btn-apply">Aplicar</button>
-                            </div>
-                            
-                            <div class="button-group">
-                                <label>Color de Fondo de Botones:</label>
-                                <div class="gradient-builder">
-                                    <input type="color" id="button-color-1" value="#d4af37">
-                                    <span>a</span>
-                                    <input type="color" id="button-color-2" value="#b8941f">
-                                    <select id="gradient-direction">
-                                        <option value="135deg">Diagonal ↘</option>
-                                        <option value="90deg">Vertical ↓</option>
-                                        <option value="45deg">Diagonal ↗</option>
-                                        <option value="0deg">Horizontal →</option>
-                                    </select>
-                                    <button onclick="aplicarGradienteBotones()" class="btn-apply">Aplicar</button>
-                                </div>
-                            </div>
-                            
-                            <div class="button-group">
-                                <label>Intensidad de Sombra:</label>
-                                <input type="range" id="shadow-intensity" min="0" max="100" value="40" oninput="actualizarSombraBotones(this.value)">
-                                <span id="shadow-value">40%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="button-preview">
-                            <h4>Vista Previa de Botones:</h4>
-                            <div id="button-preview-container">
-                                <button class="preview-button">MENÚ</button>
-                                <button class="preview-button">KARAOKE</button>
-                                <button class="preview-button">LLAMAR MESERO</button>
-                            </div>
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button onclick="previsualizarCambios()" class="btn-preview">
-                                <i class="fas fa-eye"></i> Vista Previa
-                            </button>
-                            <button onclick="guardarTemaPersonalizado('botones')" class="btn-save">
-                                <i class="fas fa-save"></i> Guardar Cambios
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Panel de Efectos -->
-                    <div id="panel-efectos" class="config-panel">
-                        <div class="effects-controls">
-                            <div class="effect-group">
-                                <label>Efectos de Brillo (Glow):</label>
-                                <div class="glow-builder">
-                                    <input type="color" id="glow-color-1" value="#FFD700">
-                                    <input type="color" id="glow-color-2" value="#FFA500">
-                                    <input type="range" id="glow-intensity" min="0" max="50" value="15" oninput="actualizarBrillo(this.value)">
-                                    <span id="glow-value">15px</span>
-                                    <button onclick="aplicarEfectosBrillo()" class="btn-apply">Aplicar</button>
-                                </div>
-                            </div>
-                            
-                            <div class="effect-group">
-                                <label>Velocidad de Animaciones:</label>
-                                <select id="animation-speed">
-                                    <option value="1s">Muy Rápida (1s)</option>
-                                    <option value="2s">Rápida (2s)</option>
-                                    <option value="3s">Normal (3s)</option>
-                                    <option value="4s">Lenta (4s)</option>
-                                    <option value="6s">Muy Lenta (6s)</option>
-                                </select>
-                                <button onclick="aplicarVelocidadAnimacion()" class="btn-apply">Aplicar</button>
-                            </div>
-                            
-                            <div class="effect-group">
-                                <label>Opacidad de Superposición:</label>
-                                <input type="range" id="overlay-opacity" min="0" max="100" value="30" oninput="actualizarSuperposicion(this.value)">
-                                <span id="overlay-value">30%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button onclick="previsualizarCambios()" class="btn-preview">
-                                <i class="fas fa-eye"></i> Vista Previa
-                            </button>
-                            <button onclick="guardarTemaPersonalizado('efectos')" class="btn-save">
-                                <i class="fas fa-save"></i> Guardar Cambios
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Panel de Fondos -->
-                    <div id="panel-fondos" class="config-panel">
-                        <div class="background-controls">
-                            <div class="bg-type-selector">
-                                <label>Tipo de Fondo:</label>
-                                <div class="radio-group">
-                                    <label><input type="radio" name="bg-type" value="color" checked> Color Sólido</label>
-                                    <label><input type="radio" name="bg-type" value="gradient"> Gradiente</label>
-                                    <label><input type="radio" name="bg-type" value="image"> Imagen</label>
-                                </div>
-                            </div>
-                            
-                            <div id="color-background" class="bg-option active">
-                                <label>Color de Fondo:</label>
-                                <input type="color" id="bg-color" value="#232323">
-                                <button onclick="aplicarFondoColor()" class="btn-apply">Aplicar</button>
-                            </div>
-                            
-                            <div id="gradient-background" class="bg-option">
-                                <label>Gradiente Personalizado:</label>
-                                <div class="gradient-builder-advanced">
-                                    <input type="color" id="gradient-color-1" value="#232323">
-                                    <input type="color" id="gradient-color-2" value="#2c1810">
-                                    <input type="color" id="gradient-color-3" value="#d4af37">
-                                    <select id="gradient-type">
-                                        <option value="linear">Lineal</option>
-                                        <option value="radial">Radial</option>
-                                        <option value="conic">Cónico</option>
-                                    </select>
-                                    <select id="gradient-direction-bg">
-                                        <option value="135deg">Diagonal ↘</option>
-                                        <option value="90deg">Vertical ↓</option>
-                                        <option value="45deg">Diagonal ↗</option>
-                                        <option value="0deg">Horizontal →</option>
-                                    </select>
-                                    <button onclick="aplicarFondoGradiente()" class="btn-apply">Aplicar</button>
-                                </div>
-                            </div>
-                            
-                            <div id="image-background" class="bg-option">
-                                <label>URL de Imagen:</label>
-                                <input type="url" id="bg-image-url" placeholder="https://ejemplo.com/imagen.jpg">
-                                <select id="bg-image-size">
-                                    <option value="cover">Cubrir</option>
-                                    <option value="contain">Contener</option>
-                                    <option value="repeat">Repetir</option>
-                                    <option value="no-repeat">Sin Repetir</option>
-                                </select>
-                                <button onclick="aplicarFondoImagen()" class="btn-apply">Aplicar</button>
-                            </div>
-                        </div>
-                        
-                        <div class="action-buttons">
-                            <button onclick="previsualizarCambios()" class="btn-preview">
-                                <i class="fas fa-eye"></i> Vista Previa
-                            </button>
-                            <button onclick="guardarTemaPersonalizado('fondos')" class="btn-save">
-                                <i class="fas fa-save"></i> Guardar Cambios
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Acciones Generales -->
-                <div class="themes-actions">
-                    <button onclick="crearTemaDesdePersonalizacion()" class="btn-success">
-                        <i class="fas fa-plus-circle"></i> Crear Tema Personalizado
-                    </button>
-                    <button onclick="exportarTema()" class="btn-info">
-                        <i class="fas fa-download"></i> Exportar Tema
-                    </button>
-                    <button onclick="importarTema()" class="btn-warning">
-                        <i class="fas fa-upload"></i> Importar Tema
-                    </button>
-                    <button onclick="resetearTemas()" class="btn-danger">
-                        <i class="fas fa-undo"></i> Restaurar por Defecto
-                    </button>
-                </div>
-            </section>
-
-            <!-- Sección Fondos Personalizados -->
-            <section id="seccion-fondos" class="dashboard-section">
-                <h2><i class="fas fa-image"></i> Fondos Personalizados</h2>
+            <!-- Panel de Control Principal -->
+            <div class="personalizacion-container-modern">
                 
-                <div class="upload-zone" id="zona-subida-fondos">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Arrastra y suelta imágenes aquí o <button class="btn-link" onclick="seleccionarArchivo()">selecciona archivos</button></p>
-                    <small>Formatos soportados: JPG, PNG, WEBP. Máximo 5MB por archivo.</small>
-                    <input type="file" id="input-fondos" multiple accept="image/*" style="display: none;">
+                <!-- Columna Izquierda: Controles Modernos -->
+                <div class="personalizacion-controles-modern">
+                    <div class="control-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-palette"></i> Personalización de Fondos</h3>
+                            <p class="section-subtitle">Personaliza la apariencia visual de tu chatbot</p>
+                        </div>
+
+                        <!-- Tipo de Fondo -->
+                        <!-- ELIMINADO: Selector de tipo Color Sólido - Solo imágenes disponibles -->
+                        <div class="fondo-type-selector">
+                            <div class="type-option" data-type="imagen">
+                                <div class="option-card active" onclick="seleccionarTipoFondo('imagen')">
+                                    <div class="option-icon">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                    <div class="option-info">
+                                        <h4>Imagen Personalizada</h4>
+                                        <p>Sube o selecciona una imagen de fondo (Sistema simplificado)</p>
+                                    </div>
+                                    <div class="option-check">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ELIMINADO: Panel Configuración Color - Sistema simplificado solo con imágenes -->
+
+                        <!-- Panel Configuración Imagen -->
+                        <div id="config-imagen-fondo" class="config-panel active">
+                            <div class="panel-header">
+                                <h4><i class="fas fa-images"></i> Gestión de Imágenes</h4>
+                            </div>
+                            
+                            <!-- Upload Area -->
+                            <div class="upload-area-modern">
+                                <div class="upload-zone" onclick="document.getElementById('input-nueva-imagen').click()">
+                                    <div class="upload-content">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <h5>Subir Nueva Imagen</h5>
+                                        <p>Haz clic aquí o arrastra una imagen</p>
+                                        <span class="upload-formats">JPG, PNG, GIF hasta 5MB</span>
+                                    </div>
+                                </div>
+                                <input type="file" id="input-nueva-imagen" accept="image/*" style="display: none;">
+                            </div>
+
+                            <!-- Galería de Fondos -->
+                            <div class="fondos-gallery-modern">
+                                <div class="gallery-header">
+                                    <h5><i class="fas fa-folder-open"></i> Fondos Disponibles</h5>
+                                    <span class="fondos-count" id="fondos-counter">Cargando...</span>
+                                </div>
+                                <div id="galeria-fondos-grid" class="fondos-grid">
+                                    <div class="loading-placeholder">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Cargando fondos disponibles...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- SISTEMA SIMPLIFICADO - Solo imágenes de fondo -->
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="action-buttons-modern">
+                            <button type="button" class="btn-action-primary" onclick="aplicarSoloFondo()">
+                                <i class="fas fa-magic"></i>
+                                <span>Aplicar Cambios</span>
+                            </button>
+                            <button type="button" class="btn-action-secondary" onclick="resetearFondo()">
+                                <i class="fas fa-undo-alt"></i>
+                                <span>Restaurar Original</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div id="galeria-fondos" class="backgrounds-gallery">
-                    <div class="loading-message">
-                        <i class="fas fa-spinner fa-spin"></i> Cargando fondos...
+                <!-- Columna Derecha: Vista Previa Expandida -->
+                <div class="personalizacion-preview-modern">
+                    <div class="preview-section">
+                        <div class="preview-header">
+                            <h3><i class="fas fa-eye"></i> Vista Previa en Tiempo Real</h3>
+                            <div class="preview-controls">
+                                <button class="btn-preview-refresh" onclick="actualizarPreviewFondo()" title="Actualizar Preview">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <a href="/chatbot" target="_blank" class="btn-preview-full" title="Abrir en Pestaña Nueva">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="preview-container-modern">
+                            <div class="preview-device">
+                                <div class="device-frame">
+                                    <iframe 
+                                        id="preview-iframe" 
+                                        src="/chatbot" 
+                                        class="chatbot-preview"
+                                        title="Vista previa del chatbot">
+                                    </iframe>
+                                </div>
+                                <div class="device-info">
+                                    <span class="device-label">Vista del Cliente</span>
+                                    <span class="device-resolution">Responsive • Tiempo Real</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estado Actual -->
+                    <div class="estado-actual-modern">
+                        <div class="estado-header">
+                            <h4><i class="fas fa-info-circle"></i> Estado Actual</h4>
+                        </div>
+                        <div class="estado-content">
+                            <div class="estado-item">
+                                <div class="estado-label">Fondo Activo:</div>
+                                <div class="estado-value" id="fondo-actual-nombre">Color sólido #1a1a1a</div>
+                            </div>
+                            <div class="estado-item">
+                                <div class="estado-label">Última Actualización:</div>
+                                <div class="estado-value" id="ultima-actualizacion">Nunca</div>
+                            </div>
+                            <div class="estado-item">
+                                <div class="estado-label">Modo:</div>
+                                <div class="estado-value" id="modo-actual">Personalización Manual</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -564,21 +348,7 @@
                 <h2><i class="fas fa-cog"></i> Configuración del Sistema</h2>
                 
                 <form id="form-configuracion" class="config-form">
-                    <div class="config-group">
-                        <h3>Mensajes Automáticos</h3>
-                        <div class="form-row">
-                            <label for="saludo-manana">Saludo de la Mañana:</label>
-                            <textarea id="saludo-manana" rows="2"></textarea>
-                        </div>
-                        <div class="form-row">
-                            <label for="saludo-tarde">Saludo de la Tarde:</label>
-                            <textarea id="saludo-tarde" rows="2"></textarea>
-                        </div>
-                        <div class="form-row">
-                            <label for="saludo-noche">Saludo de la Noche:</label>
-                            <textarea id="saludo-noche" rows="2"></textarea>
-                        </div>
-                    </div>
+
 
                     <div class="config-group">
                         <h3>Configuración General</h3>
@@ -600,6 +370,62 @@
                         </div>
                     </div>
 
+                    <div class="config-group">
+                        <h3><i class="fas fa-utensils"></i> Gestión de Menús</h3>
+                        
+                        <!-- MENÚ PRINCIPAL -->
+                        <div class="menu-section">
+                            <h4><i class="fas fa-home"></i> Menú Principal (Interno)</h4>
+                            <div class="form-row">
+                                <label for="menu-principal-habilitado">
+                                    <input type="checkbox" id="menu-principal-habilitado" checked>
+                                    <span class="checkbox-label">Habilitar Menú Principal</span>
+                                </label>
+                                <small class="help-text">Menú interno del sistema con productos, categorías y precios</small>
+                            </div>
+                            <div class="form-row">
+                                <label for="menu-principal-url">URL del Menú Principal:</label>
+                                <input type="text" id="menu-principal-url" value="/menu/general" />
+                                <small class="help-text">Ruta del menú principal del sistema</small>
+                            </div>
+                            <div class="form-row">
+                                <button type="button" class="btn-secondary" onclick="probarMenuPrincipal()">
+                                    <i class="fas fa-external-link-alt"></i> Probar Menú Principal
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- MENÚ ALTERNATIVO -->
+                        <div class="menu-section">
+                            <h4><i class="fas fa-external-link-alt"></i> Menú Alternativo (Externo)</h4>
+                            <div class="form-row">
+                                <label for="menu-alternativo-habilitado">
+                                    <input type="checkbox" id="menu-alternativo-habilitado">
+                                    <span class="checkbox-label">Habilitar Menú Alternativo</span>
+                                </label>
+                                <small class="help-text">Redirigir a un menú externo (carta digital, promociones, etc.)</small>
+                            </div>
+                            <div class="form-row">
+                                <label for="menu-alternativo-url">URL del Menú Alternativo:</label>
+                                <input type="url" id="menu-alternativo-url" placeholder="https://ejemplo.com/menu-especial" />
+                                <small class="help-text">URL completa del menú externo</small>
+                            </div>
+                            <div class="form-row">
+                                <button type="button" class="btn-secondary" onclick="probarMenuAlternativo()">
+                                    <i class="fas fa-external-link-alt"></i> Probar Menú Alternativo
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ESTADO GENERAL -->
+                        <div class="form-row">
+                            <div class="menu-status" id="menu-status">
+                                <i class="fas fa-info-circle text-warning"></i> 
+                                <span>Configura los menús según las necesidades del restaurante</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-actions">
                         <button type="submit" class="btn-primary">
                             <i class="fas fa-save"></i> Guardar Configuración
@@ -614,38 +440,7 @@
         </main>
     </div>
 
-    <!-- Modal para crear/editar temas -->
-    <div id="modal-tema" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-palette"></i> <span id="modal-titulo">Crear Tema</span></h3>
-                <button class="modal-close" onclick="cerrarModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="form-tema">
-                    <div class="form-row">
-                        <label for="tema-nombre">Nombre del Tema:</label>
-                        <input type="text" id="tema-nombre" required>
-                    </div>
-                    <div class="form-row">
-                        <label for="tema-descripcion">Descripción:</label>
-                        <textarea id="tema-descripcion" rows="3"></textarea>
-                    </div>
-                    <div class="theme-properties">
-                        <h4>Propiedades del Tema</h4>
-                        <div class="properties-grid" id="propiedades-tema">
-                            <!-- Se cargan dinámicamente -->
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
-                <button type="submit" form="form-tema" class="btn-primary">Guardar Tema</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="{{ url_for('chatbot_admin.static', filename='dashboard.js') }}?v=20250917b"></script>
+        <!-- JavaScript Dashboard Funcional -->
+    <script src="{{ url_for('chatbot_admin.static', filename='dashboard_funcional.js') }}"></script>
 </body>
 </html>

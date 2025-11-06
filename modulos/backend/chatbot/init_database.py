@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from modulos.backend.menu.database.base import Base  # Usar la base existente del sistema
 from modulos.backend.chatbot.models import (
     Sesion, Calificacion, Comentario, NotificacionMesero,
-    Analytics, ConfiguracionChatbot, TemaPersonalizacion, PropiedadTema,
+    Analytics, ConfiguracionChatbot,
     FondoPersonalizado, inicializar_datos_chatbot
 )
 
@@ -50,20 +50,20 @@ def inicializar_base_datos_chatbot():
         total_configs = session.query(ConfiguracionChatbot).count()
         print(f"📋 Configuraciones cargadas: {total_configs}")
         
-        # Contar temas
-        total_temas = session.query(TemaPersonalizacion).count()
-        print(f"🎨 Temas predefinidos: {total_temas}")
+        # ELIMINADO: Conteo de temas - sistema simplificado
+        # total_temas = session.query(TemaPersonalizacion).count()
+        # print(f"🎨 Temas predefinidos: {total_temas}")
         
-        # Contar propiedades de temas
-        total_propiedades = session.query(PropiedadTema).count()
-        print(f"🎯 Propiedades de temas: {total_propiedades}")
+        # ELIMINADO: Conteo propiedades de temas - sistema simplificado
+        # total_propiedades = session.query(PropiedadTema).count()
+        # print(f"🎯 Propiedades de temas: {total_propiedades}")
         
-        # Mostrar tema activo
-        tema_activo = session.query(TemaPersonalizacion).filter_by(activo=True).first()
-        if tema_activo:
-            print(f"🌟 Tema activo: {tema_activo.nombre}")
-        else:
-            print("⚠️ No hay tema activo configurado")
+        # ELIMINADO: Mostrar tema activo - sistema simplificado
+        # tema_activo = session.query(TemaPersonalizacion).filter_by(activo=True).first()
+        # if tema_activo:
+        #     print(f"🌟 Tema activo: {tema_activo.nombre}")
+        # else:
+        #     print("⚠️ No hay tema activo configurado")
         
         session.close()
         
@@ -97,8 +97,8 @@ def verificar_estado_chatbot():
             ('Notificaciones', NotificacionMesero),
             ('Analytics', Analytics),
             ('Configuraciones', ConfiguracionChatbot),
-            ('Temas', TemaPersonalizacion),
-            ('Propiedades de Temas', PropiedadTema)
+            # ELIMINADO: ('Temas', TemaPersonalizacion) - sistema simplificado
+            # ELIMINADO: ('Propiedades de Temas', PropiedadTema) - sistema simplificado
         ]
         
         print("\n📊 Estado de las tablas:")
@@ -120,14 +120,14 @@ def verificar_estado_chatbot():
             else:
                 print(f"  ❌ {config_key}: No configurada")
         
-        # Verificar tema activo
-        print("\n🎨 Estado de temas:")
-        tema_activo = session.query(TemaPersonalizacion).filter_by(activo=True).first()
-        if tema_activo:
-            propiedades_count = session.query(PropiedadTema).filter_by(tema_id=tema_activo.id).count()
-            print(f"  🌟 Tema activo: {tema_activo.nombre}")
-            print(f"  🎯 Propiedades: {propiedades_count}")
-        else:
+        # ELIMINADO: Verificar tema activo - sistema simplificado
+        print("\n🎨 Estado de temas: ELIMINADO - Sistema simplificado")
+        # tema_activo = session.query(TemaPersonalizacion).filter_by(activo=True).first()
+        # if tema_activo:
+        #     propiedades_count = session.query(PropiedadTema).filter_by(tema_id=tema_activo.id).count()
+        #     print(f"  🌟 Tema activo: {tema_activo.nombre}")
+        #     print(f"  🎯 Propiedades: {propiedades_count}")
+        # else:
             print("  ⚠️ No hay tema activo")
         
         # Verificar fondos personalizados (NUEVO)
@@ -150,8 +150,91 @@ def verificar_estado_chatbot():
         print(f"❌ Error en verificación: {str(e)}")
         return False
 
+def verificar_temas_predefinidos():
+    """
+    Verifica si los temas predefinidos existen en la base de datos
+    """
+    print("🎨 Verificando temas predefinidos...")
+    
+    try:
+        engine = create_engine('sqlite:///modulos/backend/menu/menu.db')
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        
+        # SISTEMA DE TEMAS ELIMINADO - CÓDIGO COMENTADO
+        # temas = session.query(TemaPersonalizacion).all()
+        temas = []  # Lista vacía porque el sistema de temas fue eliminado
+        print(f"📊 Sistema de temas eliminado - funcionalidad simplificada")
+        
+        # for tema in temas:
+        #     propiedades = session.query(PropiedadTema).filter_by(tema_id=tema.id).count()
+        #     activo_str = " (ACTIVO)" if tema.activo else ""
+        #     print(f"  🎭 {tema.nombre}: {propiedades} propiedades{activo_str}")
+        print("🎨 Personalización disponible solo vía URL parámetros")
+        
+        # Si no hay temas, inicializar
+        if len(temas) == 0:
+            print("⚠️ No se encontraron temas predefinidos")
+            print("🔄 Inicializando temas predefinidos...")
+            
+            from modulos.backend.chatbot.models import inicializar_datos_chatbot
+            inicializar_datos_chatbot(session)
+            
+            # Verificar nuevamente
+            temas_nuevos = session.query(TemaPersonalizacion).all()
+            print(f"✅ Temas creados: {len(temas_nuevos)}")
+            
+        session.close()
+        return len(temas) > 0
+        
+    except Exception as e:
+        print(f"❌ Error verificando temas: {str(e)}")
+        return False
+
+def reparar_temas_predefinidos():
+    """
+    Repara o recrea los temas predefinidos si hay problemas
+    """
+    print("🔧 Reparando temas predefinidos...")
+    
+    try:
+        engine = create_engine('sqlite:///modulos/backend/menu/menu.db')
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        
+        # Limpiar temas existentes si están corruptos
+        print("🗑️ Limpiando temas existentes...")
+        session.query(PropiedadTema).delete()
+        session.query(TemaPersonalizacion).delete()
+        session.commit()
+        
+        # Recrear temas predefinidos
+        print("🎨 Recreando temas predefinidos...")
+        from modulos.backend.chatbot.models import inicializar_datos_chatbot
+        inicializar_datos_chatbot(session)
+        
+        # Verificar resultado
+        temas_nuevos = session.query(TemaPersonalizacion).all()
+        print(f"✅ Temas recreados: {len(temas_nuevos)}")
+        
+        for tema in temas_nuevos:
+            propiedades = session.query(PropiedadTema).filter_by(tema_id=tema.id).count()
+            activo_str = " (ACTIVO)" if tema.activo else ""
+            print(f"  🎭 {tema.nombre}: {propiedades} propiedades{activo_str}")
+        
+        session.close()
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error reparando temas: {str(e)}")
+        return False
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--verificar":
         verificar_estado_chatbot()
+    elif len(sys.argv) > 1 and sys.argv[1] == "--reparar-temas":
+        reparar_temas_predefinidos()
+    elif len(sys.argv) > 1 and sys.argv[1] == "--verificar-temas":
+        verificar_temas_predefinidos()
     else:
         inicializar_base_datos_chatbot()

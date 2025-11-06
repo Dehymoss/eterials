@@ -13,8 +13,8 @@ from datetime import datetime, timedelta
 import json
 import os
 
-# Importar modelos
-from .models import Sesion, Calificacion, Comentario, NotificacionMesero, Analytics
+# Importar modelos - ELIMINADO: TemaPersonalizacion, PropiedadTema para simplificar sistema
+from .models import Sesion, Calificacion, Comentario, NotificacionMesero, Analytics, FondoPersonalizado
 from .services import verificar_estado_backend
 
 # Blueprint para el dashboard administrativo
@@ -380,88 +380,25 @@ def api_analytics_graficos():
         }), 500
 
 
-# ==================== GESTIÓN DE TEMAS ====================
+# ==================== GESTIÓN DE TEMAS - ELIMINADO ====================
+# Sistema simplificado solo fondos personalizados
 
 @chatbot_admin_bp.route('/temas')
 def gestion_temas():
-    """
-    Página de gestión de temas del chatbot
-    """
-    try:
-        from .models import TemaPersonalizacion, PropiedadTema
-        
-        db = get_db_session()
-        
-        # Obtener todos los temas
-        temas = db.query(TemaPersonalizacion).all()
-        
-        # Obtener tema activo
-        tema_activo = db.query(TemaPersonalizacion).filter_by(activo=True).first()
-        
-        # Estadísticas de temas
-        stats_temas = {
-            'total_temas': len(temas),
-            'temas_predefinidos': len([t for t in temas if t.predefinido]),
-            'temas_personalizados': len([t for t in temas if not t.predefinido]),
-            'tema_activo': tema_activo.nombre if tema_activo else 'Ninguno'
-        }
-        
-        # Preparar datos de temas para el template
-        temas_data = []
-        for tema in temas:
-            propiedades = db.query(PropiedadTema).filter_by(tema_id=tema.id).all()
-            temas_data.append({
-                'id': tema.id,
-                'nombre': tema.nombre,
-                'descripcion': tema.descripcion,
-                'activo': tema.activo,
-                'predefinido': tema.predefinido,
-                'total_propiedades': len(propiedades),
-                'fecha_creacion': tema.fecha_creacion.strftime('%d/%m/%Y')
-            })
-        
-        db.close()
-        
-        return render_template('admin_temas_chatbot.html', 
-                             temas=temas_data, 
-                             stats=stats_temas)
-        
-    except Exception as e:
-        return f"Error al cargar gestión de temas: {str(e)}", 500
+    """ELIMINADO: Página de gestión de temas - sistema simplificado solo fondos"""
+    return jsonify({
+        'success': False,
+        'message': 'Sistema de temas eliminado - usar solo fondos personalizados',
+        'redirect': '/admin/chatbot/fondos'
+    }), 410  # Gone
 
 @chatbot_admin_bp.route('/temas/preview')
 def preview_chatbot():
-    """
-    Vista previa del chatbot con el tema activo aplicado
-    """
-    try:
-        from .models import TemaPersonalizacion, PropiedadTema
-        
-        db = get_db_session()
-        
-        # Obtener tema activo
-        tema_activo = db.query(TemaPersonalizacion).filter_by(activo=True).first()
-        
-        if not tema_activo:
-            return "No hay tema activo configurado", 404
-        
-        # Obtener propiedades del tema
-        propiedades = db.query(PropiedadTema).filter_by(tema_id=tema_activo.id).all()
-        
-        # Crear diccionario de propiedades CSS
-        css_vars = {}
-        for prop in propiedades:
-            variable_name = prop.propiedad.replace('_', '-')
-            css_vars[variable_name] = prop.valor
-        
-        db.close()
-        
-        return render_template('preview_chatbot.html', 
-                             tema_nombre=tema_activo.nombre,
-                             css_vars=css_vars)
-        
-    except Exception as e:
-        return f"Error al cargar preview: {str(e)}", 500
+    """ELIMINADO: Vista previa de temas - sistema simplificado solo fondos"""
+    return jsonify({
+        'success': False,
+        'message': 'Vista previa de temas eliminada - usar solo fondos personalizados'
+    }), 410  # Gone
 
 
 # ============= GESTIÓN DE FONDOS PERSONALIZADOS =============
@@ -478,7 +415,7 @@ def gestionar_fondos():
         # Calcular estadísticas
         total_fondos = len(fondos)
         espacio_usado = sum(f.tamaño_archivo for f in fondos)
-        mas_usado = max(fondos, key=lambda f: f.contador_uso) if fondos else None
+        mas_usado = max(fondos, key=lambda f: f.uso_contador) if fondos else None
         
         estadisticas = {
             'total_fondos': total_fondos,
@@ -498,68 +435,36 @@ def gestionar_fondos():
 
 @chatbot_admin_bp.route('/temas/<int:tema_id>/personalizar')
 def personalizar_tema(tema_id):
-    """Página de personalización de tema específico"""
-    try:
-        from .models import TemaPersonalizacion, PropiedadTema, FondoPersonalizado
-        
-        db = get_db_session()
-        
-        tema = db.query(TemaPersonalizacion).get(tema_id)
-        if not tema:
-            return "Tema no encontrado", 404
-        
-        propiedades = db.query(PropiedadTema).filter_by(tema_id=tema.id).all()
-        fondos_disponibles = db.query(FondoPersonalizado).filter_by(activo=True).all()
-        
-        # Organizar propiedades por categoría
-        props_organizadas = {}
-        for prop in propiedades:
-            if prop.categoria not in props_organizadas:
-                props_organizadas[prop.categoria] = {}
-            props_organizadas[prop.categoria][prop.propiedad] = prop.valor
-        
-        db.close()
-        
-        return render_template('admin/personalizar_tema.html', 
-                             tema=tema, 
-                             propiedades=props_organizadas,
-                             fondos=fondos_disponibles)
-    except Exception as e:
-        return f"Error al cargar personalización de tema: {str(e)}", 500
+    """ELIMINADO: Personalización de temas - sistema simplificado solo fondos"""
+    return jsonify({
+        'success': False,
+        'message': 'Personalización de temas eliminada - usar solo fondos personalizados'
+    }), 410  # Gone
 
 
 @chatbot_admin_bp.route('/temas/<int:tema_id>/preview')
 def preview_tema_especifico(tema_id):
-    """Vista previa de un tema específico"""
-    try:
-        from .models import TemaPersonalizacion, PropiedadTema
-        
-        db = get_db_session()
-        
-        tema = db.query(TemaPersonalizacion).get(tema_id)
-        if not tema:
-            return "Tema no encontrado", 404
-        
-        propiedades = db.query(PropiedadTema).filter_by(tema_id=tema.id).all()
-        
-        # Organizar propiedades por categoría
-        props_organizadas = {}
-        css_vars = {}
-        
-        for prop in propiedades:
-            if prop.categoria not in props_organizadas:
-                props_organizadas[prop.categoria] = {}
-            props_organizadas[prop.categoria][prop.propiedad] = prop.valor
-            
-            # También crear variables CSS
-            variable_name = prop.propiedad.replace('_', '-')
-            css_vars[variable_name] = prop.valor
-        
-        db.close()
-        
-        return render_template('admin/preview_tema.html', 
-                             tema=tema, 
-                             propiedades=props_organizadas,
-                             css_vars=css_vars)
-    except Exception as e:
-        return f"Error al cargar preview del tema: {str(e)}", 500
+    """ELIMINADO: Preview de temas - sistema simplificado solo fondos"""
+    return jsonify({
+        'success': False,
+        'message': 'Preview de temas eliminado - usar solo fondos personalizados'
+    }), 410  # Gone
+
+# ==================== API ENDPOINTS PARA TEMAS - ELIMINADOS ====================
+
+@chatbot_admin_bp.route('/api/temas/predefinidos')
+def api_temas_predefinidos():
+    """ELIMINADO: API de temas predefinidos - sistema simplificado solo fondos"""
+    return jsonify({
+        'success': False,
+        'message': 'API de temas eliminada - usar solo fondos personalizados',
+        'redirect': '/api/chatbot/fondos'
+    }), 410  # Gone
+
+@chatbot_admin_bp.route('/api/temas/<int:tema_id>/aplicar', methods=['POST'])
+def api_aplicar_tema(tema_id):
+    """ELIMINADO: API aplicar tema - sistema simplificado solo fondos"""
+    return jsonify({
+        'success': False,
+        'message': 'API aplicar tema eliminada - usar solo fondos personalizados'
+    }), 410  # Gone

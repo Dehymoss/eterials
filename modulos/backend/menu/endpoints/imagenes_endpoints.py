@@ -347,7 +347,9 @@ def buscar_en_pixabay(query, limite=6):
             
     except Exception as e:
         print(f"❌ Error generando placeholders: {e}")
-        return []@imagenes_bp.route('/upload', methods=['POST'])
+        return []
+
+@imagenes_bp.route('/subir-imagen', methods=['POST'])
 def subir_imagen():
     """⬆️ SUBIR NUEVA IMAGEN"""
     try:
@@ -383,6 +385,7 @@ def subir_imagen():
             url_imagen = f'/menu-admin/api/imagenes/servir/{nombre_archivo}'
             
             return jsonify({
+                'success': True,
                 'mensaje': 'Imagen subida exitosamente',
                 'archivo': nombre_archivo,
                 'url': url_imagen,
